@@ -42,12 +42,14 @@ Theme with two variables on `:root`: `--lu-theme-primary` and `--lu-theme-second
 pnpm install
 pnpm storybook
 pnpm test
+pnpm exec playwright install chromium
+pnpm test:browser
 pnpm lint
 pnpm typecheck
 pnpm build
 ```
 
-Each component lives in `src/components/<name>/` with its CSS, its element if it has state, its story and its test. An element documents its public API in JSDoc (`@summary`, `@slot`, `@csspart`, `@cssprop`, `@fires`, and every public attribute and property); `pnpm generate` reads it into `custom-elements.json`, which feeds the Storybook props tables and the React and Vue element types. Tokens, base styles and utilities live in `src/foundations/`. Decisions live in [`docs/adr`](docs/adr).
+Each component lives in `src/components/<name>/` with its CSS, its element if it has state, its story and its test. An element documents its public API in JSDoc (`@summary`, `@slot`, `@csspart`, `@cssprop`, `@fires`, and every public attribute and property); `pnpm generate` reads it into `custom-elements.json`, which feeds the Storybook props tables and the React and Vue element types. `pnpm test` runs the unit tests in jsdom; `pnpm test:browser` runs every story in Chromium, with its `play` function and an accessibility check that fails on any violation. Tokens, base styles and utilities live in `src/foundations/`. Decisions live in [`docs/adr`](docs/adr).
 
 ## Release
 
