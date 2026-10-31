@@ -1,4 +1,4 @@
-const litSelector = '.lu-button, .lu-icon-button, .lu-switch, [data-lu-light]'
+const litSelector = '.lu-button, .lu-icon-button, .lu-switch, .lu-checkbox, .lu-radio, [data-lu-light]'
 
 export function light(element: Element) {
   element.removeAttribute('data-lu-lit')

@@ -10,7 +10,7 @@ const meta: Meta = {
       description: {
         component: `The light marks the action, the color marks the state. Every action lights up for a moment, then gets its color back; the state is read from the color, never from the light.
 
-\`attachLight()\` from \`@slashome/lumen/lib\` lights \`.lu-button\`, \`.lu-icon-button\`, \`.lu-switch\` and any \`[data-lu-light]\` element on click; \`light(element)\` lights one by hand. The glow takes \`--lu-light-color\`, and its duration, curve and intensity come from the \`motion.light\` tokens. It is off under \`prefers-reduced-motion\`.`,
+\`attachLight()\` from \`@slashome/lumen/lib\` lights \`.lu-button\`, \`.lu-icon-button\`, \`.lu-switch\`, \`.lu-checkbox\`, \`.lu-radio\` and any \`[data-lu-light]\` element on click; \`light(element)\` lights one by hand. The glow takes \`--lu-light-color\`, and its duration, curve and intensity come from the \`motion.light\` tokens. It is off under \`prefers-reduced-motion\`.`,
       },
     },
   },

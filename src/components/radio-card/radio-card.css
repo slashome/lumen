@@ -1,0 +1,71 @@
+@layer lu.components {
+  .lu-radio-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--lu-space-3);
+    padding: var(--lu-space-3);
+    border: 1px solid var(--lu-color-border);
+    border-radius: var(--lu-radius-lg);
+    background: var(--lu-color-background);
+    font-size: var(--lu-font-size-sm);
+    cursor: pointer;
+    transition:
+      background-color var(--lu-motion-hover-duration) var(--lu-motion-hover-easing),
+      border-color var(--lu-motion-hover-duration) var(--lu-motion-hover-easing);
+
+    & > .lu-radio {
+      margin-block-start: 0.125rem;
+    }
+
+    &:hover {
+      background: var(--lu-color-muted);
+    }
+
+    &:has(:checked) {
+      border-color: var(--lu-color-primary);
+    }
+
+    &:has([aria-invalid='true']) {
+      border-color: var(--lu-color-danger);
+    }
+
+    &:has(:focus-visible) {
+      outline: 2px solid var(--lu-color-ring);
+      outline-offset: 2px;
+
+      & > .lu-radio {
+        outline: none;
+      }
+    }
+
+    &:has(:disabled) {
+      cursor: not-allowed;
+      opacity: 0.5;
+
+      &:hover {
+        background: var(--lu-color-background);
+      }
+    }
+  }
+
+  .lu-radio-card__body {
+    display: grid;
+    gap: 0.125rem;
+    min-inline-size: 0;
+  }
+
+  .lu-radio-card__label {
+    font-weight: var(--lu-font-weight-medium);
+  }
+
+  .lu-radio-card__description {
+    color: var(--lu-color-muted-foreground);
+    font-size: var(--lu-font-size-xs);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lu-radio-card {
+      transition: none;
+    }
+  }
+}

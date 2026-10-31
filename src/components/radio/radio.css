@@ -1,0 +1,59 @@
+@layer lu.components {
+  .lu-radio {
+    --lu-light-color: var(--lu-color-primary);
+    display: inline-grid;
+    place-content: center;
+    flex-shrink: 0;
+    inline-size: 1rem;
+    block-size: 1rem;
+    margin: 0;
+    border: 1px solid var(--lu-color-muted-foreground);
+    border-radius: var(--lu-radius-full);
+    background: var(--lu-color-background);
+    appearance: none;
+    cursor: pointer;
+    transition:
+      background-color var(--lu-motion-hover-duration) var(--lu-motion-hover-easing),
+      border-color var(--lu-motion-hover-duration) var(--lu-motion-hover-easing);
+
+    &::before {
+      content: '';
+      inline-size: 0.375rem;
+      block-size: 0.375rem;
+      border-radius: inherit;
+      background: var(--lu-color-primary-foreground);
+      scale: 0;
+      transition: scale var(--lu-motion-hover-duration) var(--lu-motion-hover-easing);
+    }
+
+    &:checked {
+      border-color: var(--lu-color-primary);
+      background: var(--lu-color-primary);
+    }
+
+    &:checked::before {
+      scale: 1;
+    }
+
+    &[aria-invalid='true'] {
+      border-color: var(--lu-color-danger);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--lu-color-ring);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lu-radio,
+    .lu-radio::before {
+      transition: none;
+    }
+  }
+}
