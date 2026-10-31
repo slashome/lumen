@@ -13,6 +13,28 @@
     "dist",
     "custom-elements.json"
   ],
+  "sideEffects": [
+    "./dist/index.js",
+    "./dist/icon.js",
+    "./dist/dialog.js",
+    "./dist/sheet.js",
+    "./dist/confirm-dialog.js",
+    "./dist/tooltip.js",
+    "./dist/hover-card.js",
+    "./dist/select.js",
+    "./dist/multi-select.js",
+    "./dist/segmented.js",
+    "./dist/toaster.js",
+    "./dist/markdown.js",
+    "./dist/highlight.js",
+    "./dist/drag-area.js",
+    "./dist/components/select/option.js",
+    "./dist/components/drag-area/draggable.js",
+    "./dist/components/drag-area/drop-zone.js",
+    "./dist/css/*.css",
+    "./src/index.ts",
+    "./src/components/*/*.ts"
+  ],
   "bin": {
     "lumen-icons": "./scripts/icons.js"
   },
@@ -20,6 +42,58 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./icon": {
+      "types": "./dist/types/components/icon/icon.d.ts",
+      "default": "./dist/icon.js"
+    },
+    "./dialog": {
+      "types": "./dist/types/components/dialog/dialog.d.ts",
+      "default": "./dist/dialog.js"
+    },
+    "./sheet": {
+      "types": "./dist/types/components/sheet/sheet.d.ts",
+      "default": "./dist/sheet.js"
+    },
+    "./confirm-dialog": {
+      "types": "./dist/types/components/confirm-dialog/confirm-dialog.d.ts",
+      "default": "./dist/confirm-dialog.js"
+    },
+    "./tooltip": {
+      "types": "./dist/types/components/tooltip/tooltip.d.ts",
+      "default": "./dist/tooltip.js"
+    },
+    "./hover-card": {
+      "types": "./dist/types/components/hover-card/hover-card.d.ts",
+      "default": "./dist/hover-card.js"
+    },
+    "./select": {
+      "types": "./dist/types/components/select/select.d.ts",
+      "default": "./dist/select.js"
+    },
+    "./multi-select": {
+      "types": "./dist/types/components/multi-select/multi-select.d.ts",
+      "default": "./dist/multi-select.js"
+    },
+    "./segmented": {
+      "types": "./dist/types/components/segmented/segmented.d.ts",
+      "default": "./dist/segmented.js"
+    },
+    "./toaster": {
+      "types": "./dist/types/components/toaster/toaster.d.ts",
+      "default": "./dist/toaster.js"
+    },
+    "./markdown": {
+      "types": "./dist/types/components/markdown/markdown.d.ts",
+      "default": "./dist/markdown.js"
+    },
+    "./highlight": {
+      "types": "./dist/types/components/highlight/highlight.d.ts",
+      "default": "./dist/highlight.js"
+    },
+    "./drag-area": {
+      "types": "./dist/types/components/drag-area/drag-area.d.ts",
+      "default": "./dist/drag-area.js"
     },
     "./lib": {
       "types": "./dist/types/lib/index.d.ts",
