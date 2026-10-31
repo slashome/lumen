@@ -1,26 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite'
 import { html } from 'lit'
+import semanticColors from '../tokens/semantic/light/color.json'
 
-const colors = [
-  'background',
-  'foreground',
-  'muted',
-  'muted-foreground',
-  'border',
-  'popover',
-  'sidebar',
-  'primary',
-  'primary-foreground',
-  'ring',
-  'accent',
-  'halo',
-  'overlay',
-  'danger',
-  'success',
-  'warning',
-  'info',
-  'highlight',
-]
+const colors = Object.keys(semanticColors.color).filter((key) => !key.startsWith('$'))
 
 const meta: Meta = { title: 'Foundations/Tokens' }
 export default meta
