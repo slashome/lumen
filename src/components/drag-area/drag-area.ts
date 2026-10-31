@@ -111,7 +111,7 @@ export class LumenDragArea extends LitElement {
 
   private onKeydown(event: KeyboardEvent) {
     const carried = this.carried
-    if (!carried) {
+    if (!carried || event.defaultPrevented) {
       return
     }
     const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key]
@@ -128,6 +128,7 @@ export class LumenDragArea extends LitElement {
       this.release()
       this.announcement = zone ? `Dropped on ${this.describe(zone)}.` : 'Dropped.'
       this.end({ active, over: zone?.zoneId ?? null })
+      carried.draggable.focus()
     } else if (event.key === 'Escape') {
       event.preventDefault()
       this.release()
