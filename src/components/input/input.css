@@ -15,6 +15,10 @@
       color: var(--lu-color-muted-foreground);
     }
 
+    &[aria-invalid='true'] {
+      border-color: var(--lu-color-danger);
+    }
+
     &:focus-visible {
       outline: 2px solid var(--lu-color-ring);
       outline-offset: 0;

@@ -30,6 +30,10 @@
     font-size: var(--lu-font-size-sm);
     appearance: none;
 
+    &[aria-invalid='true'] {
+      border-color: var(--lu-color-danger);
+    }
+
     &:focus-visible {
       outline: 2px solid var(--lu-color-ring);
       outline-offset: 0;

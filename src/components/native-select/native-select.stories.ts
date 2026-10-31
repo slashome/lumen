@@ -13,7 +13,7 @@ const meta: Meta = {
 | Class | Use |
 | --- | --- |
 | \`.lu-native-select\` | The \`<span>\` wrapper that draws the chevron. |
-| \`.lu-native-select__control\` | The \`<select>\` inside it. |`,
+| \`.lu-native-select__control\` | The \`<select>\` inside it. Invalid by \`aria-invalid="true"\`. |`,
       },
     },
   },

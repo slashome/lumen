@@ -12,7 +12,7 @@ const meta: Meta = {
 
 | Class | Use |
 | --- | --- |
-| \`.lu-input\` | The field. Disabled by \`disabled\`. |`,
+| \`.lu-input\` | The field. Disabled by \`disabled\`, invalid by \`aria-invalid="true"\`. |`,
       },
     },
   },
