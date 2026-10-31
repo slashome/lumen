@@ -11,7 +11,7 @@ Ariane sets two colors at run time (`--theme-primary`, `--theme-secondary`) and 
 ## Decision
 
 - Tokens are JSON in the DTCG format: `tokens/primitive` (scales) and `tokens/semantic/light` and `tokens/semantic/dark` (meaning). `scripts/tokens.js` builds them with Style Dictionary into one `tokens.css`, keeping references as `var()` so derived values follow the run-time theme.
-- Variables are named `--lumen-*`. The theme is `--lu-theme-primary` and `--lu-theme-secondary`.
+- Variables are named `--lu-*`. The theme is `--lu-theme-primary` and `--lu-theme-secondary`.
 - Dark tokens apply under `:root[data-appearance='dark']`, and under `prefers-color-scheme: dark` when the attribute is absent.
 - One family of tokens carries the light effect of an action (`--lu-motion-light-*`): changing its duration, curve or intensity changes it everywhere.
 
