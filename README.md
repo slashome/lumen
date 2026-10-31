@@ -51,9 +51,20 @@ pnpm build
 
 Each component lives in `src/components/<name>/` with its CSS, its element if it has state, its story and its test. An element documents its public API in JSDoc (`@summary`, `@slot`, `@csspart`, `@cssprop`, `@fires`, and every public attribute and property); `pnpm generate` reads it into `custom-elements.json`, which feeds the Storybook props tables and the React and Vue element types. `pnpm test` runs the unit tests in jsdom; `pnpm test:browser` runs every story in Chromium, with its `play` function and an accessibility check that fails on any violation. Tokens, base styles and utilities live in `src/foundations/`. Decisions live in [`docs/adr`](docs/adr).
 
-## Release
+## Releasing
 
-Bump `version` in `package.json`, merge, then push a tag `v<version>`: the Release workflow publishes `@slashome/lumen` on npm. Storybook is deployed to GitHub Pages on every push to `main`.
+Every pull request that changes `src/`, `tokens/` or `icons/` adds a changeset: run `pnpm changeset`, pick the semver level, and write one line for someone who uses Lumen. A change that ships nothing takes `pnpm changeset --empty`. CI fails a pull request that touches those folders without one.
+
+The owner releases from an up-to-date `main`:
+
+```sh
+pnpm changeset version
+git commit -am "Release v$(node -p "require('./package.json').version")"
+git tag "v$(node -p "require('./package.json').version")"
+git push origin main --follow-tags
+```
+
+`pnpm changeset version` consumes the pending changesets into `CHANGELOG.md` and bumps `version` in `package.json`; check both before committing. The tag `v<version>` triggers the Release workflow: it checks the tag against `package.json`, publishes `@slashome/lumen` on npm with provenance, and creates a GitHub Release whose notes are that version's section of `CHANGELOG.md`. The changelog also ships in the package and shows in the Storybook under Foundations. Storybook is deployed to GitHub Pages on every push to `main`. See ADR-0008.
 
 ## Deprecation
 
