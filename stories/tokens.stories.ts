@@ -1,40 +1,41 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite'
-import { html } from 'lit'
+import { html, nothing } from 'lit'
 import motion from '../tokens/semantic/base/motion.json'
 import theme from '../tokens/semantic/base/theme.json'
 import semanticColors from '../tokens/semantic/light/color.json'
-
-type Token = { variable: string; value: string; description: string }
-
-function isGroup(node: unknown): node is Record<string, unknown> {
-  return typeof node === 'object' && node !== null
-}
-
-function tokensOf(group: Record<string, unknown>, path: string[] = []): Token[] {
-  return Object.entries(group).flatMap(([key, node]) => {
-    if (key.startsWith('$') || !isGroup(node)) return []
-    const nodePath = [...path, key]
-    if (!('$value' in node)) return tokensOf(node, nodePath)
-    return [{ variable: `--lu-${nodePath.join('-')}`, value: String(node.$value), description: String(node.$description ?? '') }]
-  })
-}
+import { tokensOf, type Token } from './token-list'
 
 const colors = tokensOf(semanticColors)
 const others = [...tokensOf(theme), ...tokensOf(motion)]
 
-const meta: Meta = { title: 'Foundations/Tokens' }
+function deprecation({ deprecated }: Token) {
+  return deprecated === null ? nothing : html`<span class="lu-badge lu-badge--outline">Deprecated</span> ${deprecated}`
+}
+
+const meta: Meta = {
+  title: 'Foundations/Tokens',
+  tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'The semantic tokens, read from the JSON in `tokens/semantic`. A token marked `$deprecated` shows a Deprecated badge with its replacement; it lives at least one minor version before it is removed in a major.',
+      },
+    },
+  },
+}
 export default meta
 
 export const Colors: StoryObj = {
   render: () => html`
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(16rem,1fr));gap:1.5rem;font-size:0.8rem">
       ${colors.map(
-        ({ variable, description }) => html`
+        (token) => html`
           <figure style="margin:0">
-            <div style="block-size:3rem;border:1px solid var(--lu-color-border);border-radius:var(--lu-radius-md);background:var(${variable})"></div>
+            <div style="block-size:3rem;border:1px solid var(--lu-color-border);border-radius:var(--lu-radius-md);background:var(${token.variable})"></div>
             <figcaption>
-              <code>${variable}</code>
-              <p style="margin:0.25rem 0 0;color:var(--lu-color-muted-foreground)">${description}</p>
+              <code>${token.variable}</code> ${deprecation(token)}
+              <p style="margin:0.25rem 0 0;color:var(--lu-color-muted-foreground)">${token.description}</p>
             </figcaption>
           </figure>
         `,
@@ -52,20 +53,11 @@ export const ThemeMotionAndControls: StoryObj = {
       </thead>
       <tbody>
         ${others.map(
-          ({ variable, value, description }) => html`
-            <tr><td><code>${variable}</code></td><td><code>${value}</code></td><td>${description}</td></tr>
+          (token) => html`
+            <tr><td><code>${token.variable}</code> ${deprecation(token)}</td><td><code>${token.value}</code></td><td>${token.description}</td></tr>
           `,
         )}
       </tbody>
     </table>
-  `,
-}
-
-export const Light: StoryObj = {
-  render: () => html`
-    <p>Every action lights up for a moment, then gets its color back; the state is read from the color, never from the light.</p>
-    <button class="lu-button" @click=${(event: Event) => import('../src/lib/light').then(({ light }) => light(event.currentTarget as Element))}>Click me</button>
-    <input type="checkbox" role="switch" class="lu-switch" aria-label="Sub-nodes"
-      @click=${(event: Event) => import('../src/lib/light').then(({ light }) => light(event.currentTarget as Element))} />
   `,
 }

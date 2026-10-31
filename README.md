@@ -47,11 +47,17 @@ pnpm typecheck
 pnpm build
 ```
 
-Each component lives in `src/components/<name>/` with its CSS, its element if it has state, its story and its test. Tokens, base styles and utilities live in `src/foundations/`. Decisions live in [`docs/adr`](docs/adr).
+Each component lives in `src/components/<name>/` with its CSS, its element if it has state, its story and its test. An element documents its public API in JSDoc (`@summary`, `@slot`, `@csspart`, `@cssprop`, `@fires`, and every public attribute and property); `pnpm generate` reads it into `custom-elements.json`, which feeds the Storybook props tables and the React and Vue element types. Tokens, base styles and utilities live in `src/foundations/`. Decisions live in [`docs/adr`](docs/adr).
 
 ## Release
 
 Bump `version` in `package.json`, merge, then push a tag `v<version>`: the Release workflow publishes `@slashome/lumen` on npm. Storybook is deployed to GitHub Pages on every push to `main`.
+
+## Deprecation
+
+Nothing public disappears without warning. A token takes `$deprecated` in its JSON; an attribute, a property or an export takes `@deprecated` in its JSDoc; an event, a slot, a part or a custom property takes `@deprecated` at the end of its `@fires`, `@slot`, `@csspart` or `@cssprop` line. The build reports deprecated tokens, `custom-elements.json` carries the rest, and the Storybook shows both.
+
+**A deprecation lives at least one minor version before its removal, and the removal is a major version.** It names its replacement. The details are on the Prop conventions page of the Storybook.
 
 ## Licence
 

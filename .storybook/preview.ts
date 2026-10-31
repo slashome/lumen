@@ -1,5 +1,6 @@
 import { setCustomElementsManifest, type Preview } from '@storybook/web-components-vite'
 import manifest from '../custom-elements.json'
+import { declarationOf, markDeprecated } from './deprecated'
 import '../src/foundations/lumen.css'
 import '../src/index'
 
@@ -36,9 +37,15 @@ const preview: Preview = {
       return story()
     },
   ],
+  argTypesEnhancers: [(context) => markDeprecated(context.argTypes, declarationOf(manifest, context.component))],
   parameters: {
     controls: { expanded: true },
     a11y: { test: 'error' },
+    options: {
+      storySort: {
+        order: ['Foundations', ['Introduction', 'Prop conventions', 'Tokens', 'Icons', 'Light', 'Frameworks'], 'Actions', 'Form', 'Feedback', 'Navigation', 'Data', 'Overlays'],
+      },
+    },
   },
 }
 
