@@ -1,6 +1,6 @@
 # ADR-0005 — Document the API in JSDoc and read it from the manifest
 
-- **Status:** Accepted, amended by [ADR-0009](0009-describe-components-by-usage-not-by-floor.md)
+- **Status:** Accepted, amended by [ADR-0009](0009-describe-components-by-usage-not-by-floor.md) and [ADR-0012](0012-lumen-ships-no-text.md)
 - **Date:** 2026-10-31
 - **Concerns:** ADR-0001, ADR-0004
 
@@ -22,7 +22,7 @@ The repository forbids comments in code. Public JSDoc on a custom element is not
 
 - A property added without a description fails the tests; one added with a description reaches Storybook, React and Vue without another edit.
 - The element classes still carry the TypeScript types the adapters use; the manifest adds names, events and descriptions, not types. An event detail type named in `@fires` must be exported from `src/index.ts`, or the generated adapters do not compile.
-- `lu-pickup`, which `lu-draggable` sends to `lu-drag-area`, is not documented: it is a private protocol, even though it bubbles out.
+- `lu-pickup`, which `lu-draggable` sent to `lu-drag-area`, was removed by ADR-0012: elements of Lumen call each other's methods, and a member they share is tagged `@internal`, which keeps it out of the manifest.
 - The default slot does not appear in the Storybook props table, which ignores unnamed slots; the element description mentions it.
 
 ## Alternatives considered

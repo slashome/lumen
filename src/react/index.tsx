@@ -6,6 +6,7 @@ import type { Range } from '../lib/highlight'
 import { highlightTerms } from '../lib/highlight-terms'
 import { nextSort, sortRows, type SortDirection, type SortValue, type TableSort } from '../lib/sort'
 import { storedSort } from '../lib/sort-store'
+import { documentLang, messagesFor, reportMissing, subscribeToMessages } from '../lib/messages'
 import {
   ConfirmDialogElement,
   DialogElement,
@@ -106,9 +107,28 @@ export function EmptyState({ icon, title, children, className }: { icon?: string
   )
 }
 
-export function LoadingState({ rows = 4, label = 'Loading…' }: { rows?: number; label?: string }) {
+function subscribeToLang(onChange: () => void) {
+  return subscribeToMessages({ requestUpdate: onChange })
+}
+
+function registeredLoadingLabel(): string | undefined {
+  return messagesFor(documentLang())?.loading
+}
+
+function useLoadingLabel(label: string | undefined): string | undefined {
+  const registered = useSyncExternalStore(subscribeToLang, registeredLoadingLabel, () => undefined)
+  const resolved = label || registered
+  useEffect(() => {
+    if (!resolved) {
+      reportMissing(LoadingState, 'LoadingState', 'loading', documentLang(), 'the label prop')
+    }
+  }, [resolved])
+  return resolved
+}
+
+export function LoadingState({ rows = 4, label }: { rows?: number; label?: string }) {
   return (
-    <div role="status" aria-label={label} className="lu-loading-state">
+    <div role="status" aria-label={useLoadingLabel(label)} className="lu-loading-state">
       {Array.from({ length: rows }, (_, index) => (
         <div key={index} className="lu-loading-state__row" />
       ))}
@@ -161,13 +181,17 @@ function only<Key extends string, Value>(key: Key, value: Value | undefined): Pa
 
 export type OpenChangeHandler = (open: boolean, source: OpenChangeSource) => void
 
-interface DialogProps {
+interface ModalProps {
   open?: boolean
   onOpenChange?: OpenChangeHandler
   title: ReactNode
   description?: ReactNode
   className?: string
   children?: ReactNode
+}
+
+interface DialogProps extends ModalProps {
+  closeLabel?: string
 }
 
 function Titles({ title, description }: { title: ReactNode; description?: ReactNode }) {
@@ -183,18 +207,18 @@ function openChange(open: boolean | undefined, onOpenChange: OpenChangeHandler |
   return controlledBy<{ open: boolean; source: OpenChangeSource }>(open !== undefined, (detail) => onOpenChange?.(detail.open, detail.source))
 }
 
-export function Dialog({ open, onOpenChange, title, description, className, children }: DialogProps) {
+export function Dialog({ open, onOpenChange, title, description, closeLabel, className, children }: DialogProps) {
   return (
-    <DialogElement {...only('open', open)} onOpenChange={openChange(open, onOpenChange)} className={className}>
+    <DialogElement {...only('open', open)} {...only('closeLabel', closeLabel)} onOpenChange={openChange(open, onOpenChange)} className={className}>
       <Titles title={title} description={description} />
       {children}
     </DialogElement>
   )
 }
 
-export function Sheet({ open, onOpenChange, title, description, className, children }: DialogProps) {
+export function Sheet({ open, onOpenChange, title, description, closeLabel, className, children }: DialogProps) {
   return (
-    <SheetElement {...only('open', open)} onOpenChange={openChange(open, onOpenChange)} className={className}>
+    <SheetElement {...only('open', open)} {...only('closeLabel', closeLabel)} onOpenChange={openChange(open, onOpenChange)} className={className}>
       <Titles title={title} description={description} />
       {children}
     </SheetElement>
@@ -207,17 +231,17 @@ export function ConfirmDialog({
   title,
   description,
   confirmLabel,
-  cancelLabel = 'Cancel',
+  cancelLabel,
   pending = false,
   onConfirm,
-}: Omit<DialogProps, 'children' | 'className'> & { confirmLabel: string; cancelLabel?: string; pending?: boolean; onConfirm: () => void }) {
+}: Omit<ModalProps, 'children' | 'className'> & { confirmLabel: string; cancelLabel?: string; pending?: boolean; onConfirm: () => void }) {
   return (
     <ConfirmDialogElement
       {...only('open', open)}
       onOpenChange={openChange(open, onOpenChange)}
       onConfirm={onConfirm}
       confirmLabel={confirmLabel}
-      cancelLabel={cancelLabel}
+      {...only('cancelLabel', cancelLabel)}
       pending={pending}
     >
       <Titles title={title} description={description} />
@@ -298,11 +322,13 @@ export function MultiSelect({
   label,
   options,
   selected,
+  clearLabel,
   onChange,
 }: {
   label: string
   options: MultiSelectOption[]
   selected?: string[]
+  clearLabel?: string
   onChange?: (selected: string[], source: ValueChangeSource) => void
 }) {
   return (
@@ -310,6 +336,7 @@ export function MultiSelect({
       label={label}
       options={options}
       {...only('selected', selected)}
+      {...only('clearLabel', clearLabel)}
       onSelectedChange={controlledBy<{ selected: string[]; source: ValueChangeSource }>(selected !== undefined, (detail) => onChange?.(detail.selected, detail.source))}
     />
   )
@@ -365,8 +392,8 @@ export function Tabs({
   )
 }
 
-export function Toaster() {
-  return <ToasterElement />
+export function Toaster({ label, closeLabel }: { label?: string; closeLabel?: string } = {}) {
+  return <ToasterElement {...only('label', label)} {...only('closeLabel', closeLabel)} />
 }
 
 export function Markdown({
@@ -412,9 +439,23 @@ export function DragArea({ onDragEnd, children, className }: { onDragEnd: (event
   )
 }
 
-export function Draggable({ id, onOpen, label, className, children }: { id: string; onOpen?: () => void; label?: string; className?: string; children: ReactNode }) {
+export function Draggable({
+  id,
+  onOpen,
+  label,
+  roleDescription,
+  className,
+  children,
+}: {
+  id: string
+  onOpen?: () => void
+  label?: string
+  roleDescription?: string
+  className?: string
+  children: ReactNode
+}) {
   return (
-    <DraggableElement dragId={id} openable={Boolean(onOpen)} label={label ?? ''} onOpen={() => onOpen?.()} className={className}>
+    <DraggableElement dragId={id} openable={Boolean(onOpen)} label={label ?? ''} {...only('roleDescription', roleDescription)} onOpen={() => onOpen?.()} className={className}>
       {children}
     </DraggableElement>
   )

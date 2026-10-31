@@ -3,6 +3,7 @@ import type { SelectedChangeDetail, ValueChangeSource } from '../../lib/change'
 import { emit } from '../../lib/emit'
 import { float } from '../../lib/floating'
 import { define } from '../../lib/define'
+import { MessagesController } from '../../lib/messages'
 import { nextIndex } from '../../lib/list-navigation'
 import { buttonStyles, popoverStyles } from '../../lib/styles'
 import '../icon/icon'
@@ -109,8 +110,9 @@ export class LumenMultiSelect extends LitElement {
   declare options: MultiSelectOption[]
   /** The values of the checked items. */
   declare selected: string[]
-  /** The text of the item that clears the selection. */
+  /** The text of the item that clears the selection. Overrides the `clear` message registered with `registerLumenMessages()`. */
   declare clearLabel: string
+  private messages = new MessagesController(this)
   declare private expanded: boolean
   private stopFloating?: () => void
 
@@ -119,7 +121,7 @@ export class LumenMultiSelect extends LitElement {
     this.label = ''
     this.options = []
     this.selected = []
-    this.clearLabel = 'Clear'
+    this.clearLabel = ''
     this.expanded = false
   }
 
@@ -225,7 +227,7 @@ export class LumenMultiSelect extends LitElement {
           `,
         )}
         ${this.selected.length > 0
-          ? html`<hr /><button type="button" class="item clear" role="menuitem" tabindex="-1" @click=${this.clear}>${this.clearLabel}</button>`
+          ? html`<hr /><button type="button" class="item clear" role="menuitem" tabindex="-1" @click=${this.clear}>${this.messages.text('clear', this.clearLabel, 'clear-label') ?? nothing}</button>`
           : nothing}
       </div>
     `

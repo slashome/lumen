@@ -1,8 +1,9 @@
-import { css, html, LitElement, type PropertyValues } from 'lit'
+import { css, html, LitElement, nothing, type PropertyValues } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import { dismiss, toasts, type Toast, type ToastKind } from '../../lib/toast'
 import { isPopoverOpen } from '../../lib/popover'
 import { define } from '../../lib/define'
+import { MessagesController } from '../../lib/messages'
 import { buttonStyles, utilityStyles } from '../../lib/styles'
 import '../icon/icon'
 
@@ -20,6 +21,8 @@ const icons: Record<ToastKind, string | null> = {
  *
  * Place one toaster per page.
  *
+ * The region is named by `label`, or else by the `notifications` message; the close button of each toast by `close-label`, or else by the `close` message, both registered with `registerLumenMessages()`.
+ *
  * @summary The stack of transient notifications raised with `toast()`.
  * @tag lu-toaster
  * @csspart region - The landmark that holds the toasts.
@@ -27,6 +30,7 @@ const icons: Record<ToastKind, string | null> = {
  */
 export class LumenToaster extends LitElement {
   static properties = {
+    label: {},
     closeLabel: { attribute: 'close-label' },
     entries: { state: true },
   }
@@ -111,15 +115,19 @@ export class LumenToaster extends LitElement {
     `,
   ]
 
-  /** The accessible name of the close button of each toast. */
+  /** The accessible name of the region that holds the toasts. Overrides the `notifications` message registered with `registerLumenMessages()`. */
+  declare label: string
+  /** The accessible name of the close button of each toast. Overrides the `close` message registered with `registerLumenMessages()`. */
   declare closeLabel: string
+  private messages = new MessagesController(this)
   declare private entries: readonly Toast[]
   private stopListening?: () => void
   private timers = new Map<number, ReturnType<typeof setTimeout>>()
 
   constructor() {
     super()
-    this.closeLabel = 'Close'
+    this.label = ''
+    this.closeLabel = ''
     this.entries = toasts.get()
   }
 
@@ -188,7 +196,7 @@ export class LumenToaster extends LitElement {
   render() {
     return html`
       <div class="lu-visually-hidden" aria-live="polite" aria-atomic="true">${this.announcement}</div>
-      <section popover="manual" aria-label="Notifications" part="region">
+      <section popover="manual" aria-label=${this.messages.text('notifications', this.label, 'label') ?? nothing} part="region">
         ${repeat(
           this.entries,
           (entry) => entry.id,
@@ -202,7 +210,7 @@ export class LumenToaster extends LitElement {
             >
               ${icons[entry.kind] ? html`<lu-icon class="kind" name=${icons[entry.kind]}></lu-icon>` : null}
               <span class="message">${entry.message}</span>
-              <button type="button" class="lu-icon-button close" aria-label=${this.closeLabel} @click=${() => this.close(entry.id)}>
+              <button type="button" class="lu-icon-button close" aria-label=${this.messages.text('close', this.closeLabel, 'close-label') ?? nothing} @click=${() => this.close(entry.id)}>
                 <lu-icon name="close"></lu-icon>
               </button>
             </div>

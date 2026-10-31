@@ -41,3 +41,20 @@ export function deprecatedInClassTags() {
     },
   }
 }
+
+function isUntaggedBase(declaration) {
+  return declaration.kind === 'class' && declaration.customElement && !declaration.tagName
+}
+
+export function taggedElementsOnly() {
+  return {
+    name: 'lumen/tagged-elements-only',
+    packageLinkPhase({ customElementsManifest }) {
+      for (const module of customElementsManifest.modules) {
+        const bases = new Set((module.declarations ?? []).filter(isUntaggedBase).map((declaration) => declaration.name))
+        module.declarations = module.declarations?.filter((declaration) => !bases.has(declaration.name))
+        module.exports = module.exports?.filter((entry) => !bases.has(entry.declaration?.name))
+      }
+    },
+  }
+}

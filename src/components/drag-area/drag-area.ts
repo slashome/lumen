@@ -2,7 +2,8 @@ import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/ad
 import { css, html, LitElement } from 'lit'
 import { emit } from '../../lib/emit'
 import { define } from '../../lib/define'
-import { dragKey, LumenDraggable, type PickupDetail } from './draggable'
+import { MessagesController } from '../../lib/messages'
+import { dragKey, type LumenDraggable } from './draggable'
 import { LumenDropZone, zoneKey } from './drop-zone'
 import { utilityStyles } from '../../lib/styles'
 
@@ -21,6 +22,8 @@ interface Carried {
  * Moves `lu-draggable` items between `lu-drop-zone` targets, with the mouse, touch or the keyboard: Space picks an item up, the arrow keys move it across the zones, Space or Enter drops it and Escape cancels. Each step is announced.
  *
  * The area never moves the items itself: it fires `lu-drag-end` and the owner updates its data.
+ *
+ * The announcements are the `dragPickedUp`, `dragOver`, `dragDropped`, `dragDroppedOutside` and `dragCancelled` messages registered with `registerLumenMessages()`.
  *
  * @summary The scope of a drag and drop between zones.
  * @tag lu-drag-area
@@ -44,11 +47,11 @@ export class LumenDragArea extends LitElement {
   declare private announcement: string
   private carried: Carried | null = null
   private cleanup?: () => void
+  private messages = new MessagesController(this)
 
   constructor() {
     super()
     this.announcement = ''
-    this.addEventListener('lu-pickup', (event) => this.pickUp(event as CustomEvent<PickupDetail>))
     this.addEventListener('keydown', (event) => this.onKeydown(event))
   }
 
@@ -81,17 +84,14 @@ export class LumenDragArea extends LitElement {
     return zone?.label || zone?.zoneId || ''
   }
 
-  private pickUp(event: CustomEvent<PickupDetail>) {
-    const draggable = event.composedPath().find((node): node is LumenDraggable => node instanceof LumenDraggable)
-    if (!draggable) {
-      return
-    }
+  /** @internal Called by lu-draggable, not by the application; the tag keeps it out of custom-elements.json. */
+  pickUp(draggable: LumenDraggable) {
     const zones = this.zones
     const index = zones.findIndex((zone) => zone.contains(draggable))
     this.carried = { draggable, zones, index }
     draggable.dragging = true
     this.highlight(index)
-    this.announcement = `Picked up ${draggable.label || draggable.dragId}. Use the arrow keys to move, Space to drop, Escape to cancel.`
+    this.announcement = this.messages.format('dragPickedUp', { item: draggable.label || draggable.dragId })
   }
 
   private highlight(index: number) {
@@ -120,19 +120,19 @@ export class LumenDragArea extends LitElement {
       const count = carried.zones.length
       carried.index = (((carried.index < 0 ? 0 : carried.index + step) % count) + count) % count
       this.highlight(carried.index)
-      this.announcement = `Over ${this.describe(carried.zones[carried.index])}.`
+      this.announcement = this.messages.format('dragOver', { zone: this.describe(carried.zones[carried.index]) })
     } else if (event.key === ' ' || event.key === 'Enter') {
       event.preventDefault()
       const zone = carried.zones[carried.index]
       const active = carried.draggable.dragId
       this.release()
-      this.announcement = zone ? `Dropped on ${this.describe(zone)}.` : 'Dropped.'
+      this.announcement = zone ? this.messages.format('dragDropped', { zone: this.describe(zone) }) : (this.messages.text('dragDroppedOutside') ?? '')
       this.end({ active, over: zone?.zoneId ?? null })
       carried.draggable.focus()
     } else if (event.key === 'Escape') {
       event.preventDefault()
       this.release()
-      this.announcement = 'Move cancelled.'
+      this.announcement = this.messages.text('dragCancelled') ?? ''
     }
   }
 

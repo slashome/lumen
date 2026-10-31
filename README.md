@@ -34,6 +34,8 @@ The entries are `icon`, `dialog`, `sheet`, `confirm-dialog`, `tooltip`, `hover-c
 | Vue | the same elements; tell the compiler with `isLumenElement` from `@slashome/lumen/vue`, which also exports `LuDialog`, `LuSelect`… for `v-model:open` and `v-model:value` |
 | React | `@slashome/lumen/react`: `Button`, `Dialog`, `Select`, `DataTable`, `toast`… |
 
+Lumen ships no text. Register the generic labels once at start-up, for each language: `registerLumenMessages('fr', messages)` from `@slashome/lumen`, or `app.use(lumen, { messages: { fr, en } })` from `@slashome/lumen/vue`. An attribute on an instance (`close-label`…) wins over them, and `confirm-label` is required on every `lu-confirm-dialog`. The Labels page of the Storybook lists the keys.
+
 Theme with two variables on `:root`: `--lu-theme-primary` and `--lu-theme-secondary`. Dark mode follows `data-appearance="dark"` on the root, or the system.
 
 ## Develop

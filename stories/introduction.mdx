@@ -24,6 +24,8 @@ import '@slashome/lumen/lumen.css'
 import '@slashome/lumen'
 ```
 
+Lumen ships no text: register the generic labels once at start-up, for each language, with `registerLumenMessages()` (see [Labels](?path=/docs/foundations-labels--docs)). An element without its labels logs an error and leaves the text out.
+
 `@slashome/lumen` defines every element. A page that uses a few imports them one by one, `@slashome/lumen/<name>`: `import '@slashome/lumen/select'` defines `<lu-select>` and its `<lu-option>`, without the Markdown or drag-and-drop code. A single component's CSS is `@slashome/lumen/css/<name>.css`.
 
 ## Theme

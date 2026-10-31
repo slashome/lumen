@@ -68,4 +68,9 @@ describe('custom-elements.json', () => {
       expect(event.type?.text).toMatch(/^CustomEvent<.+>$/)
     }
   })
+
+  it('gives lu-confirm-dialog no close-label, which it has no button for', () => {
+    const confirm = elements.find((element) => element.tagName === 'lu-confirm-dialog')
+    expect(confirm?.attributes?.map((attribute) => attribute.name)).not.toContain('close-label')
+  })
 })

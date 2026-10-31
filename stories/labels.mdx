@@ -1,0 +1,88 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Foundations/Labels" />
+
+# Labels
+
+**Lumen ships no text.** No label, visible or read by assistive technology, is written in the published code: the application gives every one, in its own languages ([ADR-0012](https://github.com/slashome/lumen/blob/develop/docs/adr/0012-lumen-ships-no-text.md)). The texts on these Storybook pages are demonstration messages registered by the Storybook itself.
+
+## The rule
+
+- **Generic labels come from a registry.** The close button of a dialog, the cancel button of a confirm dialog, the drag-and-drop announcements: the application registers them once at start-up, for each language, with `registerLumenMessages()`.
+- **An attribute on an instance wins over the registry.** `close-label`, `cancel-label`, `clear-label`, the `label` of `lu-toaster`, the `role-description` of `lu-draggable`.
+- **A label that names one action is given per instance and has no registry key.** `confirm-label` on `lu-confirm-dialog` is required: a global « Confirm » is a poor name for « Delete the project ».
+- **A missing label is an error.** With neither an attribute nor a registered message, the element logs a `console.error` that names the element, the key or the attribute, and the language it looked for, and renders nothing in place of the text. A button left without a name then fails the accessibility test of its story.
+
+## The order of resolution
+
+1. The attribute of the instance, when it is not empty.
+2. The messages registered for the language of the element: its own `lang`, or that of its nearest ancestor, else `<html lang>`.
+3. The messages registered for the primary language: `fr` for `fr-CA`.
+4. Nothing, and an error in the console.
+
+A change of `lang` on `<html>` or on any element of the page, and a new call to `registerLumenMessages()`, update the elements already on the page.
+
+## The API
+
+```ts
+import { registerLumenMessages, lumenMessageKeys, type LumenMessages } from '@slashome/lumen'
+```
+
+- `registerLumenMessages(lang: string, messages: LumenMessages): void` registers or replaces one language.
+- `LumenMessages` has one required key per generic label: forgetting one is a compile error. A text with a parameter is a function, so the application plugs in its own `t()`.
+- `lumenMessageKeys` lists the keys, to check a set of messages loaded at run time.
+
+The registry is kept on `globalThis` under `Symbol.for('@slashome/lumen/messages')`: two copies of Lumen in one page share it.
+
+| Key | Type | Used by |
+| --- | --- | --- |
+| `close` | `string` | The close button of `lu-dialog`, `lu-sheet` and each toast of `lu-toaster`; attribute `close-label`. |
+| `cancel` | `string` | The cancel button of `lu-confirm-dialog`; attribute `cancel-label`. |
+| `clear` | `string` | The clear item of `lu-multi-select`; attribute `clear-label`. |
+| `notifications` | `string` | The region of `lu-toaster`; attribute `label`. |
+| `loading` | `string` | `LoadingState` in React; prop `label`. |
+| `draggable` | `string` | What assistive technology calls a `lu-draggable`; attribute `role-description`. |
+| `dragPickedUp` | `({ item }) => string` | Announced by `lu-drag-area` when an item is picked up with the keyboard; it says how to move, drop and cancel. |
+| `dragOver` | `({ zone }) => string` | Announced when a keyboard move reaches a zone. |
+| `dragDropped` | `({ zone }) => string` | Announced when an item is dropped on a zone. |
+| `dragDroppedOutside` | `string` | Announced when an item is dropped outside any zone. |
+| `dragCancelled` | `string` | Announced when a keyboard move is cancelled. |
+
+## React
+
+Call the function once, before the first render. There is no provider.
+
+```tsx
+import { registerLumenMessages } from '@slashome/lumen'
+import { t } from './i18n'
+
+registerLumenMessages('fr', {
+  close: t('close'),
+  cancel: t('cancel'),
+  clear: t('clear'),
+  notifications: t('notifications'),
+  loading: t('loading'),
+  draggable: t('draggable'),
+  dragPickedUp: ({ item }) => t('drag.pickedUp', { item }),
+  dragOver: ({ zone }) => t('drag.over', { zone }),
+  dragDropped: ({ zone }) => t('drag.dropped', { zone }),
+  dragDroppedOutside: t('drag.droppedOutside'),
+  dragCancelled: t('drag.cancelled'),
+})
+
+createRoot(document.getElementById('root')!).render(<App />)
+```
+
+`ConfirmDialog` requires `confirmLabel`; `Dialog`, `Sheet`, `Toaster`, `MultiSelect`, `Draggable` and `LoadingState` take an optional label prop that wins over the registry.
+
+## Vue
+
+```ts
+import { createApp } from 'vue'
+import { lumen } from '@slashome/lumen/vue'
+import { en, fr } from './lumen-messages'
+
+createApp(App).use(lumen, { messages: { en, fr } }).mount('#app')
+```
+
+The plugin calls `registerLumenMessages()` for each language. An instance overrides it with its attribute: `<lu-dialog close-label="Fermer la fiche">`.

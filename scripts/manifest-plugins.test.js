@@ -1,7 +1,7 @@
 import { create, ts } from '@custom-elements-manifest/analyzer'
 import { litPlugin } from '@custom-elements-manifest/analyzer/src/features/framework-plugins/lit/lit.js'
 import { describe, expect, it } from 'vitest'
-import { deprecatedInClassTags, publicApiOnly } from './manifest-plugins.js'
+import { deprecatedInClassTags, publicApiOnly, taggedElementsOnly } from './manifest-plugins.js'
 
 const source = `
 import { LitElement } from 'lit'
@@ -59,5 +59,29 @@ describe('manifest plugins', () => {
       { name: 'lu-change', type: { text: 'CustomEvent<{ value: string }>' }, description: 'The value changed.', deprecated: 'Listen to lu-value-change.' },
     ])
     expect(element.slots.find((slot) => slot.name === 'old')).toEqual({ name: 'old', description: 'The former content slot.', deprecated: 'Use the default slot.' })
+  })
+
+  it('drops an untagged base class and keeps what its elements inherit from it', () => {
+    const inherited = `
+import { LitElement } from 'lit'
+
+export class LumenBase extends LitElement {
+  static properties = { open: { type: Boolean } }
+
+  /** Whether it is open. */
+  declare open: boolean
+}
+
+/**
+ * @summary A fixture.
+ * @tag lu-fixture
+ */
+export class LumenFixture extends LumenBase {}
+`
+    const module = ts.createSourceFile('src/fixture.ts', inherited, ts.ScriptTarget.ES2023, true)
+    const manifest = create({ modules: [module], plugins: [...litPlugin(), publicApiOnly(), taggedElementsOnly()] })
+    expect(manifest.modules[0].declarations.map((declaration) => declaration.name)).toEqual(['LumenFixture'])
+    expect(manifest.modules[0].exports.map((entry) => entry.name)).toEqual(['LumenFixture'])
+    expect(manifest.modules[0].declarations[0].attributes.map((attribute) => attribute.name)).toEqual(['open'])
   })
 })
