@@ -58,6 +58,7 @@
     }
   }
 
+  .lu-button--danger,
   .lu-button--destructive {
     --lu-light-color: var(--lu-color-danger);
     background: var(--lu-color-danger);

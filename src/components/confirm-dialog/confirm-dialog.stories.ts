@@ -14,7 +14,7 @@ export default meta
 
 export const Default: StoryObj = {
   render: () => html`
-    <button class="lu-button lu-button--destructive" @click=${openNext}>Delete</button>
+    <button class="lu-button lu-button--danger" @click=${openNext}>Delete</button>
     <lu-confirm-dialog
       heading="Delete T104?"
       description="The file is removed from the tree; git keeps its history."
@@ -27,7 +27,7 @@ export const Default: StoryObj = {
     const host = canvasElement.querySelector('lu-confirm-dialog')
     const dialog = inShadow<HTMLDialogElement>(host, 'dialog')
     const cancel = inShadow(host, '.actions .lu-button--outline')
-    const confirm = inShadow(host, '.actions .lu-button--destructive')
+    const confirm = inShadow(host, '.actions .lu-button--danger')
     const opener = canvas.getByRole('button', { name: 'Delete' })
     const confirms = recordEvents(canvasElement, 'lu-confirm')
     const openChanges = recordEvents(canvasElement, 'lu-open-change')

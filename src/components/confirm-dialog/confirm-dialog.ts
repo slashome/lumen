@@ -79,7 +79,7 @@ export class LumenConfirmDialog extends LumenDialog {
             <button type="button" class="lu-button lu-button--outline lu-button--sm" @click=${this.requestClose} autofocus>
               ${this.cancelLabel}
             </button>
-            <button type="button" class="lu-button lu-button--destructive lu-button--sm" ?disabled=${this.pending} @click=${this.confirm}>
+            <button type="button" class="lu-button lu-button--danger lu-button--sm" ?disabled=${this.pending} @click=${this.confirm}>
               ${this.confirmLabel}
             </button>
           </div>

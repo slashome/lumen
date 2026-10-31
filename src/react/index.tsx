@@ -33,11 +33,16 @@ export function classes(...parts: (string | false | null | undefined)[]): string
   return parts.filter(Boolean).join(' ')
 }
 
-export type ButtonVariant = 'default' | 'outline' | 'ghost' | 'destructive'
+/** `'destructive'` is deprecated: use `'danger'`, which draws the same. Removed in the next major version. */
+export type ButtonVariant = 'default' | 'outline' | 'ghost' | 'danger' | 'destructive'
 export type ButtonSize = 'default' | 'sm' | 'icon'
 
+function variantModifier(variant: ButtonVariant): string {
+  return variant === 'destructive' ? 'danger' : variant
+}
+
 export function buttonClasses({ variant = 'default', size = 'default' }: { variant?: ButtonVariant | null; size?: ButtonSize | null } = {}): string {
-  return classes('lu-button', variant && variant !== 'default' && `lu-button--${variant}`, size && size !== 'default' && `lu-button--${size}`)
+  return classes('lu-button', variant && variant !== 'default' && `lu-button--${variantModifier(variant)}`, size && size !== 'default' && `lu-button--${size}`)
 }
 
 export type ButtonProps = ComponentProps<'button'> & { variant?: ButtonVariant | null; size?: ButtonSize | null }

@@ -9,6 +9,7 @@ import '../icon/icon'
 const icons: Record<ToastKind, string | null> = {
   default: null,
   success: 'success',
+  danger: 'error',
   error: 'error',
   info: 'info',
   warning: 'warning',
@@ -73,6 +74,7 @@ export class LumenToaster extends LitElement {
       }
 
       .toast[data-kind='success'] { --tone: var(--lu-color-success); }
+      .toast[data-kind='danger'],
       .toast[data-kind='error'] { --tone: var(--lu-color-danger); }
       .toast[data-kind='info'] { --tone: var(--lu-color-info); }
       .toast[data-kind='warning'] { --tone: var(--lu-color-warning); }

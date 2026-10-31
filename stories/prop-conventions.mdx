@@ -24,10 +24,10 @@ A size is a modifier of the block, never a separate class. `.lu-button--icon` is
 - **default**: the one main action, on the primary fill. `.lu-button`.
 - **`outline`**: secondary, a border on the page fill. `.lu-button--outline`, `.lu-badge--outline`.
 - **`ghost`**: no fill until hovered, inside dense content. `.lu-button--ghost`.
-- **`destructive`**: deletes or cannot be undone, on the danger fill. `.lu-button--destructive`.
+- **`danger`**: deletes or cannot be undone, on the danger fill. `.lu-button--danger`; `.lu-button--destructive` is its deprecated name.
 - **`primary`**: the one badge that must stand out. `.lu-badge--primary`.
 
-A status is not a variant: success, error, warning and info are kinds of toast and modifiers of `.lu-alert` (`--success`, `--danger`, `--warning`, `--info`), drawn with the tokens of the same name.
+A status is not a variant: success, danger, warning and info are kinds of toast (`toast.danger()`) and modifiers of `.lu-alert` (`--success`, `--danger`, `--warning`, `--info`), drawn with the tokens of the same name. **The error state has one name, `danger`**, from the token to the button, the alert and the toast; the toast kind `error`, `toast.error()` and `.lu-button--destructive` are its deprecated names.
 
 ## Events
 
