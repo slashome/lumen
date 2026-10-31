@@ -6,8 +6,8 @@ import { inShadow, recordEvents } from '../../../stories/play'
 const meta: Meta = {
   title: 'Form/Segmented',
   component: 'lu-segmented',
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/segmented'" } },
 }
 export default meta
 

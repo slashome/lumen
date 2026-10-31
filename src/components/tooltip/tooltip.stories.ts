@@ -6,8 +6,8 @@ import { inShadow, isOpen } from '../../../stories/play'
 const meta: Meta = {
   title: 'Overlays/Tooltip',
   component: 'lu-tooltip',
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/tooltip'" } },
 }
 export default meta
 

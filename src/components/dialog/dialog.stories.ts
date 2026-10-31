@@ -6,8 +6,8 @@ import { playModal } from '../../../stories/play'
 const meta: Meta = {
   title: 'Overlays/Dialog',
   component: 'lu-dialog',
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/dialog'" } },
 }
 export default meta
 

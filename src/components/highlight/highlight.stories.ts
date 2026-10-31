@@ -4,8 +4,8 @@ import { html } from 'lit'
 const meta: Meta = {
   title: 'Data/Highlight',
   component: 'lu-highlight',
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/highlight'" } },
 }
 export default meta
 

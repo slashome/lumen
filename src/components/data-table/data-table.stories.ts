@@ -3,10 +3,10 @@ import { html } from 'lit'
 
 const meta: Meta = {
   title: 'Data/Data table',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `A sortable table on the native \`<table>\`. Sorting needs no element: \`sortRows\` orders the rows and \`storedSort()\` keeps the column and direction across visits; the React adapter wraps both in \`DataTable\`. Set \`aria-sort\` on each sortable header.
 

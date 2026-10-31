@@ -3,10 +3,10 @@ import { html } from 'lit'
 
 const meta: Meta = {
   title: 'Feedback/States',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `The states of a page or a region: its header, nothing to show, loading, an error, and a page not built yet.
 

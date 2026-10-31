@@ -4,10 +4,10 @@ import { expect } from 'storybook/test'
 
 const meta: Meta = {
   title: 'Navigation/Breadcrumb',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `The path from the root to the current page. A \`<nav>\` named by \`aria-label\`, around an ordered list of links; a chevron separates the items, drawn by the CSS so that screen readers do not read it. The last item is the current page: give it \`aria-current="page"\`, on a link or on a \`<span>\`.
 

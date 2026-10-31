@@ -4,8 +4,8 @@ import { html } from 'lit'
 const meta: Meta = {
   title: 'Data/Markdown',
   component: 'lu-markdown',
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/markdown'" } },
 }
 export default meta
 

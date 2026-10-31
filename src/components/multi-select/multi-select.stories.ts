@@ -6,8 +6,8 @@ import { inShadow, isOpen, recordEvents } from '../../../stories/play'
 const meta: Meta = {
   title: 'Form/Multi-select',
   component: 'lu-multi-select',
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/multi-select'" } },
 }
 export default meta
 

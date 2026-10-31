@@ -8,8 +8,8 @@ const meta: Meta = {
   title: 'Form/Select',
   component: 'lu-select',
   subcomponents: { 'lu-option': 'lu-option' },
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/select'" } },
 }
 export default meta
 

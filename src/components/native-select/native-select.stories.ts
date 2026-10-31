@@ -3,10 +3,10 @@ import { html } from 'lit'
 
 const meta: Meta = {
   title: 'Form/Native select',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `A select on the native \`<select>\`, styled to match the inputs: the platform picker, on every device. Use it in forms; use \`<lu-select>\` when the options need markup.
 

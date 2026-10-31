@@ -3,10 +3,10 @@ import { html } from 'lit'
 
 const meta: Meta = {
   title: 'Actions/Button',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `A button on the native \`<button>\`, or a link styled as one. It lights up when clicked once \`attachLight()\` runs. Disabled by \`disabled\` or \`aria-disabled="true"\`.
 

@@ -3,10 +3,10 @@ import { html } from 'lit'
 
 const meta: Meta = {
   title: 'Form/Input',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `A text field on the native \`<input>\`, at the control height. Name it with a \`<label>\` or \`aria-label\`.
 

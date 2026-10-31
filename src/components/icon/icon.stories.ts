@@ -5,8 +5,8 @@ import { iconNames } from '../../lib/icons'
 const meta: Meta = {
   title: 'Foundations/Icons',
   component: 'lu-icon',
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/icon'" } },
 }
 export default meta
 

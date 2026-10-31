@@ -6,8 +6,8 @@ import { playModal } from '../../../stories/play'
 const meta: Meta = {
   title: 'Overlays/Sheet',
   component: 'lu-sheet',
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/sheet'" } },
 }
 export default meta
 

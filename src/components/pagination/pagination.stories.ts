@@ -4,10 +4,10 @@ import { expect } from 'storybook/test'
 
 const meta: Meta = {
   title: 'Navigation/Pagination',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `Links or buttons to the pages of a long list. A \`<nav>\` named by \`aria-label\`, around a list. Use links when each page has its own URL, buttons when the page changes in place. The current page takes \`aria-current="page"\` and the primary fill; previous and next take an \`aria-label\` and, on the first or the last page, \`disabled\` on a button or \`aria-disabled="true"\` on a link without \`href\`. Which pages to show around the current one is the owner's choice.
 

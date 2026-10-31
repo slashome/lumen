@@ -4,10 +4,10 @@ import { expect } from 'storybook/test'
 
 const meta: Meta = {
   title: 'Feedback/Alert',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `A message about a region or a page that stays in place, unlike a toast. The status modifier tints it and colors its icon; the text stays in the foreground color, so it reads on every tint.
 

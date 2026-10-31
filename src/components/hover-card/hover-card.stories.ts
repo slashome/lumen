@@ -6,8 +6,8 @@ import { inShadow, isOpen } from '../../../stories/play'
 const meta: Meta = {
   title: 'Overlays/Hover card',
   component: 'lu-hover-card',
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/hover-card'" } },
 }
 export default meta
 

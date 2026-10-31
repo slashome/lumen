@@ -1,6 +1,6 @@
 # Lumen
 
-The design system of slashome: design tokens, CSS for what has no state, and Lit custom elements for what has one. One implementation for React, Vue, Svelte and plain HTML.
+The design system of slashome: design tokens, CSS classes for what has no state, and custom elements for what has one. One implementation for React, Vue, Svelte and plain HTML.
 
 **Storybook:** https://slashome.github.io/lumen/
 
@@ -15,7 +15,7 @@ import '@slashome/lumen/lumen.css'
 import '@slashome/lumen'
 ```
 
-`lumen.css` holds the tokens and floor 0; `tokens.css` alone holds the tokens, and `css/<name>.css` one component.
+`lumen.css` holds the tokens and every CSS class; `tokens.css` alone holds the tokens, and `css/<name>.css` one component.
 
 `@slashome/lumen` defines every element. To ship only the ones a page uses, import them one by one; each defines its element and the ones it renders:
 

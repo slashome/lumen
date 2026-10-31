@@ -6,8 +6,8 @@ import { inShadow, recordEvents } from '../../../stories/play'
 const meta: Meta = {
   title: 'Navigation/Tabs',
   component: 'lu-tabs',
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/tabs'" } },
 }
 export default meta
 

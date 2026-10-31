@@ -7,8 +7,8 @@ import { inShadow, isOpen } from '../../../stories/play'
 const meta: Meta = {
   title: 'Feedback/Toaster',
   component: 'lu-toaster',
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/toaster'" } },
 }
 export default meta
 
