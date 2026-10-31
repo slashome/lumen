@@ -99,4 +99,17 @@ describe('the React adapter', () => {
     expect(onChange).toHaveBeenCalledWith('M', 'option')
     expect(segmented.value).toBe('M')
   })
+
+  it('leaves the segmented buttons out of the tab order with skipTab, or the deprecated focusable false', async () => {
+    const host = await mount(
+      <>
+        <Segmented label="Kept" values={['S']} />
+        <Segmented label="Skipped" values={['S']} skipTab />
+        <Segmented label="Unfocusable" values={['S']} focusable={false} />
+      </>,
+    )
+    const segmenteds = [...host.querySelectorAll<LumenSegmented>('lu-segmented')]
+    await Promise.all(segmenteds.map((segmented) => segmented.updateComplete))
+    expect(segmenteds.map((segmented) => segmented.shadowRoot!.querySelector('button')!.tabIndex)).toEqual([0, -1, -1])
+  })
 })

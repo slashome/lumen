@@ -315,25 +315,23 @@ export function MultiSelect({
   )
 }
 
-export function Segmented({
-  label,
-  values,
-  value,
-  onChange,
-  focusable = true,
-}: {
+export interface SegmentedProps {
   label: string
   values: string[]
   value?: string | null
   onChange?: (value: string | null, source: ValueChangeSource) => void
+  skipTab?: boolean
+  /** @deprecated Use `skipTab`, true to leave the buttons out of the tab order. Removed in the next major version. */
   focusable?: boolean
-}) {
+}
+
+export function Segmented({ label, values, value, onChange, skipTab = false, focusable = true }: SegmentedProps) {
   return (
     <SegmentedElement
       label={label}
       values={values}
       {...only('value', value)}
-      focusable={focusable}
+      skipTab={skipTab || !focusable}
       onValueChange={controlledBy<{ value: string | null; source: ValueChangeSource }>(value !== undefined, (detail) => onChange?.(detail.value, detail.source))}
     />
   )

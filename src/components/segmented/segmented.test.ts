@@ -39,4 +39,17 @@ describe('lu-segmented', () => {
     expect(seen).toEqual([null])
     expect(segmented.value).toBeNull()
   })
+
+  it('leaves its buttons out of the tab order with skip-tab, or the deprecated focusable="false"', async () => {
+    const tabIndexes = async (markup: string) => {
+      const segmented = await mount<LumenSegmented>(markup)
+      segmented.values = ['S', 'M']
+      await segmented.updateComplete
+      return [...segmented.shadowRoot!.querySelectorAll('button')].map((button) => button.tabIndex)
+    }
+    expect(await tabIndexes('<lu-segmented label="Size"></lu-segmented>')).toEqual([0, 0])
+    expect(await tabIndexes('<lu-segmented label="Size" skip-tab></lu-segmented>')).toEqual([-1, -1])
+    expect(await tabIndexes('<lu-segmented label="Size" focusable="false"></lu-segmented>')).toEqual([-1, -1])
+    expect(await tabIndexes('<lu-segmented label="Size" focusable></lu-segmented>')).toEqual([0, 0])
+  })
 })

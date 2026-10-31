@@ -48,3 +48,33 @@ export const Default: StoryObj = {
     })
   },
 }
+
+export const Skip_tab: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'With `skip-tab`, the buttons stay clickable but Tab passes over them, for a row the page reaches with its own keys.',
+      },
+    },
+  },
+  render: () => html`
+    <button class="lu-button lu-button--outline">Before</button>
+    <lu-segmented label="Priority" .values=${['low', 'medium', 'high']} value="medium" skip-tab></lu-segmented>
+    <button class="lu-button lu-button--outline">After</button>
+  `,
+  play: async ({ canvas, canvasElement, userEvent, step }) => {
+    const group = inShadow(canvasElement.querySelector('lu-segmented'), '[part="group"]')
+
+    await step('Tab goes from the button before to the button after', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'Before' }))
+      await userEvent.tab()
+      await expect(canvas.getByRole('button', { name: 'After' })).toHaveFocus()
+    })
+
+    await step('A click still presses a button', async () => {
+      const high = [...group.querySelectorAll('button')].find((entry) => entry.textContent?.trim() === 'high') as HTMLButtonElement
+      await userEvent.click(high)
+      await waitFor(() => expect(high).toHaveAttribute('aria-pressed', 'true'))
+    })
+  },
+}
