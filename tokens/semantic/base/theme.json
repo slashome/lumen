@@ -1,0 +1,14 @@
+{
+  "theme": {
+    "$type": "color",
+    "$description": "The two colors an application chooses, set on :root at run time; every other shade derives from them.",
+    "primary": {
+      "$value": "#3760c9",
+      "$description": "The application's main color, set on :root; primary and ring derive from it. Never read it in a component: use color.primary."
+    },
+    "secondary": {
+      "$value": "#3760c9",
+      "$description": "The application's second color, set on :root; accent and halo derive from it. Never read it in a component: use color.accent."
+    }
+  }
+}

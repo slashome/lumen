@@ -1,30 +1,81 @@
 {
   "color": {
     "$type": "color",
-    "background": { "$value": "{color.gray.990}" },
-    "foreground": { "$value": "{color.gray.200}" },
-    "muted": { "$value": "{color.gray.950}" },
-    "muted-foreground": { "$value": "{color.gray.500}" },
-    "border": { "$value": "{color.gray.900}" },
-    "popover": { "$value": "{color.gray.1000}" },
-    "sidebar": { "$value": "{color.gray.975}" },
-    "primary": { "$value": "{theme.primary}" },
+    "background": {
+      "$value": "{color.gray.990}",
+      "$description": "The page, and the fill of inputs and outline buttons. Not for a surface that floats above the page: use popover."
+    },
+    "foreground": {
+      "$value": "{color.gray.200}",
+      "$description": "Body text and icons on background, muted or popover. Not on a colored fill: use its own -foreground token."
+    },
+    "muted": {
+      "$value": "{color.gray.950}",
+      "$description": "A quiet fill set apart from the page: hover rows, code, kbd, secondary badges. Not for text: use muted-foreground."
+    },
+    "muted-foreground": {
+      "$value": "{color.gray.500}",
+      "$description": "Secondary text: hints, placeholders, captions, inactive tabs. Not for text the user must read to act."
+    },
+    "border": {
+      "$value": "{color.gray.900}",
+      "$description": "Hairlines that separate or outline: inputs, cards, tables, panels. Not for focus: use ring."
+    },
+    "popover": {
+      "$value": "{color.gray.1000}",
+      "$description": "The fill of what floats above the page: popovers, menus, tooltips, toasts, dialogs. Not for the page itself."
+    },
+    "sidebar": {
+      "$value": "{color.gray.975}",
+      "$description": "The fill of an application's side navigation, a step off the page. Not for panels inside the content: use muted."
+    },
+    "primary": {
+      "$value": "{theme.primary}",
+      "$description": "The one main action and the selected state: primary button, checked switch, active segment, links. Not for status: use danger, success, warning or info."
+    },
     "primary-foreground": {
       "$value": "oklch(from {color.primary} clamp(0, (0.62 - l) * 1000, 1) 0 0)",
-      "$description": "White or black text on the primary, whichever reads on it."
+      "$description": "White or black text on the primary, whichever reads on it. Only on a primary fill."
     },
-    "ring": { "$value": "{theme.primary}" },
-    "accent": { "$value": "{theme.secondary}" },
+    "ring": {
+      "$value": "{theme.primary}",
+      "$description": "The focus outline drawn on :focus-visible. Not for borders or selection."
+    },
+    "accent": {
+      "$value": "{theme.secondary}",
+      "$description": "The application's second color, for the hover of icon buttons. Not for the main action: use primary."
+    },
     "halo": {
       "$value": "color-mix(in oklab, {color.accent} 14%, transparent)",
-      "$description": "The disc behind an icon button on hover."
+      "$description": "The disc behind an icon button on hover. Not as a background for content."
     },
-    "overlay": { "$value": "oklch(0 0 0 / 0.3)" },
-    "danger": { "$value": "{color.red.600}" },
-    "danger-foreground": { "$value": "{color.white}" },
-    "success": { "$value": "{color.green.600}" },
-    "warning": { "$value": "{color.amber.600}" },
-    "info": { "$value": "{color.blue.600}" },
-    "highlight": { "$value": "oklch(from {color.amber.200} l c h / 0.8)" }
+    "overlay": {
+      "$value": "oklch(0 0 0 / 0.3)",
+      "$description": "The veil behind a modal dialog or sheet. Not for anything that stays interactive."
+    },
+    "danger": {
+      "$value": "{color.red.600}",
+      "$description": "Destructive actions and errors: destructive button, error state, error toast. Not to draw attention to a safe action."
+    },
+    "danger-foreground": {
+      "$value": "{color.white}",
+      "$description": "Text and icons on a danger fill. Only on danger."
+    },
+    "success": {
+      "$value": "{color.green.600}",
+      "$description": "A completed or valid outcome, as in a success toast. Not for a neutral confirmation the user did not wait for."
+    },
+    "warning": {
+      "$value": "{color.amber.600}",
+      "$description": "Something the user should check before going on, as in a warning toast. Not for errors: use danger."
+    },
+    "info": {
+      "$value": "{color.blue.600}",
+      "$description": "Neutral information, as in an info toast. Not for links or actions: use primary."
+    },
+    "highlight": {
+      "$value": "oklch(from {color.amber.200} l c h / 0.8)",
+      "$description": "Matched search terms, behind .lu-mark. Not for selection or status."
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks'
 
-<Meta title="Introduction" />
+<Meta title="Foundations/Introduction" />
 
 # Lumen
 
@@ -8,8 +8,10 @@ The design system of slashome. One implementation, used the same way from React,
 
 ## Two floors
 
-- **Floor 0, CSS.** Tokens, and every component without state: `.lu-button`, `.lu-badge`, `.lu-input`, `.lu-native-select`, `.lu-switch`, `.lu-kbd`, the page states, `.lu-markdown`, `.lu-data-table`. BEM classes in cascade layers: an application overrides them without `!important`, and they work without JavaScript.
-- **Floor 1, Lit.** Custom elements, only for what has state: `<lu-dialog>`, `<lu-sheet>`, `<lu-confirm-dialog>`, `<lu-tooltip>`, `<lu-hover-card>`, `<lu-select>`, `<lu-multi-select>`, `<lu-segmented>`, `<lu-toaster>`, `<lu-markdown>`, `<lu-highlight>`, `<lu-drag-area>`, `<lu-icon>`. The platform first: `<dialog>`, the popover API.
+- **Floor 0, CSS.** Tokens, and every component without state: `.lu-button`, `.lu-icon-button`, `.lu-badge`, `.lu-field`, `.lu-input`, `.lu-textarea`, `.lu-native-select`, `.lu-switch`, `.lu-checkbox`, `.lu-radio`, `.lu-radio-card`, `.lu-kbd`, the page states, `.lu-alert`, `.lu-skeleton`, `.lu-progress`, `.lu-breadcrumb`, `.lu-pagination`, `.lu-markdown`, `.lu-data-table`, `.lu-mark`, and the utilities `.lu-visually-hidden`, `.lu-truncate`, `.lu-line-clamp`, `.lu-spin`. The data table sorts with `sortRows` and `storedSort()`, no element needed. BEM classes in cascade layers: an application overrides them without `!important`, and they work without JavaScript.
+- **Floor 1, Lit.** Custom elements, only for what has state: `<lu-dialog>`, `<lu-sheet>`, `<lu-confirm-dialog>`, `<lu-tooltip>`, `<lu-hover-card>`, `<lu-select>` and `<lu-multi-select>` with their `<lu-option>`, `<lu-segmented>`, `<lu-tabs>`, `<lu-toaster>`, `<lu-markdown>`, `<lu-highlight>`, `<lu-drag-area>` with `<lu-draggable>` and `<lu-drop-zone>`, `<lu-icon>`. The platform first: `<dialog>`, the popover API.
+
+The Storybook is sorted by use: Foundations, Actions, Form, Feedback, Navigation (empty until the tabs, the breadcrumb and the pagination land), Data, Overlays. Each page says its floor under its title, and its props table is read from `custom-elements.json`. The shared vocabulary of names, sizes, variants and events is on [Prop conventions](?path=/docs/foundations-prop-conventions--docs).
 
 ## Install
 
@@ -21,6 +23,8 @@ pnpm add @slashome/lumen
 import '@slashome/lumen/lumen.css'
 import '@slashome/lumen'
 ```
+
+`@slashome/lumen` defines every element. A page that uses a few imports them one by one, `@slashome/lumen/<name>`: `import '@slashome/lumen/select'` defines `<lu-select>` and its `<lu-option>`, without the Markdown or drag-and-drop code. A single component's CSS is `@slashome/lumen/css/<name>.css`.
 
 ## Theme
 
@@ -70,4 +74,4 @@ vue({ template: { compilerOptions: { isCustomElement: isLumenElement } } })
 
 ## Events
 
-Every event is a `CustomEvent` named `lumen-*`, bubbling and composed: `lu-open-change`, `lu-value-change`, `lu-selected-change`, `lu-confirm`, `lu-navigate`, `lu-drag-end`, `lu-open`.
+Every event is a `CustomEvent` named `lu-*`, bubbling and composed: `lu-open-change`, `lu-value-change`, `lu-selected-change`, `lu-confirm`, `lu-navigate`, `lu-drag-end`, `lu-open`. The type of each `detail` is on the page of its element.

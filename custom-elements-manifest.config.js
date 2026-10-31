@@ -1,6 +1,9 @@
+import { deprecatedInClassTags, publicApiOnly } from './scripts/manifest-plugins.js'
+
 export default {
-  globs: ['src/elements/*.ts'],
-  exclude: ['src/**/*.test.ts'],
+  globs: ['src/components/**/*.ts'],
+  exclude: ['src/**/*.test.ts', 'src/**/*.stories.ts'],
   litelement: true,
   outdir: '.',
+  plugins: [publicApiOnly(), deprecatedInClassTags()],
 }

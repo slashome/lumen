@@ -1,0 +1,53 @@
+@layer lu.components {
+  .lu-field {
+    display: grid;
+    gap: var(--lu-space-1-5);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .lu-field__label {
+    float: inline-start;
+    padding: 0;
+    font-size: var(--lu-font-size-sm);
+    font-weight: var(--lu-font-weight-medium);
+  }
+
+  .lu-field__required {
+    margin-inline-start: 0.125rem;
+    color: var(--lu-color-danger);
+  }
+
+  .lu-field__choice {
+    display: flex;
+    align-items: center;
+    gap: var(--lu-space-2);
+    font-size: var(--lu-font-size-sm);
+    cursor: pointer;
+
+    &:has(:disabled) {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  .lu-field__hint,
+  .lu-field__error {
+    margin: 0;
+    font-size: var(--lu-font-size-xs);
+  }
+
+  .lu-field__hint {
+    color: var(--lu-color-muted-foreground);
+  }
+
+  .lu-field__error {
+    color: var(--lu-color-danger);
+  }
+
+  .lu-field:is(:disabled, :has(> :disabled)) .lu-field__label {
+    opacity: 0.5;
+  }
+}

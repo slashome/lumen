@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useSyncExternalStore, type ComponentProps, type InputHTMLAttributes, type ReactElement, type ReactNode } from 'react'
-import type { LinkResolver } from '../elements/markdown'
-import type { MultiSelectOption } from '../elements/multi-select'
+import type { LinkResolver } from '../components/markdown/markdown'
+import type { MultiSelectOption } from '../components/multi-select/multi-select'
 import type { Range } from '../lib/highlight'
 import { highlightTerms } from '../lib/highlight-terms'
 import { nextSort, sortRows, type SortDirection, type SortValue, type TableSort } from '../lib/sort'
@@ -20,13 +20,14 @@ import {
   SegmentedElement,
   SelectElement,
   SheetElement,
+  TabsElement,
   ToasterElement,
   TooltipElement,
 } from './elements'
 
 export { toast } from '../lib/toast'
-export type { LinkResolver, LinkTarget } from '../elements/markdown'
-export type { MultiSelectOption } from '../elements/multi-select'
+export type { LinkResolver, LinkTarget } from '../components/markdown/markdown'
+export type { MultiSelectOption } from '../components/multi-select/multi-select'
 
 export function classes(...parts: (string | false | null | undefined)[]): string {
   return parts.filter(Boolean).join(' ')
@@ -282,6 +283,28 @@ export function Segmented({
   focusable?: boolean
 }) {
   return <SegmentedElement label={label} values={values} value={value} focusable={focusable} onValueChange={(event) => onChange(event.detail.value)} />
+}
+
+export function Tabs({
+  label,
+  value,
+  onChange,
+  manual = false,
+  children,
+  className,
+}: {
+  label: string
+  value: string
+  onChange: (value: string) => void
+  manual?: boolean
+  children: ReactNode
+  className?: string
+}) {
+  return (
+    <TabsElement label={label} value={value} manual={manual} onValueChange={(event) => onChange(event.detail.value)} className={className}>
+      {children}
+    </TabsElement>
+  )
 }
 
 export function Toaster() {
