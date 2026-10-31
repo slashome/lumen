@@ -15,7 +15,16 @@ import '@slashome/lumen/lumen.css'
 import '@slashome/lumen'
 ```
 
-`lumen.css` holds the tokens and floor 0; `tokens.css` alone holds the tokens.
+`lumen.css` holds the tokens and floor 0; `tokens.css` alone holds the tokens, and `css/<name>.css` one component.
+
+`@slashome/lumen` defines every element. To ship only the ones a page uses, import them one by one; each defines its element and the ones it renders:
+
+```js
+import '@slashome/lumen/select'
+import '@slashome/lumen/dialog'
+```
+
+The entries are `icon`, `dialog`, `sheet`, `confirm-dialog`, `tooltip`, `hover-card`, `select` (with `lu-option`), `multi-select`, `segmented`, `toaster`, `markdown`, `highlight` and `drag-area` (with `lu-draggable` and `lu-drop-zone`).
 
 ## Use
 
@@ -38,7 +47,7 @@ pnpm typecheck
 pnpm build
 ```
 
-Decisions live in [`docs/adr`](docs/adr).
+Each component lives in `src/components/<name>/` with its CSS, its element if it has state, its story and its test. Tokens, base styles and utilities live in `src/foundations/`. Decisions live in [`docs/adr`](docs/adr).
 
 ## Release
 
