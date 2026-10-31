@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite'
 import { html } from 'lit'
+import { expect, waitFor } from 'storybook/test'
+import { inShadow, recordEvents } from '../../../stories/play'
 
 const meta: Meta = {
   title: 'Actions/Drag and drop',
@@ -36,5 +38,64 @@ export const Default: StoryObj = {
         ${column('todo', ['T104', 'T105'])} ${column('in progress', ['T106'])} ${column('done', [])}
       </lu-drag-area>
     `
+  },
+  play: async ({ canvas, canvasElement, userEvent, step }) => {
+    const area = canvasElement.querySelector('lu-drag-area')
+    const announcer = inShadow(area, '[aria-live="assertive"]')
+    const card = (id: string) => canvas.getByRole('button', { name: id })
+    const zone = (id: string) => canvas.getByRole('region', { name: id })
+    const highlighted = () => [...canvasElement.querySelectorAll('lu-drop-zone[over]')].map((entry) => entry.getAttribute('zone-id'))
+    const ends = recordEvents(canvasElement, 'lu-drag-end')
+
+    await expect(card('T104')).toHaveAttribute('aria-roledescription', 'draggable')
+    await expect(zone('todo')).toContainElement(card('T104'))
+
+    await step('Space picks a card up and announces it', async () => {
+      card('T104').focus()
+      await userEvent.keyboard(' ')
+      await waitFor(() => expect(card('T104')).toHaveAttribute('dragging'))
+      await expect(highlighted()).toEqual(['todo'])
+      await waitFor(() => expect(announcer).toHaveTextContent('Picked up T104.'))
+    })
+
+    await step('The arrow keys move the card across the zones, wrapping around', async () => {
+      await userEvent.keyboard('{ArrowRight}')
+      await waitFor(() => expect(highlighted()).toEqual(['in progress']))
+      await waitFor(() => expect(announcer).toHaveTextContent('Over in progress.'))
+      await userEvent.keyboard('{ArrowLeft}{ArrowLeft}')
+      await waitFor(() => expect(highlighted()).toEqual(['done']))
+      await userEvent.keyboard('{ArrowDown}{ArrowDown}')
+      await waitFor(() => expect(highlighted()).toEqual(['in progress']))
+    })
+
+    await step('Space drops the card, fires lu-drag-end and keeps the focus on it', async () => {
+      await userEvent.keyboard(' ')
+      await expect(ends).toHaveBeenCalledOnce()
+      await expect(ends).toHaveBeenCalledWith({ active: 'T104', over: 'in progress' })
+      await expect(zone('in progress')).toContainElement(card('T104'))
+      await expect(card('T104')).toHaveFocus()
+      await waitFor(() => expect(card('T104')).not.toHaveAttribute('dragging'))
+      await expect(highlighted()).toEqual([])
+      await waitFor(() => expect(announcer).toHaveTextContent('Dropped on in progress.'))
+    })
+
+    await step('Escape cancels a move without firing lu-drag-end', async () => {
+      card('T105').focus()
+      await userEvent.keyboard(' ')
+      await waitFor(() => expect(card('T105')).toHaveAttribute('dragging'))
+      await userEvent.keyboard('{ArrowRight}{Escape}')
+      await expect(ends).toHaveBeenCalledOnce()
+      await expect(zone('todo')).toContainElement(card('T105'))
+      await expect(card('T105')).toHaveFocus()
+      await waitFor(() => expect(card('T105')).not.toHaveAttribute('dragging'))
+      await waitFor(() => expect(announcer).toHaveTextContent('Move cancelled.'))
+    })
+
+    await step('Enter drops as Space does', async () => {
+      await userEvent.keyboard(' ')
+      await userEvent.keyboard('{ArrowLeft}{Enter}')
+      await expect(ends).toHaveBeenLastCalledWith({ active: 'T105', over: 'done' })
+      await expect(zone('done')).toContainElement(card('T105'))
+    })
   },
 }

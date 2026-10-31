@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite'
 import { html } from 'lit'
 import { closeSelf, openNext } from '../../../stories/dialog-triggers'
+import { playModal } from '../../../stories/play'
 
 const meta: Meta = {
   title: 'Overlays/Sheet',
@@ -17,4 +18,5 @@ export const Default: StoryObj = {
       <lu-markdown source="One token sets the duration, the curve and the intensity of the flash."></lu-markdown>
     </lu-sheet>
   `,
+  play: (context) => playModal(context, 'lu-sheet', 'Open the sheet'),
 }

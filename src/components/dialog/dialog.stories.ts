@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite'
 import { html } from 'lit'
 import { closeSelf, openNext } from '../../../stories/dialog-triggers'
+import { playModal } from '../../../stories/play'
 
 const meta: Meta = {
   title: 'Overlays/Dialog',
@@ -17,4 +18,5 @@ export const Default: StoryObj = {
       <input class="lu-input" aria-label="Title" value="The token and the light effect" />
     </lu-dialog>
   `,
+  play: (context) => playModal(context, 'lu-dialog', 'Open the dialog'),
 }
