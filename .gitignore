@@ -1,0 +1,8 @@
+node_modules
+dist
+storybook-static
+src/css/tokens.css
+src/icons/generated.ts
+custom-elements.json
+*.tsbuildinfo
+.DS_Store
