@@ -1,5 +1,6 @@
 import StyleDictionary from 'style-dictionary'
 import { formattedVariables } from 'style-dictionary/utils'
+import { isRelativeColor, resolveRelativeColor } from './relative-color.js'
 
 const prefix = 'lu'
 
@@ -31,6 +32,26 @@ function declarations(dictionary, keep) {
   return formattedVariables({ format: 'css', dictionary: { ...dictionary, allTokens }, outputReferences: true, usesDtcg: true })
 }
 
+function originalValue(token) {
+  return String(token.original?.$value ?? '')
+}
+
+export function needsFallback(token) {
+  const value = originalValue(token)
+  return isRelativeColor(value) || value.includes('{theme.')
+}
+
+function fallbackValue(token) {
+  return isRelativeColor(token.$value) ? resolveRelativeColor(token.$value) : token.$value
+}
+
+function fallbacks(dictionary) {
+  return dictionary.allTokens
+    .filter(needsFallback)
+    .map((token) => `  --${token.name}: ${fallbackValue(token)};`)
+    .join('\n')
+}
+
 export async function render(source, keep) {
   const dictionary = new StyleDictionary({
     source,
@@ -42,6 +63,7 @@ export async function render(source, keep) {
   requireDescriptions(platform)
   return {
     css: declarations(platform, keep),
+    fallback: fallbacks(platform),
     deprecated: platform.allTokens.filter((token) => (keep ? keep(token) : true) && isDeprecated(token)).map((token) => `--${token.name}`),
   }
 }

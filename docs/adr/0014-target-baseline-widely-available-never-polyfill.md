@@ -26,7 +26,7 @@ What the shipped code uses and is not « widely available », from `web-features
 
 | Feature | Status | Where | Fallback |
 | --- | --- | --- | --- |
-| Relative color syntax, `oklch(from …)` | newly available since 2024-09-16 | `tokens/semantic`: `--lu-color-primary-foreground` and `--lu-color-highlight` in light, `--lu-color-primary`, `--lu-color-ring`, `--lu-color-accent` and `--lu-color-highlight` in dark | None. An older browser drops the value at computed time: the properties that use it fall back to `unset`, so a primary fill loses its background in dark mode. To fix in the token build, with `@supports`. |
+| Relative color syntax, `oklch(from …)` | newly available since 2024-09-16 | `tokens/semantic`: `--lu-color-primary-foreground` and `--lu-color-highlight` in light, `--lu-color-primary`, `--lu-color-ring`, `--lu-color-accent` and `--lu-color-highlight` in dark | Since ADR-0015, values computed at build time from the default theme, under `@supports not (color: oklch(from red l c h))`: an older browser draws these tokens with the default colors. Before it, none: the properties that used them fell back to `unset`, and a primary fill lost its background in dark mode. |
 | `ariaDescribedByElements`, `ariaControlsElements` | newly available since 2025-04-04 | `src/lib/trigger.ts`, for a trigger in another shadow root than its tooltip or hover card (ADR-0013) | Feature-detected: without them the trigger works, without the description or `aria-controls`. Usable. |
 
 Widely available, and close to the line: the popover attribute and its methods, `:popover-open` and `toggle` (2026-10-16), CSS nesting (2026-06-11), `:has()` (2026-06-19), `mask-image` (2026-06-07), `ToggleEvent` (2026-05-21), `oklch()`, `oklab` and `color-mix()` (2025-11-09). `display: contents` is widely available, except on focusable elements, where Lumen does not use it.
@@ -36,7 +36,7 @@ Widely available, and close to the line: the popover attribute and its methods, 
 - An application built on Lumen works in every browser released in the last two and a half years, ATLAS's users included.
 - Lumen waits for the platform: a feature that would remove JavaScript, such as `interestfor` for the hover card, is used only once it is « widely available », or behind a fallback that keeps the JavaScript.
 - Widening later to newer features breaks nothing; reaching older browsers after the fact would cost a rewrite.
-- The relative colors of the tokens break the rule today and need an `@supports` fallback in the token build; until then, dark mode on a browser older than September 2024 draws primary fills without a background.
+- The relative colors of the tokens broke the rule when this ADR was written; ADR-0015 gives them an `@supports` fallback in the token build.
 - The popover API crossed the line only on 2026-10-16: before this ADR, `lu-select`, `lu-multi-select`, `lu-toaster`, `lu-tooltip` and `lu-hover-card` depended on a feature that was not yet « widely available ».
 
 ## Alternatives considered
