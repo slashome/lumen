@@ -2,8 +2,11 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite'
 import { html } from 'lit'
 import { useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import { expect, waitFor } from 'storybook/test'
 import { createApp, h, ref } from 'vue'
+import type { LumenSelect } from '../src/components/select/select'
 import { Button, Select, SelectItem } from '../src/react'
+import { inShadow } from './play'
 
 const meta: Meta = {
   title: 'Foundations/Frameworks',
@@ -45,7 +48,7 @@ const VueDemo = {
       h('div', { style: 'display:flex;gap:0.5rem;align-items:center' }, [
         h(
           'lu-select',
-          { label: 'Status (Vue)', value: status.value, onLumenValueChange: (event: CustomEvent<{ value: string }>) => (status.value = event.detail.value) },
+          { label: 'Status (Vue)', value: status.value, onLuValueChange: (event: CustomEvent<{ value: string }>) => (status.value = event.detail.value) },
           statuses.map((entry) => h('lu-option', { value: entry }, entry)),
         ),
         h('button', { class: 'lu-button lu-button--outline', onClick: () => (status.value = 'todo') }, 'Reset'),
@@ -77,5 +80,26 @@ export const Side_by_side: StoryObj = {
       </div>
       ${section('React 19')} ${reactHost} ${section('Vue 3')} ${vueHost}
     `
+  },
+  play: async ({ canvasElement, userEvent, step }) => {
+    const selectNamed = async (label: string) => {
+      let found: LumenSelect | undefined
+      await waitFor(() => {
+        found = [...canvasElement.querySelectorAll<LumenSelect>('lu-select')].find((select) => select.label === label)
+        expect(found).toBeDefined()
+      })
+      return found as LumenSelect
+    }
+
+    for (const framework of ['HTML', 'React', 'Vue']) {
+      await step(`${framework} receives lu-value-change and shows the picked value`, async () => {
+        const select = await selectNamed(`Status (${framework})`)
+        const output = select.parentElement?.querySelector('output')
+        await waitFor(() => expect(output).toHaveTextContent('todo'))
+        await userEvent.click(inShadow(select, '[part="trigger"]'))
+        await userEvent.click(select.querySelector('lu-option[value="done"]') as HTMLElement)
+        await waitFor(() => expect(output).toHaveTextContent('done'))
+      })
+    }
   },
 }
