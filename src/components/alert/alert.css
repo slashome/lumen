@@ -1,0 +1,72 @@
+@layer lu.components {
+  .lu-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--lu-space-2);
+    padding: var(--lu-space-3) var(--lu-space-4);
+    border: 1px solid var(--lu-color-border);
+    border-radius: var(--lu-radius-lg);
+    background: var(--lu-color-background);
+    color: var(--lu-color-foreground);
+    font-size: var(--lu-font-size-sm);
+  }
+
+  .lu-alert__icon {
+    --lu-icon-size: 1rem;
+    flex-shrink: 0;
+    margin-block-start: 0.125rem;
+  }
+
+  .lu-alert__body {
+    display: grid;
+    flex: 1;
+    gap: var(--lu-space-1);
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .lu-alert__title {
+    margin: 0;
+    font-weight: var(--lu-font-weight-medium);
+  }
+
+  .lu-alert__description {
+    margin: 0;
+  }
+
+  .lu-alert--info {
+    border-color: color-mix(in oklab, var(--lu-color-info) 30%, var(--lu-color-border));
+    background: color-mix(in oklab, var(--lu-color-info) 8%, var(--lu-color-background));
+
+    & .lu-alert__icon {
+      color: var(--lu-color-info);
+    }
+  }
+
+  .lu-alert--success {
+    border-color: color-mix(in oklab, var(--lu-color-success) 30%, var(--lu-color-border));
+    background: color-mix(in oklab, var(--lu-color-success) 8%, var(--lu-color-background));
+
+    & .lu-alert__icon {
+      color: var(--lu-color-success);
+    }
+  }
+
+  .lu-alert--warning {
+    border-color: color-mix(in oklab, var(--lu-color-warning) 30%, var(--lu-color-border));
+    background: color-mix(in oklab, var(--lu-color-warning) 8%, var(--lu-color-background));
+
+    & .lu-alert__icon {
+      color: var(--lu-color-warning);
+    }
+  }
+
+  .lu-alert--danger {
+    border-color: color-mix(in oklab, var(--lu-color-danger) 30%, var(--lu-color-border));
+    background: color-mix(in oklab, var(--lu-color-danger) 8%, var(--lu-color-background));
+
+    & .lu-alert__icon {
+      color: var(--lu-color-danger);
+    }
+  }
+}
