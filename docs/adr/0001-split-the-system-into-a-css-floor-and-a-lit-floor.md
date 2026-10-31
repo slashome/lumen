@@ -6,7 +6,7 @@
 
 ## Context
 
-Lumen is extracted from `ariane/web/src/shared/ui`: 23 React 19 exports on Radix, Tailwind 4 and `cva`. It must serve React, Vue, Svelte and plain HTML. Radix runs only in React. Kosmos, the design system of the ATLAS applications, already set the rule this repository follows: check the platform and the ARIA pattern before writing a component, and keep the semantic token layer full, so that no color travels as a prop or an inline style.
+Lumen is extracted from `ariane/web/src/shared/ui`: 23 React 19 exports on Radix, Tailwind 4 and `cva`. It must serve React, Vue, Svelte and plain HTML. Radix runs only in React. The rule this repository follows: check the platform and the ARIA pattern before writing a component, and keep the semantic token layer full, so that no color travels as a prop or an inline style.
 
 ## Decision
 
