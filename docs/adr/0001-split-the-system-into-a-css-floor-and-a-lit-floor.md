@@ -14,6 +14,7 @@ Lumen is extracted from `ariane/web/src/shared/ui`: 23 React 19 exports on Radix
 - **Floor 0 is CSS.** Tokens, and every component without state, as BEM classes inside the cascade layers `lu.tokens`, `lu.base` and `lu.components`: `.lu-button`, `.lu-icon-button`, `.lu-badge`, `.lu-input`, `.lu-native-select`, `.lu-switch` (a native checkbox with `role="switch"`), `.lu-kbd`, the page states, `.lu-markdown`, `.lu-data-table`, `.lu-mark`. Light DOM, no JavaScript.
 - **Floor 1 is Lit**, in Shadow DOM, for what has state: dialogs on `<dialog>`, floating panels on the popover API positioned by Floating UI, selects, toasts, Markdown, highlight, drag and drop. Elements are written with `static properties`, without decorators, so any TypeScript or JavaScript toolchain compiles them.
 - Floor 1 reuses floor 0 by importing its CSS files with `?inline` into its shadow roots.
+- **The data table is floor 0**, where `slashome/ariane#R012` placed it on floor 1. Sorting needs no state of its own in an element: a `.lu-data-table` class draws it, `sortRows` orders the rows and `storedSort()` keeps the column and direction across visits. Its rows and cells are the consumer's own markup, which a shadow root would cut off from the page's styles.
 - Events are `CustomEvent`s named `lu-*`, bubbling and composed.
 
 ## Consequences
