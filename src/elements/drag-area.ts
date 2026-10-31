@@ -4,7 +4,7 @@ import { emit } from '../lib/emit'
 import { define } from './define'
 import { dragKey, LumenDraggable, type PickupDetail } from './draggable'
 import { LumenDropZone, zoneKey } from './drop-zone'
-import { visuallyHidden } from './styles'
+import { utilityStyles } from './styles'
 
 export interface DragEndDetail {
   active: string
@@ -23,7 +23,7 @@ export class LumenDragArea extends LitElement {
   }
 
   static styles = [
-    visuallyHidden,
+    utilityStyles,
     css`
       :host {
         display: block;
@@ -127,7 +127,7 @@ export class LumenDragArea extends LitElement {
 
   render() {
     return html`<slot></slot>
-      <div class="visually-hidden" aria-live="assertive" aria-atomic="true">${this.announcement}</div>`
+      <div class="lu-visually-hidden" aria-live="assertive" aria-atomic="true">${this.announcement}</div>`
   }
 }
 

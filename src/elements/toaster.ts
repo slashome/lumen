@@ -3,7 +3,7 @@ import { repeat } from 'lit/directives/repeat.js'
 import { dismiss, toasts, type Toast, type ToastKind } from '../lib/toast'
 import { isPopoverOpen } from '../lib/popover'
 import { define } from './define'
-import { buttonStyles, visuallyHidden } from './styles'
+import { buttonStyles, utilityStyles } from './styles'
 import './icon'
 
 const icons: Record<ToastKind, string | null> = {
@@ -22,7 +22,7 @@ export class LumenToaster extends LitElement {
 
   static styles = [
     buttonStyles,
-    visuallyHidden,
+    utilityStyles,
     css`
       :host {
         display: contents;
@@ -174,7 +174,7 @@ export class LumenToaster extends LitElement {
 
   render() {
     return html`
-      <div class="visually-hidden" aria-live="polite" aria-atomic="true">${this.announcement}</div>
+      <div class="lu-visually-hidden" aria-live="polite" aria-atomic="true">${this.announcement}</div>
       <section popover="manual" aria-label="Notifications" part="region">
         ${repeat(
           this.entries,
