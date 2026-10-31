@@ -80,11 +80,12 @@ The platform's rule: **present means true, absent means false**, and the default
 ## Slots
 
 - The **default slot** holds the content: the body of a dialog, the options of a select, the items of a drop zone.
-- **Named slots** hold a part with a role: `heading`, `description`, `display` (what the select's button shows), `trigger` (what opens the hover card), `tab` (the tabs of `lu-tabs`).
+- **Named slots** hold a part with a role: `heading`, `description`, `display` (what the select's button shows), `tab` (the tabs of `lu-tabs`).
+- **A floating component never wraps its trigger.** `lu-tooltip` and `lu-hover-card` hold their content in the default slot and name their trigger by its id in `for`, as `<label for>` does, or take the element in the `anchor` property when it lives in another shadow root. They set `aria-describedby`, or `aria-expanded` and `aria-controls`, on the trigger themselves.
 
 ## Parts
 
-A part is named after what the shadow element is, never after its look: `dialog`, `panel`, `title`, `description`, `trigger`, `listbox`, `tablist`, `menu`, `card`, `tooltip`, `region`, `toast`, `group`, `svg`. Style them with `::part()`; nothing else in a shadow root is public.
+A part is named after what the shadow element is, never after its look: `dialog`, `panel`, `title`, `description`, `trigger`, `listbox`, `tablist`, `menu`, `region`, `toast`, `group`, `svg`. `lu-tooltip` and `lu-hover-card` have no part: the element is the floating panel, styled as itself. Style them with `::part()`; nothing else in a shadow root is public.
 
 ## CSS custom properties
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useSyncExternalStore, type ComponentProps, type InputHTMLAttributes, type ReactElement, type ReactNode } from 'react'
+import { useEffect, useMemo, useSyncExternalStore, type ComponentProps, type InputHTMLAttributes, type ReactNode } from 'react'
 import type { LinkResolver } from '../components/markdown/markdown'
 import type { OpenChangeSource, ValueChangeSource } from '../lib/change'
 import type { MultiSelectOption } from '../components/multi-select/multi-select'
@@ -249,16 +249,26 @@ export function ConfirmDialog({
   )
 }
 
-export function Tooltip({ content, open, onOpenChange, children }: { content: string; open?: boolean; onOpenChange?: OpenChangeHandler; children: ReactElement }) {
+export function Tooltip({
+  htmlFor,
+  open,
+  onOpenChange,
+  children,
+}: {
+  htmlFor: string
+  open?: boolean
+  onOpenChange?: OpenChangeHandler
+  children: ReactNode
+}) {
   return (
-    <TooltipElement content={content} {...only('open', open)} onOpenChange={openChange(open, onOpenChange)}>
+    <TooltipElement htmlFor={htmlFor} {...only('open', open)} onOpenChange={openChange(open, onOpenChange)}>
       {children}
     </TooltipElement>
   )
 }
 
 export function HoverCard({
-  trigger,
+  htmlFor,
   children,
   openDelay = 700,
   pinned = false,
@@ -266,7 +276,7 @@ export function HoverCard({
   onOpenChange,
   className,
 }: {
-  trigger: ReactElement
+  htmlFor: string
   children: ReactNode
   openDelay?: number
   pinned?: boolean
@@ -275,8 +285,7 @@ export function HoverCard({
   className?: string
 }) {
   return (
-    <HoverCardElement openDelay={openDelay} pinned={pinned} {...only('open', open)} onOpenChange={openChange(open, onOpenChange)} className={className}>
-      <span slot="trigger">{trigger}</span>
+    <HoverCardElement htmlFor={htmlFor} openDelay={openDelay} pinned={pinned} {...only('open', open)} onOpenChange={openChange(open, onOpenChange)} className={className}>
       {children}
     </HoverCardElement>
   )

@@ -5,12 +5,14 @@ import { emit } from '../../lib/emit'
 import { float } from '../../lib/floating'
 import { isPopoverOpen } from '../../lib/popover'
 import { define } from '../../lib/define'
-import { popoverStyles } from '../../lib/styles'
+import { ensureId, referTo, TriggerController } from '../../lib/trigger'
 
 export type { OpenChangeDetail } from '../../lib/change'
 
 /**
- * Shows a short text next to its trigger on hover and focus, after a delay, in the top layer. The text also describes the trigger for assistive technology through `aria-description`.
+ * Shows a short text next to its trigger on hover and focus, after a delay, in the top layer. The trigger is the element whose id is in `for`, looked up in the document or shadow root that holds the tooltip, as `<label for>` does; or the element given to the `anchor` property, when it lives elsewhere. The tooltip follows a trigger that appears, or gets its id, later.
+ *
+ * The tooltip is the popover itself, with `role="tooltip"`. It sets `aria-describedby` on its trigger, so that its text describes the trigger for assistive technology, and removes it when it is unbound.
  *
  * The tooltip opens and closes itself: it fires a cancelable `lu-open-change`, then sets `open` unless a listener called `preventDefault()`. To control it, cancel the event and set `open` yourself.
  *
@@ -18,39 +20,43 @@ export type { OpenChangeDetail } from '../../lib/change'
  *
  * @summary A short text shown on hover or focus of its trigger.
  * @tag lu-tooltip
- * @slot - The trigger, a single focusable element.
- * @csspart tooltip - The floating panel that holds the text.
+ * @slot - The text of the tooltip. Line breaks are kept. Without content, the tooltip shows nothing.
  * @fires {CustomEvent<OpenChangeDetail>} lu-open-change - The user asked to show or hide the tooltip. `detail.open` is the state asked for; `detail.source` is `trigger` (the pointer or the focus reached or left the trigger, after the delay to show) or `escape`. Cancelable: `preventDefault()` keeps the tooltip as it is, and the element still holds `open` while the event runs.
  */
 export class LumenTooltip extends LitElement {
   static properties = {
-    content: {},
+    htmlFor: { attribute: 'for' },
+    anchor: { attribute: false },
     delay: { type: Number },
     placement: {},
     open: { type: Boolean, reflect: true },
   }
 
-  static styles = [
-    popoverStyles,
-    css`
-      :host {
-        display: contents;
-      }
+  static styles = css`
+    :host {
+      position: fixed;
+      inset: auto;
+      box-sizing: border-box;
+      max-inline-size: 28rem;
+      margin: 0;
+      padding: var(--lu-space-1) var(--lu-space-2);
+      overflow: visible;
+      border: 1px solid var(--lu-color-border);
+      border-radius: var(--lu-radius-md);
+      background: var(--lu-color-popover);
+      color: var(--lu-color-foreground);
+      font-family: var(--lu-font-family-mono);
+      font-size: var(--lu-font-size-xs);
+      white-space: pre-line;
+      box-shadow: var(--lu-shadow-md);
+      pointer-events: none;
+    }
+  `
 
-      [popover] {
-        max-inline-size: 28rem;
-        padding: var(--lu-space-1) var(--lu-space-2);
-        font-family: var(--lu-font-family-mono);
-        font-size: var(--lu-font-size-xs);
-        white-space: pre-line;
-        box-shadow: var(--lu-shadow-md);
-        pointer-events: none;
-      }
-    `,
-  ]
-
-  /** The text of the tooltip. Line breaks are kept. An empty text shows nothing. */
-  declare content: string
+  /** The id of the trigger, in the document or shadow root that holds the tooltip. */
+  declare htmlFor: string
+  /** The trigger itself, when it is not in the document or shadow root that holds the tooltip. Wins over `for`. */
+  declare anchor: Element | null
   /** How long the pointer or the focus must stay on the trigger before the tooltip shows, in milliseconds. */
   declare delay: number
   /** Where the tooltip sits against its trigger, as a Floating UI placement: `top`, `bottom-start`… It flips when there is no room. */
@@ -59,35 +65,22 @@ export class LumenTooltip extends LitElement {
   declare open: boolean
   private timer?: ReturnType<typeof setTimeout>
   private stopFloating?: () => void
+  private triggers = new TriggerController(this, (trigger) => this.bindTrigger(trigger))
 
   constructor() {
     super()
-    this.content = ''
+    this.htmlFor = ''
+    this.anchor = null
     this.delay = 200
     this.placement = 'top'
     this.open = false
-    this.addEventListener('pointerenter', () => this.schedule())
-    this.addEventListener('pointerleave', () => this.request(false, 'trigger'))
-    this.addEventListener('focusin', () => this.schedule())
-    this.addEventListener('focusout', () => this.request(false, 'trigger'))
-    this.addEventListener('keydown', (event) => event.key === 'Escape' && this.request(false, 'escape'))
   }
 
-  private get trigger(): Element | undefined {
-    return this.renderRoot.querySelector('slot')?.assignedElements()[0]
-  }
-
-  private get panel(): HTMLElement | null {
-    return this.renderRoot.querySelector('[popover]')
-  }
-
-  protected updated(changed: PropertyValues<this>) {
-    if (changed.has('content')) {
-      this.describeTrigger()
-    }
-    if (changed.has('open') || changed.has('content')) {
-      this.sync()
-    }
+  connectedCallback() {
+    ensureId(this, 'lu-tooltip')
+    this.setAttribute('popover', 'manual')
+    this.setAttribute('role', 'tooltip')
+    super.connectedCallback()
   }
 
   disconnectedCallback() {
@@ -96,8 +89,41 @@ export class LumenTooltip extends LitElement {
     this.hide()
   }
 
-  private describeTrigger() {
-    this.trigger?.setAttribute('aria-description', this.content)
+  protected updated(changed: PropertyValues<this>) {
+    if (changed.has('open')) {
+      this.sync()
+    }
+  }
+
+  private get hasContent(): boolean {
+    return [...this.childNodes].some((node) => node.nodeType === Node.ELEMENT_NODE || Boolean(node.textContent?.trim()))
+  }
+
+  private bindTrigger(trigger: Element): () => void {
+    const enter = () => this.schedule()
+    const leave = () => this.request(false, 'trigger')
+    const escape = (event: Event) => {
+      if ((event as KeyboardEvent).key === 'Escape') {
+        this.request(false, 'escape')
+      }
+    }
+    const listeners: [string, EventListener][] = [
+      ['pointerenter', enter],
+      ['pointerleave', leave],
+      ['focusin', enter],
+      ['focusout', leave],
+      ['keydown', escape],
+    ]
+    listeners.forEach(([name, listener]) => trigger.addEventListener(name, listener))
+    const unrefer = referTo(trigger, 'aria-describedby', this)
+    this.hide()
+    this.sync()
+    return () => {
+      listeners.forEach(([name, listener]) => trigger.removeEventListener(name, listener))
+      unrefer()
+      clearTimeout(this.timer)
+      this.hide()
+    }
   }
 
   private schedule() {
@@ -107,7 +133,7 @@ export class LumenTooltip extends LitElement {
 
   private request(open: boolean, source: OpenChangeSource) {
     clearTimeout(this.timer)
-    if (open === this.open || (open && !this.content)) {
+    if (open === this.open || (open && !this.hasContent)) {
       return
     }
     if (emit<OpenChangeDetail>(this, 'lu-open-change', { open, source }, { cancelable: true })) {
@@ -124,26 +150,24 @@ export class LumenTooltip extends LitElement {
   }
 
   private show() {
-    const trigger = this.trigger
-    const panel = this.panel
-    if (!trigger || !panel || !this.content || isPopoverOpen(panel)) {
+    const trigger = this.triggers.trigger
+    if (!trigger || !this.hasContent || isPopoverOpen(this)) {
       return
     }
-    panel.showPopover()
-    this.stopFloating = float(trigger, panel, { placement: this.placement, gap: 6 })
+    this.showPopover()
+    this.stopFloating = float(trigger, this, { placement: this.placement, gap: 6 })
   }
 
   private hide() {
     this.stopFloating?.()
     this.stopFloating = undefined
-    if (isPopoverOpen(this.panel)) {
-      this.panel?.hidePopover()
+    if (isPopoverOpen(this)) {
+      this.hidePopover()
     }
   }
 
   render() {
-    return html`<slot @slotchange=${this.describeTrigger}></slot>
-      <div popover="manual" role="tooltip" part="tooltip">${this.content}</div>`
+    return html`<slot></slot>`
   }
 }
 

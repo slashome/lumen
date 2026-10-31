@@ -75,21 +75,27 @@ describe('the React adapter', () => {
     expect(dialog.open).toBe(false)
   })
 
-  it('controls a tooltip given open, and leaves one without it alone', async () => {
+  it('binds a tooltip to its trigger by htmlFor, controls it given open, and leaves one without it alone', async () => {
     const host = await mount(
       <>
-        <Tooltip content="Controlled" open={false}>
-          <button>One</button>
+        <button id="one">One</button>
+        <Tooltip htmlFor="one" open={false}>
+          Controlled
         </Tooltip>
-        <Tooltip content="Free">
-          <button>Two</button>
-        </Tooltip>
+        <button id="two">Two</button>
+        <Tooltip htmlFor="two">Free</Tooltip>
       </>,
     )
     const [controlled, free] = [...host.querySelectorAll<LumenTooltip>('lu-tooltip')]
-    for (const tooltip of [controlled!, free!]) {
+    const [one, two] = [...host.querySelectorAll('button')]
+    expect(one!.getAttribute('aria-describedby')).toBe(controlled!.id)
+    expect(two!.getAttribute('aria-describedby')).toBe(free!.id)
+    for (const [tooltip, trigger] of [
+      [controlled!, one!],
+      [free!, two!],
+    ] as const) {
       tooltip.delay = 0
-      tooltip.dispatchEvent(new Event('pointerenter'))
+      trigger.dispatchEvent(new Event('pointerenter'))
     }
     await new Promise((resolve) => setTimeout(resolve, 0))
     expect(controlled!.open).toBe(false)

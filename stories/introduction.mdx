@@ -49,6 +49,15 @@ import { Button, Dialog, toast, Toaster } from '@slashome/lumen/react'
 
 The adapter keeps React's idioms: `open` and `onOpenChange`, `value` and `onValueChange`. Given `open` or `value`, a component is controlled; without it, the element changes itself and still calls the callback.
 
+`Tooltip` and `HoverCard` do not wrap their trigger: they name it with `htmlFor`, as `<label htmlFor>` does, and the trigger carries the id, best made with `useId()`.
+
+```tsx
+const id = useId()
+
+<Button id={id} variant="ghost" size="icon"><Icon name="copy" label="Copy" /></Button>
+<Tooltip htmlFor={id}>Copy the command</Tooltip>
+```
+
 ## Vue
 
 ```ts
@@ -69,11 +78,19 @@ vue({ template: { compilerOptions: { isCustomElement: isLumenElement } } })
 <LuDialog v-model:open="editing" heading="Edit T104">…</LuDialog>
 ```
 
+A tooltip or a hover card names its trigger with `for`; a template ref given to `:anchor` does the same for a trigger in another shadow root.
+
+```vue
+<button id="copy" class="lu-icon-button"><lu-icon name="copy" label="Copy" /></button>
+<LuTooltip for="copy">Copy the command</LuTooltip>
+```
+
 ## Plain HTML
 
 ```html
 <button class="lu-button lu-button--outline">Cancel</button>
-<lu-tooltip content="Copy the command"><button class="lu-icon-button"><lu-icon name="copy"></lu-icon></button></lu-tooltip>
+<button id="copy" class="lu-icon-button"><lu-icon name="copy" label="Copy"></lu-icon></button>
+<lu-tooltip for="copy">Copy the command</lu-tooltip>
 ```
 
 ## Icons

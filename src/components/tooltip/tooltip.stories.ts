@@ -3,7 +3,7 @@ import { html } from 'lit'
 import { expect, waitFor } from 'storybook/test'
 import type { OpenChangeDetail } from '../../lib/change'
 import type { LumenTooltip } from './tooltip'
-import { inShadow, isOpen, recordEvents } from '../../../stories/play'
+import { isOpen, recordEvents } from '../../../stories/play'
 
 const meta: Meta = {
   title: 'Overlays/Tooltip',
@@ -15,15 +15,15 @@ export default meta
 
 export const Default: StoryObj = {
   render: () => html`
-    <lu-tooltip content="~/workspace/projects/slashome/_ariane">
-      <button class="lu-button lu-button--outline">Content repository</button>
-    </lu-tooltip>
+    <button id="content-repository" class="lu-button lu-button--outline">Content repository</button>
+    <lu-tooltip for="content-repository">~/workspace/projects/slashome/_ariane</lu-tooltip>
   `,
   play: async ({ canvas, canvasElement, userEvent, step }) => {
-    const panel = inShadow(canvasElement.querySelector('lu-tooltip'), '[role="tooltip"]')
+    const panel = canvasElement.querySelector<LumenTooltip>('lu-tooltip')!
     const trigger = canvas.getByRole('button', { name: 'Content repository' })
     const openChanges = recordEvents(canvasElement, 'lu-open-change')
-    await expect(trigger).toHaveAttribute('aria-description', '~/workspace/projects/slashome/_ariane')
+    await expect(trigger).toHaveAttribute('aria-describedby', panel.id)
+    await expect(trigger).toHaveAccessibleDescription('~/workspace/projects/slashome/_ariane')
 
     await step('Focus shows the tooltip by itself after its delay, Escape hides it', async () => {
       await userEvent.tab()
@@ -73,15 +73,14 @@ export const Controlled: StoryObj = {
   },
   render: () => html`
     <div style="display:flex;gap:1rem;align-items:center">
-      <lu-tooltip content="Held by its owner" @lu-open-change=${holdOpen}>
-        <button class="lu-button lu-button--outline">Controlled</button>
-      </lu-tooltip>
+      <button id="controlled-tooltip" class="lu-button lu-button--outline">Controlled</button>
+      <lu-tooltip for="controlled-tooltip" @lu-open-change=${holdOpen}>Held by its owner</lu-tooltip>
       <label class="lu-field__choice"><input type="checkbox" class="lu-checkbox" name="hold" /> Hold it</label>
     </div>
   `,
   play: async ({ canvas, canvasElement, userEvent, step }) => {
     const host = canvasElement.querySelector<LumenTooltip>('lu-tooltip')
-    const panel = inShadow(host, '[role="tooltip"]')
+    const panel = host!
     const trigger = canvas.getByRole('button', { name: 'Controlled' })
     const hold = canvas.getByRole('checkbox', { name: 'Hold it' })
 

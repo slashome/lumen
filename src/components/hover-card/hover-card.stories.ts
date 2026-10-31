@@ -3,7 +3,7 @@ import { html } from 'lit'
 import { expect, waitFor } from 'storybook/test'
 import type { OpenChangeDetail } from '../../lib/change'
 import type { LumenHoverCard } from './hover-card'
-import { inShadow, isOpen, recordEvents } from '../../../stories/play'
+import { isOpen, recordEvents } from '../../../stories/play'
 
 const meta: Meta = {
   title: 'Overlays/Hover card',
@@ -15,15 +15,17 @@ export default meta
 
 export const Default: StoryObj = {
   render: () => html`
-    <lu-hover-card open-delay="100" placement="bottom-start">
-      <button slot="trigger" class="lu-button lu-button--outline">3 uncommitted changes</button>
+    <button id="uncommitted" class="lu-button lu-button--outline">3 uncommitted changes</button>
+    <lu-hover-card for="uncommitted" open-delay="100" placement="bottom-start">
       <p style="margin:0">Commit everything, commit per node, or push.</p>
     </lu-hover-card>
   `,
   play: async ({ canvas, canvasElement, userEvent, step }) => {
-    const card = inShadow(canvasElement.querySelector('lu-hover-card'), '[part="card"]')
+    const card = canvasElement.querySelector<LumenHoverCard>('lu-hover-card')!
     const trigger = canvas.getByRole('button', { name: '3 uncommitted changes' })
     const openChanges = recordEvents(canvasElement, 'lu-open-change')
+    await expect(trigger).toHaveAttribute('aria-controls', card.id)
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
 
     await step('Focus opens the card by itself after its delay, Escape closes it', async () => {
       await userEvent.tab()
@@ -31,6 +33,7 @@ export const Default: StoryObj = {
       await expect(isOpen(card)).toBe(false)
       await waitFor(() => expect(isOpen(card)).toBe(true))
       await expect(openChanges).toHaveBeenLastCalledWith({ open: true, source: 'trigger' })
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true')
       await userEvent.keyboard('{Escape}')
       await waitFor(() => expect(isOpen(card)).toBe(false))
       await expect(openChanges).toHaveBeenLastCalledWith({ open: false, source: 'escape' })
@@ -68,8 +71,8 @@ export const Controlled: StoryObj = {
   },
   render: () => html`
     <div style="display:flex;gap:1rem;align-items:center">
-      <lu-hover-card open-delay="100" close-delay="100" placement="bottom-start" @lu-open-change=${holdOpen}>
-        <button slot="trigger" class="lu-button lu-button--outline">Controlled</button>
+      <button id="controlled-card" class="lu-button lu-button--outline">Controlled</button>
+      <lu-hover-card for="controlled-card" open-delay="100" close-delay="100" placement="bottom-start" @lu-open-change=${holdOpen}>
         <p style="margin:0">Held by its owner.</p>
       </lu-hover-card>
       <label class="lu-field__choice"><input type="checkbox" class="lu-checkbox" name="hold" /> Hold it</label>
@@ -77,7 +80,7 @@ export const Controlled: StoryObj = {
   `,
   play: async ({ canvas, canvasElement, userEvent, step }) => {
     const host = canvasElement.querySelector<LumenHoverCard>('lu-hover-card')
-    const card = inShadow(host, '[part="card"]')
+    const card = host!
     const trigger = canvas.getByRole('button', { name: 'Controlled' })
     const hold = canvas.getByRole('checkbox', { name: 'Hold it' })
 

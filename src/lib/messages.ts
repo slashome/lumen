@@ -110,14 +110,14 @@ export function reportMissing(owner: object, name: string, key: string, lang: st
   )
 }
 
-export function reportMissingAttribute(owner: object, name: string, attribute: string) {
+export function reportMissingAttribute(owner: object, name: string, attribute: string, reason = 'it gives the element its accessible name, and Lumen has no default for it') {
   const seen = reported.get(owner) ?? new Set<string>()
   reported.set(owner, seen)
   if (seen.has(attribute)) {
     return
   }
   seen.add(attribute)
-  console.error(`[lumen] <${name}> needs ${attribute}: it gives the element its accessible name, and Lumen has no default for it.`)
+  console.error(`[lumen] <${name}> needs ${attribute}: ${reason}.`)
 }
 
 export function requiredLabel(owner: Element, value: string | null | undefined, attribute: string): string | undefined {

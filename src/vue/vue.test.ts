@@ -2,9 +2,11 @@ import { afterEach, describe, expect, expectTypeOf, it } from 'vitest'
 import { createApp, defineComponent, h, nextTick, ref, type GlobalComponents } from 'vue'
 import type { LumenDialog } from '../components/dialog/dialog'
 import type { LumenSegmented } from '../components/segmented/segmented'
+import type { LumenTooltip } from '../components/tooltip/tooltip'
 import '../components/dialog/dialog'
+import '../components/tooltip/tooltip'
 import '../components/segmented/segmented'
-import { LuDialog, LuMultiSelect, LuSegmented, LuSelect, LuTabs } from './index'
+import { LuDialog, LuMultiSelect, LuSegmented, LuSelect, LuTabs, LuTooltip } from './index'
 import './elements'
 
 afterEach(() => {
@@ -82,5 +84,23 @@ describe('the Vue adapter', () => {
     await segmented.updateComplete
     expect(value.value).toBe('M')
     expect(segmented.value).toBe('M')
+  })
+
+  it('binds a tooltip to its trigger by the for attribute, or by an element given to anchor', async () => {
+    const anchor = ref<Element | null>(null)
+    const host = await mount(() =>
+      h('div', [
+        h('button', { id: 'copy' }, 'Copy'),
+        h(LuTooltip, { for: 'copy' }, () => 'Copy the command'),
+        h('button', { ref: anchor }, 'Paste'),
+        h(LuTooltip, { anchor: anchor.value }, () => 'Paste the command'),
+      ]),
+    )
+    await nextTick()
+    const [byId, byAnchor] = [...host.querySelectorAll<LumenTooltip>('lu-tooltip')]
+    await Promise.all([byId!.updateComplete, byAnchor!.updateComplete])
+    const [copy, paste] = [...host.querySelectorAll('button')]
+    expect(copy!.getAttribute('aria-describedby')).toBe(byId!.id)
+    expect(paste!.getAttribute('aria-describedby')).toBe(byAnchor!.id)
   })
 })
