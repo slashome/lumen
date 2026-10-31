@@ -17,6 +17,16 @@ interface Carried {
   index: number
 }
 
+/**
+ * Moves `lu-draggable` items between `lu-drop-zone` targets, with the mouse, touch or the keyboard: Space picks an item up, the arrow keys move it across the zones, Space or Enter drops it and Escape cancels. Each step is announced.
+ *
+ * The area never moves the items itself: it fires `lu-drag-end` and the owner updates its data.
+ *
+ * @summary The scope of a drag and drop between zones.
+ * @tag lu-drag-area
+ * @slot - The drop zones and their draggable items.
+ * @fires {CustomEvent<DragEndDetail>} lu-drag-end - An item was dropped. `detail.active` is its `drag-id`; `detail.over` is the `zone-id` it was dropped on, or `null` outside any zone.
+ */
 export class LumenDragArea extends LitElement {
   static properties = {
     announcement: { state: true },

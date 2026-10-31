@@ -14,6 +14,16 @@ const icons: Record<ToastKind, string | null> = {
   warning: 'warning',
 }
 
+/**
+ * Shows the toasts raised with `toast()` from `@slashome/lumen/lib`, stacked at the bottom end of the viewport in the top layer, and announces each one politely. A toast closes after its duration; hovering it pauses the countdown.
+ *
+ * Place one toaster per page.
+ *
+ * @summary The stack of transient notifications raised with `toast()`.
+ * @tag lu-toaster
+ * @csspart region - The landmark that holds the toasts.
+ * @csspart toast - One toast.
+ */
 export class LumenToaster extends LitElement {
   static properties = {
     closeLabel: { attribute: 'close-label' },
@@ -99,6 +109,7 @@ export class LumenToaster extends LitElement {
     `,
   ]
 
+  /** The accessible name of the close button of each toast. */
   declare closeLabel: string
   declare private entries: readonly Toast[]
   private stopListening?: () => void

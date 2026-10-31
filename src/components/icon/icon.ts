@@ -3,6 +3,16 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js'
 import { iconData, onIconsRegistered } from '../../lib/icons'
 import { define } from '../../lib/define'
 
+/**
+ * Draws an icon by its semantic name, from data embedded at build time: no request at run time. An application adds its own names with `registerIcons()`.
+ *
+ * Without a `label` the icon is decorative and hidden from assistive technology; with one it is an image with that name.
+ *
+ * @summary An icon drawn by its semantic name.
+ * @tag lu-icon
+ * @csspart svg - The `<svg>` element.
+ * @cssprop --lu-icon-size - The inline and block size of the icon. Defaults to 1em, the size of the surrounding text.
+ */
 export class LumenIcon extends LitElement {
   static properties = {
     name: { reflect: true },
@@ -25,7 +35,9 @@ export class LumenIcon extends LitElement {
     }
   `
 
+  /** The semantic name of the icon, such as `close` or `chevron-down`. An unknown name draws nothing. */
   declare name: string
+  /** The accessible name of the icon. Leave it empty when the icon is decorative or its control is already named. */
   declare label: string
   private stopListening?: () => void
 

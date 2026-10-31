@@ -2,6 +2,13 @@ import { css, html, LitElement, nothing, type PropertyValues } from 'lit'
 import { define } from '../../lib/define'
 import '../icon/icon'
 
+/**
+ * One choice of a `lu-select`. It has no meaning outside one.
+ *
+ * @summary One choice of a select.
+ * @tag lu-option
+ * @slot - The label of the option.
+ */
 export class LumenOption extends LitElement {
   static properties = {
     value: { reflect: true },
@@ -45,9 +52,13 @@ export class LumenOption extends LitElement {
     }
   `
 
+  /** The value the select takes when this option is picked. */
   declare value: string
+  /** The text used for typeahead and for the button of the select, when the content of the option is not plain text. */
   declare textValue: string
+  /** Whether this option is the selected one. The select sets it from its `value`. */
   declare selected: boolean
+  /** Whether the option cannot be picked. It stays visible and is skipped by the keyboard. */
   declare disabled: boolean
 
   constructor() {
@@ -58,6 +69,7 @@ export class LumenOption extends LitElement {
     this.disabled = false
   }
 
+  /** The text of the option: `textValue`, or its text content. */
   get label(): string {
     return this.textValue || (this.textContent ?? '').trim()
   }

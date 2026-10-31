@@ -12,6 +12,19 @@ export interface ValueChangeDetail<Value = string> {
   value: Value
 }
 
+/**
+ * A single-choice select on the ARIA combobox and listbox pattern: a button that opens a list of `lu-option` in the top layer, with arrow keys, Home, End and typeahead.
+ *
+ * The select sets its own `value` when the user picks an option, then fires `lu-value-change`.
+ *
+ * @summary A single-choice list of options behind a button.
+ * @tag lu-select
+ * @slot - The `lu-option` elements.
+ * @slot display - What the button shows, when the label of the selected option is not enough.
+ * @csspart trigger - The button that opens the list.
+ * @csspart listbox - The floating list of options.
+ * @fires {CustomEvent<ValueChangeDetail>} lu-value-change - The user picked an option other than the current one. `detail.value` is its value.
+ */
 export class LumenSelect extends LitElement {
   static properties = {
     label: {},
@@ -78,8 +91,11 @@ export class LumenSelect extends LitElement {
     `,
   ]
 
+  /** The accessible name of the select and of its list. */
   declare label: string
+  /** The value of the selected option. An empty string, or a value no option has, selects nothing. */
   declare value: string
+  /** Whether the select ignores the user. */
   declare disabled: boolean
   declare private expanded: boolean
   declare private selectedLabel: string
@@ -96,6 +112,7 @@ export class LumenSelect extends LitElement {
     this.selectedLabel = ''
   }
 
+  /** The `lu-option` children, in document order. */
   get options(): LumenOption[] {
     return [...this.querySelectorAll('lu-option')]
   }

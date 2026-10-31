@@ -4,6 +4,13 @@ import { define } from '../../lib/define'
 
 export const zoneKey = 'luZoneId'
 
+/**
+ * A target of a `lu-drag-area`. With a `label` it is a named region.
+ *
+ * @summary A zone where draggable items can be dropped.
+ * @tag lu-drop-zone
+ * @slot - The content of the zone, usually its draggable items.
+ */
 export class LumenDropZone extends LitElement {
   static properties = {
     zoneId: { attribute: 'zone-id', reflect: true },
@@ -22,8 +29,11 @@ export class LumenDropZone extends LitElement {
     }
   `
 
+  /** The identifier of the zone, sent as `detail.over` of `lu-drag-end`. */
   declare zoneId: string
+  /** The accessible name of the zone and its name in the announcements. Without it, the zone is not a region and is announced by its `zone-id`. */
   declare label: string
+  /** Whether an item is over the zone. The drag area sets it. */
   declare over: boolean
   private cleanup?: () => void
 

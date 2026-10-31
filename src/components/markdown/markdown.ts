@@ -18,13 +18,24 @@ function isModified(event: MouseEvent): boolean {
   return event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey
 }
 
+/**
+ * Renders GitHub-flavored Markdown, sanitized with DOMPurify, into the light DOM so the page can search, select and style it with `.lu-markdown`.
+ *
+ * With `resolveLink`, each link is rewritten as external (new tab, with an icon), internal (a click fires `lu-navigate` instead of following it) or unresolved (plain text).
+ *
+ * @summary Sanitized Markdown, with links the application resolves.
+ * @tag lu-markdown
+ * @fires {CustomEvent<NavigateDetail>} lu-navigate - The user clicked an internal link without a modifier key. The default navigation is prevented; `detail.href` is the link.
+ */
 export class LumenMarkdown extends LitElement {
   static properties = {
     source: {},
     resolveLink: { attribute: false },
   }
 
+  /** The Markdown to render. */
   declare source: string
+  /** Decides what each link of the source points to. Without it, links stay as written. */
   declare resolveLink: LinkResolver | undefined
 
   constructor() {

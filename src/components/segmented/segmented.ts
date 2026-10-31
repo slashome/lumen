@@ -3,6 +3,16 @@ import { emit } from '../../lib/emit'
 import { define } from '../../lib/define'
 import type { ValueChangeDetail } from '../select/select'
 
+/**
+ * A row of toggle buttons where at most one is pressed. Pressing the pressed one releases it, so the value can be empty.
+ *
+ * It sets its own `value` when the user presses a button, then fires `lu-value-change`.
+ *
+ * @summary A row of toggle buttons with at most one pressed.
+ * @tag lu-segmented
+ * @csspart group - The bordered row of buttons.
+ * @fires {CustomEvent<ValueChangeDetail<string | null>>} lu-value-change - The user pressed a button. `detail.value` is its value, or `null` when the pressed one was released.
+ */
 export class LumenSegmented extends LitElement {
   static properties = {
     label: {},
@@ -48,9 +58,13 @@ export class LumenSegmented extends LitElement {
     }
   `
 
+  /** The accessible name of the group. */
   declare label: string
+  /** The values, one button each, shown as they are. */
   declare values: string[]
+  /** The pressed value, or `null` when none is. */
   declare value: string | null
+  /** Whether the buttons are in the tab order. On by default; only the attribute value `false` turns it off. */
   declare focusable: boolean
 
   constructor() {

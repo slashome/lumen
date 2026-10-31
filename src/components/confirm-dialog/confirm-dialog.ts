@@ -3,6 +3,16 @@ import { emit } from '../../lib/emit'
 import { define } from '../../lib/define'
 import { LumenDialog } from '../dialog/dialog'
 
+/**
+ * An `alertdialog` that asks to confirm a destructive action, with a cancel and a confirm button. The cancel button takes the focus; a click on the backdrop does not close it.
+ *
+ * It behaves as `lu-dialog`: controlled through `open` and `lu-open-change`. It has no close button, so `close-label` is unused.
+ *
+ * @summary A dialog that asks to confirm a destructive action.
+ * @tag lu-confirm-dialog
+ * @cssprop --lu-dialog-width - The inline size of the dialog, capped by the viewport. Defaults to 28rem.
+ * @fires {CustomEvent<Record<string, never>>} lu-confirm - The user pressed the confirm button. The owner runs the action, then closes the dialog.
+ */
 export class LumenConfirmDialog extends LumenDialog {
   static properties = {
     ...LumenDialog.properties,
@@ -31,8 +41,11 @@ export class LumenConfirmDialog extends LumenDialog {
     `,
   ]
 
+  /** The text of the confirm button, a verb that names the action: "Delete". */
   declare confirmLabel: string
+  /** The text of the cancel button. */
   declare cancelLabel: string
+  /** Whether the action is running: the confirm button is disabled until the owner clears it. */
   declare pending: boolean
 
   constructor() {

@@ -5,6 +5,16 @@ import { isPopoverOpen } from '../../lib/popover'
 import { define } from '../../lib/define'
 import { popoverStyles } from '../../lib/styles'
 
+/**
+ * Shows a card of rich, interactive content next to its trigger on hover and focus, after a delay, in the top layer. The card stays open while the pointer or the focus is on it.
+ *
+ * @summary A card of rich content shown on hover or focus of its trigger.
+ * @tag lu-hover-card
+ * @slot - The content of the card.
+ * @slot trigger - The element that opens the card.
+ * @csspart card - The floating panel that holds the content.
+ * @cssprop --lu-hover-card-width - The inline size of the card, capped by the viewport. Defaults to 24rem.
+ */
 export class LumenHoverCard extends LitElement {
   static properties = {
     openDelay: { type: Number, attribute: 'open-delay' },
@@ -30,9 +40,13 @@ export class LumenHoverCard extends LitElement {
     `,
   ]
 
+  /** How long the pointer or the focus must stay on the trigger before the card opens, in milliseconds. */
   declare openDelay: number
+  /** How long the card stays open after the pointer or the focus leaves, in milliseconds. */
   declare closeDelay: number
+  /** Where the card sits against its trigger, as a Floating UI placement: `bottom-end`, `top`… It flips when there is no room. */
   declare placement: Placement
+  /** Whether the card stays open regardless of hover and focus, and ignores Escape. */
   declare pinned: boolean
   private timer?: ReturnType<typeof setTimeout>
   private stopFloating?: () => void

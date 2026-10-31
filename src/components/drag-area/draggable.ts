@@ -9,6 +9,16 @@ export interface PickupDetail {
   id: string
 }
 
+/**
+ * An item that moves inside a `lu-drag-area`. It is a focusable button: Space picks it up.
+ *
+ * When `openable`, a click or Enter fires `lu-open`, so the same card can be dragged and opened.
+ *
+ * @summary An item that can be dragged between drop zones.
+ * @tag lu-draggable
+ * @slot - The content of the item.
+ * @fires {CustomEvent<Record<string, never>>} lu-open - The user clicked the item or pressed Enter on it, while `openable` and not dragging.
+ */
 export class LumenDraggable extends LitElement {
   static properties = {
     dragId: { attribute: 'drag-id', reflect: true },
@@ -47,9 +57,13 @@ export class LumenDraggable extends LitElement {
     }
   `
 
+  /** The identifier of the item, sent as `detail.active` of `lu-drag-end`. */
   declare dragId: string
+  /** The accessible name of the item and its name in the announcements. Without it, the item is named by its content and announced by its `drag-id`. */
   declare label: string
+  /** Whether a click or Enter opens the item and fires `lu-open`. */
   declare openable: boolean
+  /** Whether the item is being dragged. The drag area sets it. */
   declare dragging: boolean
   private cleanup?: () => void
 

@@ -8,6 +8,23 @@ export interface OpenChangeDetail {
   open: boolean
 }
 
+/**
+ * A modal dialog on the native `<dialog>`: it traps focus, closes on Escape, a click on the backdrop or its close button, and restores focus on close.
+ *
+ * The dialog is controlled: it never closes itself, it fires `lu-open-change` with `open: false` and the owner sets `open`.
+ *
+ * @summary A modal dialog with a title, an optional description and free content.
+ * @tag lu-dialog
+ * @slot - The content of the dialog.
+ * @slot heading - The title, when it needs markup; replaces the `heading` attribute.
+ * @slot description - The description, when it needs markup; replaces the `description` attribute.
+ * @csspart dialog - The native `<dialog>` element.
+ * @csspart panel - The padded column that holds the header and the content.
+ * @csspart title - The `<h2>` that holds the title.
+ * @csspart description - The paragraph that holds the description.
+ * @cssprop --lu-dialog-width - The inline size of the dialog, capped by the viewport. Defaults to 56rem.
+ * @fires {CustomEvent<OpenChangeDetail>} lu-open-change - The user asked to close the dialog: Escape, the backdrop, the close button. `detail.open` is `false`.
+ */
 export class LumenDialog extends LitElement {
   static properties = {
     open: { type: Boolean, reflect: true },
@@ -95,9 +112,13 @@ export class LumenDialog extends LitElement {
     `,
   ]
 
+  /** Whether the dialog is shown, as a modal. The owner sets it; the dialog only asks to change it through `lu-open-change`. */
   declare open: boolean
+  /** The title of the dialog, which also names it for assistive technology. */
   declare heading: string
+  /** A sentence under the title, which also describes the dialog for assistive technology. */
   declare description: string
+  /** The accessible name of the close button. */
   declare closeLabel: string
   declare protected slottedDescription: boolean
 

@@ -5,6 +5,16 @@ import { isPopoverOpen } from '../../lib/popover'
 import { define } from '../../lib/define'
 import { popoverStyles } from '../../lib/styles'
 
+/**
+ * Shows a short text next to its trigger on hover and focus, after a delay, in the top layer. The text also describes the trigger for assistive technology through `aria-description`.
+ *
+ * The tooltip never holds interactive content: use `lu-hover-card` for that.
+ *
+ * @summary A short text shown on hover or focus of its trigger.
+ * @tag lu-tooltip
+ * @slot - The trigger, a single focusable element.
+ * @csspart tooltip - The floating panel that holds the text.
+ */
 export class LumenTooltip extends LitElement {
   static properties = {
     content: {},
@@ -31,8 +41,11 @@ export class LumenTooltip extends LitElement {
     `,
   ]
 
+  /** The text of the tooltip. Line breaks are kept. An empty text shows nothing. */
   declare content: string
+  /** How long the pointer or the focus must stay on the trigger before the tooltip shows, in milliseconds. */
   declare delay: number
+  /** Where the tooltip sits against its trigger, as a Floating UI placement: `top`, `bottom-start`… It flips when there is no room. */
   declare placement: Placement
   private timer?: ReturnType<typeof setTimeout>
   private stopFloating?: () => void
