@@ -1,0 +1,70 @@
+@layer lu.components {
+  .lu-data-table {
+    border: 1px solid var(--lu-color-border);
+    border-radius: var(--lu-radius-lg);
+    overflow-x: auto;
+  }
+
+  .lu-data-table__table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: var(--lu-font-size-sm);
+  }
+
+  .lu-data-table__head {
+    background: color-mix(in oklab, var(--lu-color-muted) 50%, transparent);
+    color: var(--lu-color-muted-foreground);
+    font-size: var(--lu-font-size-xs);
+    text-align: start;
+  }
+
+  .lu-data-table__header {
+    padding: var(--lu-space-2) var(--lu-space-3);
+    font-weight: var(--lu-font-weight-medium);
+    text-align: start;
+  }
+
+  .lu-data-table__sort {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lu-space-1);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+
+    &:hover,
+    &[data-direction] {
+      color: var(--lu-color-foreground);
+    }
+  }
+
+  .lu-data-table__sort-icon {
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    opacity: 0.4;
+
+    [data-direction] > & {
+      opacity: 1;
+    }
+  }
+
+  .lu-data-table__row {
+    border-block-start: 1px solid var(--lu-color-border);
+    vertical-align: top;
+  }
+
+  .lu-data-table__cell {
+    padding: var(--lu-space-2) var(--lu-space-3);
+  }
+
+  .lu-data-table__empty {
+    margin: 0;
+    padding: var(--lu-space-8);
+    color: var(--lu-color-muted-foreground);
+    font-size: var(--lu-font-size-sm);
+    text-align: center;
+  }
+}

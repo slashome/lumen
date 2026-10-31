@@ -1,0 +1,19 @@
+{
+  "motion": {
+    "hover": {
+      "duration": { "$type": "duration", "$value": "160ms" },
+      "easing": { "$type": "cubicBezier", "$value": "cubic-bezier(0.2, 0, 0, 1)" }
+    },
+    "light": {
+      "$description": "The flash that marks an action: one place sets its duration, curve and intensity.",
+      "duration": { "$type": "duration", "$value": "250ms" },
+      "easing": { "$type": "cubicBezier", "$value": "cubic-bezier(0.2, 0, 0, 1)" },
+      "intensity": { "$type": "number", "$value": "45%" }
+    }
+  },
+  "control": {
+    "$type": "dimension",
+    "height": { "$value": "2.25rem" },
+    "height-sm": { "$value": "2rem" }
+  }
+}

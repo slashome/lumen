@@ -1,0 +1,16 @@
+@layer lu.base {
+  body {
+    background-color: var(--lu-color-background);
+    color: var(--lu-color-foreground);
+    font-family: var(--lu-font-family-sans);
+  }
+
+  :where(button, [role='button']):not(:disabled) {
+    cursor: pointer;
+  }
+
+  :where(:focus-visible) {
+    outline: 2px solid var(--lu-color-ring);
+    outline-offset: 2px;
+  }
+}

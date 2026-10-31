@@ -1,0 +1,24 @@
+@layer lu.components {
+  @keyframes lu-light {
+    from {
+      box-shadow:
+        0 0 0 0 color-mix(in oklab, var(--lu-light-color, currentColor) var(--lu-motion-light-intensity), transparent),
+        0 0 0.75rem 0.125rem color-mix(in oklab, var(--lu-light-color, currentColor) var(--lu-motion-light-intensity), transparent);
+    }
+    to {
+      box-shadow:
+        0 0 0 0.375rem transparent,
+        0 0 0.75rem 0.125rem transparent;
+    }
+  }
+
+  [data-lu-lit] {
+    animation: lu-light var(--lu-motion-light-duration) var(--lu-motion-light-easing);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-lu-lit] {
+      animation: none;
+    }
+  }
+}

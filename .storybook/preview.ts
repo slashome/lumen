@@ -1,0 +1,45 @@
+import { setCustomElementsManifest, type Preview } from '@storybook/web-components-vite'
+import manifest from '../custom-elements.json'
+import '../src/css/lumen.css'
+import '../src/index'
+
+setCustomElementsManifest(manifest)
+
+const preview: Preview = {
+  globalTypes: {
+    appearance: {
+      description: 'Light or dark appearance',
+      toolbar: { title: 'Appearance', icon: 'mirror', items: ['light', 'dark'], dynamicTitle: true },
+    },
+    primary: {
+      description: 'The theme primary color',
+      toolbar: {
+        title: 'Primary',
+        icon: 'paintbrush',
+        items: [
+          { value: '#3760c9', title: 'Blue' },
+          { value: '#16a34a', title: 'Green' },
+          { value: '#c026d3', title: 'Fuchsia' },
+          { value: '#ea580c', title: 'Orange' },
+        ],
+        dynamicTitle: true,
+      },
+    },
+  },
+  initialGlobals: { appearance: 'light', primary: '#3760c9' },
+  decorators: [
+    (story, context) => {
+      const root = document.documentElement
+      root.dataset.appearance = context.globals.appearance
+      root.style.setProperty('--lu-theme-primary', context.globals.primary)
+      root.style.setProperty('--lu-theme-secondary', context.globals.primary)
+      return story()
+    },
+  ],
+  parameters: {
+    controls: { expanded: true },
+    a11y: { test: 'error' },
+  },
+}
+
+export default preview

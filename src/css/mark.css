@@ -1,0 +1,7 @@
+@layer lu.components {
+  .lu-mark {
+    border-radius: var(--lu-radius-xs);
+    background: var(--lu-color-highlight);
+    color: inherit;
+  }
+}

@@ -1,0 +1,28 @@
+@layer lu.components {
+  .lu-input {
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: var(--lu-control-height);
+    padding-inline: var(--lu-space-3);
+    border: 1px solid var(--lu-color-border);
+    border-radius: var(--lu-radius-md);
+    background: var(--lu-color-background);
+    color: inherit;
+    font: inherit;
+    font-size: var(--lu-font-size-sm);
+
+    &::placeholder {
+      color: var(--lu-color-muted-foreground);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--lu-color-ring);
+      outline-offset: 0;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+}
