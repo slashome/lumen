@@ -45,7 +45,7 @@ Dark mode follows `data-appearance="dark"` on the root element, or the system wh
 import { Button, Dialog, toast, Toaster } from '@slashome/lumen/react'
 ```
 
-The adapter keeps React's idioms: `open` and `onOpenChange`, `value` and `onValueChange`.
+The adapter keeps React's idioms: `open` and `onOpenChange`, `value` and `onValueChange`. Given `open` or `value`, a component is controlled; without it, the element changes itself and still calls the callback.
 
 ## Vue
 
@@ -59,6 +59,12 @@ vue({ template: { compilerOptions: { isCustomElement: isLumenElement } } })
 <lu-select :value="status" @lu-value-change="status = $event.detail.value">
   <lu-option value="todo">To do</lu-option>
 </lu-select>
+```
+
+`@slashome/lumen/vue` also exports `LuDialog`, `LuSelect` and the other elements whose state the user changes, for `v-model:open`, `v-model:value` and `v-model:selected`: bound, the component is controlled; unbound, the element changes itself. Import the elements themselves as for any other use.
+
+```vue
+<LuDialog v-model:open="editing" heading="Edit T104">…</LuDialog>
 ```
 
 ## Plain HTML
@@ -75,3 +81,5 @@ vue({ template: { compilerOptions: { isCustomElement: isLumenElement } } })
 ## Events
 
 Every event is a `CustomEvent` named `lu-*`, bubbling and composed: `lu-open-change`, `lu-value-change`, `lu-selected-change`, `lu-confirm`, `lu-navigate`, `lu-drag-end`, `lu-open`. The type of each `detail` is on the page of its element.
+
+An element changes its own state when the user acts: a dialog closes on Escape, a select takes the option picked. It fires a cancelable `lu-*-change` first; cancel it and set the property to control the element yourself. The rule and the sources are on [Prop conventions](?path=/docs/foundations-prop-conventions--docs).

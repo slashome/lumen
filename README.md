@@ -31,7 +31,7 @@ The entries are `icon`, `dialog`, `sheet`, `confirm-dialog`, `tooltip`, `hover-c
 | Where | How |
 | --- | --- |
 | Plain HTML, Svelte | `<button class="lu-button">`, `<lu-select>` |
-| Vue | the same elements; tell the compiler with `isLumenElement` from `@slashome/lumen/vue` |
+| Vue | the same elements; tell the compiler with `isLumenElement` from `@slashome/lumen/vue`, which also exports `LuDialog`, `LuSelect`… for `v-model:open` and `v-model:value` |
 | React | `@slashome/lumen/react`: `Button`, `Dialog`, `Select`, `DataTable`, `toast`… |
 
 Theme with two variables on `:root`: `--lu-theme-primary` and `--lu-theme-secondary`. Dark mode follows `data-appearance="dark"` on the root, or the system.

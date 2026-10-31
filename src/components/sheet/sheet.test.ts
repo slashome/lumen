@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { mount } from '../../testing/mount'
+import type { OpenChangeDetail } from '../../lib/change'
 import type { LumenSheet } from './sheet'
 import './sheet'
 
@@ -30,11 +31,34 @@ describe('lu-sheet', () => {
     expect(sheet.shadowRoot!.getElementById(dialog.getAttribute('aria-describedby')!)?.textContent).toContain('The item')
   })
 
-  it('fires lu-open-change from its close button', async () => {
+  it('closes itself on Escape, the backdrop and the close button, saying which', async () => {
+    const sheet = await mount<LumenSheet>('<lu-sheet heading="T104"></lu-sheet>')
+    const changes: OpenChangeDetail[] = []
+    sheet.addEventListener('lu-open-change', (event) => changes.push((event as CustomEvent<OpenChangeDetail>).detail))
+    const closers = [
+      () => nativeDialog(sheet).dispatchEvent(new Event('cancel', { cancelable: true })),
+      () => nativeDialog(sheet).click(),
+      () => sheet.shadowRoot!.querySelector<HTMLButtonElement>('.close')!.click(),
+    ]
+    for (const close of closers) {
+      sheet.open = true
+      await sheet.updateComplete
+      close()
+      await sheet.updateComplete
+      expect(sheet.open).toBe(false)
+      expect(nativeDialog(sheet).hasAttribute('open')).toBe(false)
+    }
+    expect(changes.map((change) => change.source)).toEqual(['escape', 'outside', 'close-button'])
+  })
+
+  it('stays open when lu-open-change is cancelled', async () => {
     const sheet = await mount<LumenSheet>('<lu-sheet heading="T104" open></lu-sheet>')
-    const changes: boolean[] = []
-    sheet.addEventListener('lu-open-change', (event) => changes.push((event as CustomEvent<{ open: boolean }>).detail.open))
+    sheet.addEventListener('lu-open-change', (event) => event.preventDefault())
+    nativeDialog(sheet).dispatchEvent(new Event('cancel', { cancelable: true }))
+    nativeDialog(sheet).click()
     sheet.shadowRoot!.querySelector<HTMLButtonElement>('.close')!.click()
-    expect(changes).toEqual([false])
+    await sheet.updateComplete
+    expect(sheet.open).toBe(true)
+    expect(nativeDialog(sheet).hasAttribute('open')).toBe(true)
   })
 })

@@ -1,12 +1,18 @@
 import type { Placement } from '@floating-ui/dom'
 import { css, html, LitElement, type PropertyValues } from 'lit'
+import type { OpenChangeDetail, OpenChangeSource } from '../../lib/change'
+import { emit } from '../../lib/emit'
 import { float } from '../../lib/floating'
 import { isPopoverOpen } from '../../lib/popover'
 import { define } from '../../lib/define'
 import { popoverStyles } from '../../lib/styles'
 
+export type { OpenChangeDetail } from '../../lib/change'
+
 /**
  * Shows a card of rich, interactive content next to its trigger on hover and focus, after a delay, in the top layer. The card stays open while the pointer or the focus is on it.
+ *
+ * The card opens and closes itself: it fires a cancelable `lu-open-change`, then sets `open` unless a listener called `preventDefault()`. To control it, cancel the event and set `open` yourself. `pinned` shows the card whatever `open` says.
  *
  * @summary A card of rich content shown on hover or focus of its trigger.
  * @tag lu-hover-card
@@ -14,6 +20,7 @@ import { popoverStyles } from '../../lib/styles'
  * @slot trigger - The element that opens the card.
  * @csspart card - The floating panel that holds the content.
  * @cssprop --lu-hover-card-width - The inline size of the card, capped by the viewport. Defaults to 24rem.
+ * @fires {CustomEvent<OpenChangeDetail>} lu-open-change - The user asked to open or close the card. `detail.open` is the state asked for; `detail.source` is `trigger` (the pointer or the focus reached or left the trigger, after the delay), `panel` (the pointer or the focus reached or left the card) or `escape`. Never fired while `pinned`. Cancelable: `preventDefault()` keeps the card as it is, and the element still holds `open` while the event runs.
  */
 export class LumenHoverCard extends LitElement {
   static properties = {
@@ -21,6 +28,7 @@ export class LumenHoverCard extends LitElement {
     closeDelay: { type: Number, attribute: 'close-delay' },
     placement: {},
     pinned: { type: Boolean, reflect: true },
+    open: { type: Boolean, reflect: true },
   }
 
   static styles = [
@@ -46,8 +54,10 @@ export class LumenHoverCard extends LitElement {
   declare closeDelay: number
   /** Where the card sits against its trigger, as a Floating UI placement: `bottom-end`, `top`… It flips when there is no room. */
   declare placement: Placement
-  /** Whether the card stays open regardless of hover and focus, and ignores Escape. */
+  /** Whether the card stays open regardless of hover, focus and `open`, and ignores Escape. Once cleared, the card follows `open` again after `close-delay`. */
   declare pinned: boolean
+  /** Whether the card is open. The card sets it on hover and focus, unless `lu-open-change` is cancelled. */
+  declare open: boolean
   private timer?: ReturnType<typeof setTimeout>
   private stopFloating?: () => void
 
@@ -57,6 +67,7 @@ export class LumenHoverCard extends LitElement {
     this.closeDelay = 300
     this.placement = 'bottom-end'
     this.pinned = false
+    this.open = false
   }
 
   private get trigger(): Element | undefined {
@@ -68,34 +79,53 @@ export class LumenHoverCard extends LitElement {
   }
 
   protected updated(changed: PropertyValues<this>) {
-    if (changed.has('pinned')) {
-      if (this.pinned) {
-        this.show()
-      } else {
-        this.scheduleHide()
-      }
+    if (!changed.has('open') && !changed.has('pinned')) {
+      return
+    }
+    clearTimeout(this.timer)
+    if (this.open || this.pinned) {
+      this.show()
+    } else if (changed.get('pinned') === true) {
+      this.timer = setTimeout(() => this.sync(), this.closeDelay)
+    } else {
+      this.hide()
     }
   }
 
   disconnectedCallback() {
     super.disconnectedCallback()
+    clearTimeout(this.timer)
     this.hide()
   }
 
-  private scheduleShow() {
-    clearTimeout(this.timer)
-    this.timer = setTimeout(() => this.show(), this.openDelay)
+  private sync() {
+    if (this.open || this.pinned) {
+      this.show()
+    } else {
+      this.hide()
+    }
   }
 
-  private scheduleHide() {
+  private schedule(open: boolean, source: OpenChangeSource) {
     clearTimeout(this.timer)
-    if (!this.pinned) {
-      this.timer = setTimeout(() => this.hide(), this.closeDelay)
+    if (this.pinned) {
+      return
+    }
+    this.timer = setTimeout(() => this.request(open, source), open ? this.openDelay : this.closeDelay)
+  }
+
+  private request(open: boolean, source: OpenChangeSource) {
+    clearTimeout(this.timer)
+    if (this.pinned || open === this.open) {
+      this.sync()
+      return
+    }
+    if (emit<OpenChangeDetail>(this, 'lu-open-change', { open, source }, { cancelable: true })) {
+      this.open = open
     }
   }
 
   private show() {
-    clearTimeout(this.timer)
     const trigger = this.trigger
     const panel = this.panel
     if (!trigger || !panel || isPopoverOpen(panel)) {
@@ -106,7 +136,6 @@ export class LumenHoverCard extends LitElement {
   }
 
   private hide() {
-    clearTimeout(this.timer)
     this.stopFloating?.()
     this.stopFloating = undefined
     if (isPopoverOpen(this.panel)) {
@@ -114,9 +143,27 @@ export class LumenHoverCard extends LitElement {
     }
   }
 
+  private onTriggerEnter() {
+    this.schedule(true, 'trigger')
+  }
+
+  private onTriggerLeave() {
+    this.schedule(false, 'trigger')
+  }
+
+  private onPanelEnter() {
+    if (!this.pinned) {
+      this.request(true, 'panel')
+    }
+  }
+
+  private onPanelLeave() {
+    this.schedule(false, 'panel')
+  }
+
   private onKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape' && !this.pinned) {
-      this.hide()
+      this.request(false, 'escape')
     }
   }
 
@@ -124,19 +171,19 @@ export class LumenHoverCard extends LitElement {
     return html`
       <slot
         name="trigger"
-        @pointerenter=${this.scheduleShow}
-        @pointerleave=${this.scheduleHide}
-        @focusin=${this.scheduleShow}
-        @focusout=${this.scheduleHide}
+        @pointerenter=${this.onTriggerEnter}
+        @pointerleave=${this.onTriggerLeave}
+        @focusin=${this.onTriggerEnter}
+        @focusout=${this.onTriggerLeave}
         @keydown=${this.onKeydown}
       ></slot>
       <div
         popover="manual"
         part="card"
-        @pointerenter=${this.show}
-        @pointerleave=${this.scheduleHide}
-        @focusin=${this.show}
-        @focusout=${this.scheduleHide}
+        @pointerenter=${this.onPanelEnter}
+        @pointerleave=${this.onPanelLeave}
+        @focusin=${this.onPanelEnter}
+        @focusout=${this.onPanelLeave}
         @keydown=${this.onKeydown}
       >
         <slot></slot>

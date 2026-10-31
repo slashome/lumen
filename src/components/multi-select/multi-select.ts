@@ -1,4 +1,5 @@
 import { css, html, LitElement, nothing } from 'lit'
+import type { SelectedChangeDetail, ValueChangeSource } from '../../lib/change'
 import { emit } from '../../lib/emit'
 import { float } from '../../lib/floating'
 import { define } from '../../lib/define'
@@ -11,9 +12,7 @@ export interface MultiSelectOption {
   label: string
 }
 
-export interface SelectedChangeDetail {
-  selected: string[]
-}
+export type { SelectedChangeDetail } from '../../lib/change'
 
 /**
  * A multiple-choice filter on the ARIA menu pattern: a button that shows the label and the count of selected values, and opens a menu of checkable items in the top layer, with a clear item.
@@ -24,7 +23,7 @@ export interface SelectedChangeDetail {
  * @tag lu-multi-select
  * @csspart trigger - The button that opens the menu.
  * @csspart menu - The floating menu of items.
- * @fires {CustomEvent<SelectedChangeDetail>} lu-selected-change - The user toggled an item or cleared the selection. `detail.selected` holds the selected values. Cancelable: `preventDefault()` keeps the current `selected`, which the element still holds while the event runs; clearing closes the menu either way.
+ * @fires {CustomEvent<SelectedChangeDetail>} lu-selected-change - The user toggled an item or cleared the selection. `detail.selected` holds the selected values; `detail.source` is `option` for a toggle, `clear` for the clear item. Cancelable: `preventDefault()` keeps the current `selected`, which the element still holds while the event runs; clearing closes the menu either way.
  */
 export class LumenMultiSelect extends LitElement {
   static properties = {
@@ -160,18 +159,18 @@ export class LumenMultiSelect extends LitElement {
     }
   }
 
-  private change(selected: string[]) {
-    if (emit<SelectedChangeDetail>(this, 'lu-selected-change', { selected }, { cancelable: true })) {
+  private change(selected: string[], source: ValueChangeSource) {
+    if (emit<SelectedChangeDetail>(this, 'lu-selected-change', { selected, source }, { cancelable: true })) {
       this.selected = selected
     }
   }
 
   private toggle(value: string) {
-    this.change(this.selected.includes(value) ? this.selected.filter((entry) => entry !== value) : [...this.selected, value])
+    this.change(this.selected.includes(value) ? this.selected.filter((entry) => entry !== value) : [...this.selected, value], 'option')
   }
 
   private clear() {
-    this.change([])
+    this.change([], 'clear')
     this.menu?.hidePopover()
     this.trigger?.focus()
   }

@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { mount } from '../../testing/mount'
+import type { OpenChangeDetail } from '../../lib/change'
 import type { LumenConfirmDialog } from './confirm-dialog'
 import './confirm-dialog'
 
@@ -24,15 +25,43 @@ describe('lu-confirm-dialog', () => {
     expect(confirm.classList.contains('lu-button--danger')).toBe(true)
   })
 
-  it('fires lu-confirm from the confirm button, and lu-open-change from the cancel button', async () => {
+  it('fires lu-confirm from the confirm button and stays open for the owner to close', async () => {
     const dialog = await mount<LumenConfirmDialog>('<lu-confirm-dialog heading="Delete T104?" open></lu-confirm-dialog>')
     const events: string[] = []
     dialog.addEventListener('lu-confirm', () => events.push('confirm'))
     dialog.addEventListener('lu-open-change', () => events.push('open-change'))
-    const { cancel, confirm } = buttons(dialog)
-    confirm.click()
-    cancel.click()
-    expect(events).toEqual(['confirm', 'open-change'])
+    buttons(dialog).confirm.click()
+    await dialog.updateComplete
+    expect(events).toEqual(['confirm'])
+    expect(dialog.open).toBe(true)
+  })
+
+  it('closes itself on the cancel button and on Escape, saying which', async () => {
+    const dialog = await mount<LumenConfirmDialog>('<lu-confirm-dialog heading="Delete T104?" open></lu-confirm-dialog>')
+    const changes: OpenChangeDetail[] = []
+    dialog.addEventListener('lu-open-change', (event) => changes.push((event as CustomEvent<OpenChangeDetail>).detail))
+    buttons(dialog).cancel.click()
+    await dialog.updateComplete
+    expect(dialog.open).toBe(false)
+    dialog.open = true
+    await dialog.updateComplete
+    dialog.shadowRoot!.querySelector('dialog')!.dispatchEvent(new Event('cancel', { cancelable: true }))
+    await dialog.updateComplete
+    expect(dialog.open).toBe(false)
+    expect(changes).toEqual([
+      { open: false, source: 'cancel' },
+      { open: false, source: 'escape' },
+    ])
+  })
+
+  it('stays open when lu-open-change is cancelled', async () => {
+    const dialog = await mount<LumenConfirmDialog>('<lu-confirm-dialog heading="Delete T104?" open></lu-confirm-dialog>')
+    dialog.addEventListener('lu-open-change', (event) => event.preventDefault())
+    buttons(dialog).cancel.click()
+    dialog.shadowRoot!.querySelector('dialog')!.dispatchEvent(new Event('cancel', { cancelable: true }))
+    await dialog.updateComplete
+    expect(dialog.open).toBe(true)
+    expect(dialog.shadowRoot!.querySelector('dialog')!.hasAttribute('open')).toBe(true)
   })
 
   it('ignores a click on the backdrop', async () => {

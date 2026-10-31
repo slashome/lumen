@@ -25,13 +25,13 @@ export const Default: StoryObj = {
 
     await step('Pressing another button moves the pressed state to it', async () => {
       await userEvent.click(button('L'))
-      await expect(changes).toHaveBeenLastCalledWith({ value: 'L' })
+      await expect(changes).toHaveBeenLastCalledWith({ value: 'L', source: 'option' })
       await waitFor(() => expect(pressed()).toEqual(['L']))
     })
 
     await step('Pressing the pressed button releases it', async () => {
       await userEvent.click(button('L'))
-      await expect(changes).toHaveBeenLastCalledWith({ value: null })
+      await expect(changes).toHaveBeenLastCalledWith({ value: null, source: 'option' })
       await waitFor(() => expect(pressed()).toEqual([]))
     })
 
@@ -39,10 +39,10 @@ export const Default: StoryObj = {
       await expect([...group.querySelectorAll('button')].map((entry) => entry.tabIndex)).toEqual([0, 0, 0, 0, 0])
       button('XS').focus()
       await userEvent.keyboard(' ')
-      await expect(changes).toHaveBeenLastCalledWith({ value: 'XS' })
+      await expect(changes).toHaveBeenLastCalledWith({ value: 'XS', source: 'option' })
       button('S').focus()
       await userEvent.keyboard('{Enter}')
-      await expect(changes).toHaveBeenLastCalledWith({ value: 'S' })
+      await expect(changes).toHaveBeenLastCalledWith({ value: 'S', source: 'option' })
       await waitFor(() => expect(pressed()).toEqual(['S']))
       await expect(changes).toHaveBeenCalledTimes(4)
     })

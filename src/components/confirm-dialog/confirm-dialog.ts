@@ -3,14 +3,17 @@ import { emit } from '../../lib/emit'
 import { define } from '../../lib/define'
 import { LumenDialog } from '../dialog/dialog'
 
+export type { OpenChangeDetail } from '../../lib/change'
+
 /**
  * An `alertdialog` that asks to confirm a destructive action, with a cancel and a confirm button. The cancel button takes the focus; a click on the backdrop does not close it.
  *
- * It behaves as `lu-dialog`: controlled through `open` and `lu-open-change`. It has no close button, so `close-label` is unused.
+ * It closes itself as `lu-dialog` does, on Escape or its cancel button, after a cancelable `lu-open-change`. The confirm button does not close it: it fires `lu-confirm`, and the owner runs the action, then clears `open`. It has no close button, so `close-label` is unused.
  *
  * @summary A dialog that asks to confirm a destructive action.
  * @tag lu-confirm-dialog
  * @cssprop --lu-dialog-width - The inline size of the dialog, capped by the viewport. Defaults to 28rem.
+ * @fires {CustomEvent<OpenChangeDetail>} lu-open-change - The user asked to close the dialog. `detail.open` is `false`; `detail.source` is `escape` or `cancel` (the cancel button). Cancelable: `preventDefault()` keeps the dialog open, and the element still holds `open` while the event runs.
  * @fires {CustomEvent<Record<string, never>>} lu-confirm - The user pressed the confirm button. The owner runs the action, then closes the dialog. Not cancelable: the dialog runs nothing itself.
  */
 export class LumenConfirmDialog extends LumenDialog {
@@ -61,6 +64,10 @@ export class LumenConfirmDialog extends LumenDialog {
     emit(this, 'lu-confirm', {})
   }
 
+  private onCancelButton() {
+    this.requestOpen(false, 'cancel')
+  }
+
   render() {
     return html`
       <dialog
@@ -76,7 +83,7 @@ export class LumenConfirmDialog extends LumenDialog {
           ${this.renderDescription()}
           <slot></slot>
           <div class="actions">
-            <button type="button" class="lu-button lu-button--outline lu-button--sm" @click=${this.requestClose} autofocus>
+            <button type="button" class="lu-button lu-button--outline lu-button--sm" @click=${this.onCancelButton} autofocus>
               ${this.cancelLabel}
             </button>
             <button type="button" class="lu-button lu-button--danger lu-button--sm" ?disabled=${this.pending} @click=${this.confirm}>

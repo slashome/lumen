@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit'
 import { emit } from '../../lib/emit'
 import { define } from '../../lib/define'
-import type { ValueChangeDetail } from '../select/select'
+import type { ValueChangeDetail } from '../../lib/change'
 
 /**
  * A row of toggle buttons where at most one is pressed. Pressing the pressed one releases it, so the value can be empty.
@@ -11,7 +11,7 @@ import type { ValueChangeDetail } from '../select/select'
  * @summary A row of toggle buttons with at most one pressed.
  * @tag lu-segmented
  * @csspart group - The bordered row of buttons.
- * @fires {CustomEvent<ValueChangeDetail<string | null>>} lu-value-change - The user pressed a button. `detail.value` is its value, or `null` when the pressed one was released. Cancelable: `preventDefault()` keeps the current `value`, which the element still holds while the event runs.
+ * @fires {CustomEvent<ValueChangeDetail<string | null>>} lu-value-change - The user pressed a button. `detail.value` is its value, or `null` when the pressed one was released; `detail.source` is `option`. Cancelable: `preventDefault()` keeps the current `value`, which the element still holds while the event runs.
  */
 export class LumenSegmented extends LitElement {
   static properties = {
@@ -78,7 +78,7 @@ export class LumenSegmented extends LitElement {
   private press(event: MouseEvent, entry: string) {
     event.stopPropagation()
     const value = this.value === entry ? null : entry
-    if (emit<ValueChangeDetail<string | null>>(this, 'lu-value-change', { value }, { cancelable: true })) {
+    if (emit<ValueChangeDetail<string | null>>(this, 'lu-value-change', { value, source: 'option' }, { cancelable: true })) {
       this.value = value
     }
   }

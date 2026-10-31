@@ -34,7 +34,7 @@ export const Default: StoryObj = {
 
     await step('A click selects a tab and shows its panel', async () => {
       await userEvent.click(tab('History'))
-      await expect(changes).toHaveBeenLastCalledWith({ value: 'history' })
+      await expect(changes).toHaveBeenLastCalledWith({ value: 'history', source: 'option' })
       await waitFor(() => expect(tab('History')).toHaveAttribute('aria-selected', 'true'))
       await expect(canvas.getByRole('tabpanel', { name: 'History' })).toBeVisible()
     })
@@ -42,7 +42,7 @@ export const Default: StoryObj = {
     await step('The arrows select the next tab, skip the disabled one, and wrap', async () => {
       await userEvent.keyboard('{ArrowRight}')
       await expect(tab('Files')).toHaveFocus()
-      await expect(changes).toHaveBeenLastCalledWith({ value: 'files' })
+      await expect(changes).toHaveBeenLastCalledWith({ value: 'files', source: 'option' })
       await userEvent.keyboard('{ArrowRight}')
       await expect(tab('Overview')).toHaveFocus()
       await userEvent.keyboard('{ArrowLeft}')
@@ -75,7 +75,7 @@ export const Manual: StoryObj = {
     await expect(tab('Overview')).toHaveAttribute('aria-selected', 'true')
     await expect(changes).not.toHaveBeenCalled()
     await userEvent.keyboard('{Enter}')
-    await expect(changes).toHaveBeenLastCalledWith({ value: 'history' })
+    await expect(changes).toHaveBeenLastCalledWith({ value: 'history', source: 'option' })
     await waitFor(() => expect(tab('History')).toHaveAttribute('aria-selected', 'true'))
   },
 }

@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit'
 import { emit } from '../../lib/emit'
 import { define } from '../../lib/define'
-import type { ValueChangeDetail } from '../select/select'
+import type { ValueChangeDetail } from '../../lib/change'
 
 let instances = 0
 
@@ -23,7 +23,7 @@ function isEnabled(tab: HTMLElement | undefined): tab is HTMLElement {
  * @slot - The panels, one per tab, in the order of the tabs.
  * @slot tab - The tabs, usually `<button value>`. A tab without `value` takes its position, from `0`.
  * @csspart tablist - The row that holds the tabs.
- * @fires {CustomEvent<ValueChangeDetail>} lu-value-change - The user selected a tab other than the current one. `detail.value` is its value. Cancelable: `preventDefault()` keeps the current `value`, which the element still holds while the event runs.
+ * @fires {CustomEvent<ValueChangeDetail>} lu-value-change - The user selected a tab other than the current one. `detail.value` is its value, `detail.source` is `option`. Cancelable: `preventDefault()` keeps the current `value`, which the element still holds while the event runs.
  */
 export class LumenTabs extends LitElement {
   static properties = {
@@ -164,7 +164,7 @@ export class LumenTabs extends LitElement {
     if (index === this.selectedIndex) {
       return
     }
-    if (emit<ValueChangeDetail>(this, 'lu-value-change', { value }, { cancelable: true })) {
+    if (emit<ValueChangeDetail>(this, 'lu-value-change', { value, source: 'option' }, { cancelable: true })) {
       this.value = value
     }
   }

@@ -13,6 +13,7 @@ Rules, not a tutorial. Each one points to the decision that sets it, in [`docs/a
 - **The platform and the ARIA pattern first.** Check what native HTML (`<dialog>`, the popover API, `<select>`, a checkbox with `role="switch"`) and the WAI-ARIA pattern already give before writing a component. A component without state is a CSS class on native HTML; only state justifies a custom element. ([ADR-0001](docs/adr/0001-split-the-system-into-a-css-floor-and-a-lit-floor.md))
 - **Everything public is prefixed `lu-`**: elements, classes, custom properties, events (`CustomEvent`, bubbling and composed) and cascade layers. ([ADR-0001](docs/adr/0001-split-the-system-into-a-css-floor-and-a-lit-floor.md))
 - **No color and no primitive token in a component.** A component uses only semantic `--lu-*` tokens. A missing meaning is a new semantic token in `tokens/semantic`, with a `$description` saying what it is for and where not to use it; the build fails without one. ([ADR-0002](docs/adr/0002-build-tokens-with-style-dictionary.md))
+- **An element changes the state the user changes**, after a cancelable `lu-<noun>-change` that carries the new value and its `source`; a consumer controls it by cancelling the event and setting the property. ([ADR-0011](docs/adr/0011-change-state-after-a-cancelable-event.md))
 - **Icons by semantic name**, mapped in `icons/lumen.json`; nothing is fetched at run time. ([ADR-0003](docs/adr/0003-embed-icons-at-build-time-under-semantic-names.md))
 
 ## Code and documentation

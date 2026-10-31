@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useSyncExternalStore, type ComponentProps, type InputHTMLAttributes, type ReactElement, type ReactNode } from 'react'
 import type { LinkResolver } from '../components/markdown/markdown'
+import type { OpenChangeSource, ValueChangeSource } from '../lib/change'
 import type { MultiSelectOption } from '../components/multi-select/multi-select'
 import type { Range } from '../lib/highlight'
 import { highlightTerms } from '../lib/highlight-terms'
@@ -28,6 +29,7 @@ import {
 export { toast } from '../lib/toast'
 export type { LinkResolver, LinkTarget } from '../components/markdown/markdown'
 export type { MultiSelectOption } from '../components/multi-select/multi-select'
+export type { OpenChangeSource, ValueChangeSource } from '../lib/change'
 
 export function classes(...parts: (string | false | null | undefined)[]): string {
   return parts.filter(Boolean).join(' ')
@@ -144,9 +146,24 @@ export function ComingSoon({ title, children }: { title: string; children?: Reac
   )
 }
 
+function controlledBy<Detail>(controlled: boolean, handle: (detail: Detail) => void) {
+  return (event: CustomEvent<Detail>) => {
+    if (controlled) {
+      event.preventDefault()
+    }
+    handle(event.detail)
+  }
+}
+
+function only<Key extends string, Value>(key: Key, value: Value | undefined): Partial<Record<Key, Value>> {
+  return value === undefined ? {} : ({ [key]: value } as Record<Key, Value>)
+}
+
+export type OpenChangeHandler = (open: boolean, source: OpenChangeSource) => void
+
 interface DialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open?: boolean
+  onOpenChange?: OpenChangeHandler
   title: ReactNode
   description?: ReactNode
   className?: string
@@ -162,9 +179,13 @@ function Titles({ title, description }: { title: ReactNode; description?: ReactN
   )
 }
 
+function openChange(open: boolean | undefined, onOpenChange: OpenChangeHandler | undefined) {
+  return controlledBy<{ open: boolean; source: OpenChangeSource }>(open !== undefined, (detail) => onOpenChange?.(detail.open, detail.source))
+}
+
 export function Dialog({ open, onOpenChange, title, description, className, children }: DialogProps) {
   return (
-    <DialogElement open={open} onOpenChange={(event) => onOpenChange(event.detail.open)} className={className}>
+    <DialogElement {...only('open', open)} onOpenChange={openChange(open, onOpenChange)} className={className}>
       <Titles title={title} description={description} />
       {children}
     </DialogElement>
@@ -173,7 +194,7 @@ export function Dialog({ open, onOpenChange, title, description, className, chil
 
 export function Sheet({ open, onOpenChange, title, description, className, children }: DialogProps) {
   return (
-    <SheetElement open={open} onOpenChange={(event) => onOpenChange(event.detail.open)} className={className}>
+    <SheetElement {...only('open', open)} onOpenChange={openChange(open, onOpenChange)} className={className}>
       <Titles title={title} description={description} />
       {children}
     </SheetElement>
@@ -192,8 +213,8 @@ export function ConfirmDialog({
 }: Omit<DialogProps, 'children' | 'className'> & { confirmLabel: string; cancelLabel?: string; pending?: boolean; onConfirm: () => void }) {
   return (
     <ConfirmDialogElement
-      open={open}
-      onOpenChange={(event) => onOpenChange(event.detail.open)}
+      {...only('open', open)}
+      onOpenChange={openChange(open, onOpenChange)}
       onConfirm={onConfirm}
       confirmLabel={confirmLabel}
       cancelLabel={cancelLabel}
@@ -204,8 +225,12 @@ export function ConfirmDialog({
   )
 }
 
-export function Tooltip({ content, children }: { content: string; children: ReactElement }) {
-  return <TooltipElement content={content}>{children}</TooltipElement>
+export function Tooltip({ content, open, onOpenChange, children }: { content: string; open?: boolean; onOpenChange?: OpenChangeHandler; children: ReactElement }) {
+  return (
+    <TooltipElement content={content} {...only('open', open)} onOpenChange={openChange(open, onOpenChange)}>
+      {children}
+    </TooltipElement>
+  )
 }
 
 export function HoverCard({
@@ -213,16 +238,20 @@ export function HoverCard({
   children,
   openDelay = 700,
   pinned = false,
+  open,
+  onOpenChange,
   className,
 }: {
   trigger: ReactElement
   children: ReactNode
   openDelay?: number
   pinned?: boolean
+  open?: boolean
+  onOpenChange?: OpenChangeHandler
   className?: string
 }) {
   return (
-    <HoverCardElement openDelay={openDelay} pinned={pinned} className={className}>
+    <HoverCardElement openDelay={openDelay} pinned={pinned} {...only('open', open)} onOpenChange={openChange(open, onOpenChange)} className={className}>
       <span slot="trigger">{trigger}</span>
       {children}
     </HoverCardElement>
@@ -238,14 +267,19 @@ export function Select({
   className,
 }: {
   label: string
-  value: string
-  onValueChange: (value: string) => void
+  value?: string
+  onValueChange?: (value: string, source: ValueChangeSource) => void
   display?: ReactNode
   children: ReactNode
   className?: string
 }) {
   return (
-    <SelectElement label={label} value={value} onValueChange={(event) => onValueChange(event.detail.value)} className={className}>
+    <SelectElement
+      label={label}
+      {...only('value', value)}
+      onValueChange={controlledBy<{ value: string; source: ValueChangeSource }>(value !== undefined, (detail) => onValueChange?.(detail.value, detail.source))}
+      className={className}
+    >
       {display ? <span slot="display">{display}</span> : null}
       {children}
     </SelectElement>
@@ -268,10 +302,17 @@ export function MultiSelect({
 }: {
   label: string
   options: MultiSelectOption[]
-  selected: string[]
-  onChange: (selected: string[]) => void
+  selected?: string[]
+  onChange?: (selected: string[], source: ValueChangeSource) => void
 }) {
-  return <MultiSelectElement label={label} options={options} selected={selected} onSelectedChange={(event) => onChange(event.detail.selected)} />
+  return (
+    <MultiSelectElement
+      label={label}
+      options={options}
+      {...only('selected', selected)}
+      onSelectedChange={controlledBy<{ selected: string[]; source: ValueChangeSource }>(selected !== undefined, (detail) => onChange?.(detail.selected, detail.source))}
+    />
+  )
 }
 
 export function Segmented({
@@ -283,11 +324,19 @@ export function Segmented({
 }: {
   label: string
   values: string[]
-  value: string | null
-  onChange: (value: string | null) => void
+  value?: string | null
+  onChange?: (value: string | null, source: ValueChangeSource) => void
   focusable?: boolean
 }) {
-  return <SegmentedElement label={label} values={values} value={value} focusable={focusable} onValueChange={(event) => onChange(event.detail.value)} />
+  return (
+    <SegmentedElement
+      label={label}
+      values={values}
+      {...only('value', value)}
+      focusable={focusable}
+      onValueChange={controlledBy<{ value: string | null; source: ValueChangeSource }>(value !== undefined, (detail) => onChange?.(detail.value, detail.source))}
+    />
+  )
 }
 
 export function Tabs({
@@ -299,14 +348,20 @@ export function Tabs({
   className,
 }: {
   label: string
-  value: string
-  onChange: (value: string) => void
+  value?: string
+  onChange?: (value: string, source: ValueChangeSource) => void
   manual?: boolean
   children: ReactNode
   className?: string
 }) {
   return (
-    <TabsElement label={label} value={value} manual={manual} onValueChange={(event) => onChange(event.detail.value)} className={className}>
+    <TabsElement
+      label={label}
+      {...only('value', value)}
+      manual={manual}
+      onValueChange={controlledBy<{ value: string; source: ValueChangeSource }>(value !== undefined, (detail) => onChange?.(detail.value, detail.source))}
+      className={className}
+    >
       {children}
     </TabsElement>
   )

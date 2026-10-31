@@ -1,17 +1,16 @@
 import { css, html, LitElement, nothing, type PropertyValues } from 'lit'
+import type { OpenChangeDetail, OpenChangeSource } from '../../lib/change'
 import { emit } from '../../lib/emit'
 import { define } from '../../lib/define'
 import { buttonStyles } from '../../lib/styles'
 import '../icon/icon'
 
-export interface OpenChangeDetail {
-  open: boolean
-}
+export type { OpenChangeDetail, OpenChangeSource } from '../../lib/change'
 
 /**
  * A modal dialog on the native `<dialog>`: it traps focus, closes on Escape, a click on the backdrop or its close button, and restores focus on close.
  *
- * The dialog is controlled: it never closes itself, it fires `lu-open-change` with `open: false` and the owner sets `open`.
+ * The dialog closes itself: it fires a cancelable `lu-open-change`, then clears `open` unless a listener called `preventDefault()`. To control it, cancel the event and set `open` yourself.
  *
  * @summary A modal dialog with a title, an optional description and free content.
  * @tag lu-dialog
@@ -23,7 +22,7 @@ export interface OpenChangeDetail {
  * @csspart title - The `<h2>` that holds the title.
  * @csspart description - The paragraph that holds the description.
  * @cssprop --lu-dialog-width - The inline size of the dialog, capped by the viewport. Defaults to 56rem.
- * @fires {CustomEvent<OpenChangeDetail>} lu-open-change - The user asked to close the dialog: Escape, the backdrop, the close button. `detail.open` is `false`. Not cancelable: the dialog never closes itself, so there is nothing to prevent; leave `open` set to keep it open.
+ * @fires {CustomEvent<OpenChangeDetail>} lu-open-change - The user asked to close the dialog. `detail.open` is `false`; `detail.source` is `escape`, `outside` (the backdrop), `close-button`, or `form` (a `<form method="dialog">` inside it). Cancelable: `preventDefault()` keeps the dialog open, and the element still holds `open` while the event runs. When the browser does not let Escape be cancelled, the dialog closes and shows again.
  */
 export class LumenDialog extends LitElement {
   static properties = {
@@ -112,7 +111,7 @@ export class LumenDialog extends LitElement {
     `,
   ]
 
-  /** Whether the dialog is shown, as a modal. The owner sets it; the dialog only asks to change it through `lu-open-change`. */
+  /** Whether the dialog is shown, as a modal. The dialog clears it when the user closes it, unless `lu-open-change` is cancelled. */
   declare open: boolean
   /** The title of the dialog, which also names it for assistive technology. */
   declare heading: string
@@ -121,6 +120,7 @@ export class LumenDialog extends LitElement {
   /** The accessible name of the close button. */
   declare closeLabel: string
   declare protected slottedDescription: boolean
+  private forcedEscape = false
 
   constructor() {
     super()
@@ -153,26 +153,43 @@ export class LumenDialog extends LitElement {
     }
   }
 
-  protected requestClose() {
-    emit<OpenChangeDetail>(this, 'lu-open-change', { open: false })
+  protected requestOpen(open: boolean, source: OpenChangeSource): boolean {
+    if (!emit<OpenChangeDetail>(this, 'lu-open-change', { open, source }, { cancelable: true })) {
+      return false
+    }
+    this.open = open
+    return true
   }
 
   protected onCancel(event: Event) {
+    if (!event.cancelable) {
+      this.forcedEscape = true
+      return
+    }
     event.preventDefault()
-    this.requestClose()
+    this.requestOpen(false, 'escape')
   }
 
   protected onClose() {
-    if (this.open && !this.dialog?.open) {
-      this.open = false
-      this.requestClose()
+    const source = this.forcedEscape ? 'escape' : 'form'
+    this.forcedEscape = false
+    const dialog = this.dialog
+    if (!this.open || !dialog || dialog.open) {
+      return
+    }
+    if (!this.requestOpen(false, source)) {
+      dialog.showModal()
     }
   }
 
   protected onBackdropClick(event: MouseEvent) {
     if (event.target === this.dialog) {
-      this.requestClose()
+      this.requestOpen(false, 'outside')
     }
+  }
+
+  private onCloseButton() {
+    this.requestOpen(false, 'close-button')
   }
 
   protected get described(): boolean {
@@ -205,7 +222,7 @@ export class LumenDialog extends LitElement {
               <h2 id="title" class="title" part="title"><slot name="heading">${this.heading}</slot></h2>
               ${this.renderDescription()}
             </div>
-            <button type="button" class="lu-icon-button close" aria-label=${this.closeLabel} @click=${this.requestClose}>
+            <button type="button" class="lu-icon-button close" aria-label=${this.closeLabel} @click=${this.onCloseButton}>
               <lu-icon name="close"></lu-icon>
             </button>
           </div>
