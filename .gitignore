@@ -8,3 +8,4 @@ src/vue/elements.ts
 custom-elements.json
 *.tsbuildinfo
 .DS_Store
+__screenshots__

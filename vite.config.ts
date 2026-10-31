@@ -3,6 +3,8 @@ import { existsSync, readdirSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
 import { configDefaults } from 'vitest/config'
+import { storybookTest } from '@storybook/addon-vitest/vitest-plugin'
+import { playwright } from '@vitest/browser-playwright'
 
 const litReactForBrowsers = join(dirname(createRequire(import.meta.url).resolve('@lit/react')), '..', 'development', 'index.js')
 
@@ -27,9 +29,30 @@ export default defineConfig({
     sourcemap: true,
   },
   test: {
-    environment: 'jsdom',
-    setupFiles: ['./src/testing/setup.ts'],
-    alias: [{ find: /^@lit\/react$/, replacement: litReactForBrowsers }],
-    exclude: [...configDefaults.exclude, 'storybook-static/**'],
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          environment: 'jsdom',
+          setupFiles: ['./src/testing/setup.ts'],
+          alias: [{ find: /^@lit\/react$/, replacement: litReactForBrowsers }],
+          exclude: [...configDefaults.exclude, 'storybook-static/**'],
+        },
+      },
+      {
+        extends: true,
+        plugins: [storybookTest({ configDir: '.storybook' })],
+        test: {
+          name: 'storybook',
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: playwright(),
+            instances: [{ browser: 'chromium' }],
+          },
+        },
+      },
+    ],
   },
 })
