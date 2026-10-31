@@ -21,6 +21,7 @@
 @import '../components/progress/progress.css';
 @import '../components/breadcrumb/breadcrumb.css';
 @import '../components/pagination/pagination.css';
+@import '../components/stepper/stepper.css';
 @import '../components/markdown/markdown.css';
 @import '../components/data-table/data-table.css';
 @import '../components/highlight/mark.css';
