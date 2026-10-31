@@ -27,8 +27,9 @@ async function render(source, keep) {
   return declarations(platform, keep)
 }
 
-const light = await render(['tokens/primitive/**/*.json', 'tokens/semantic/light/**/*.json'])
-const dark = await render(['tokens/primitive/**/*.json', 'tokens/semantic/light/**/*.json', 'tokens/semantic/dark/**/*.json'], onlyFrom('semantic/dark'))
+const shared = ['tokens/primitive/**/*.json', 'tokens/semantic/base/**/*.json', 'tokens/semantic/light/**/*.json']
+const light = await render(shared)
+const dark = await render([...shared, 'tokens/semantic/dark/**/*.json'], onlyFrom('semantic/dark'))
 
 const css = [
   '@layer lu.tokens {',
