@@ -1,7 +1,7 @@
 node_modules
 dist
 storybook-static
-src/css/tokens.css
+src/foundations/tokens.css
 src/icons/generated.ts
 custom-elements.json
 *.tsbuildinfo

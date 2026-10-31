@@ -1,10 +1,10 @@
 import { createComponent, type EventName } from '@lit/react'
 import * as React from 'react'
-import type { OpenChangeDetail } from '../elements/dialog'
-import type { DragEndDetail } from '../elements/drag-area'
-import type { NavigateDetail } from '../elements/markdown'
-import type { SelectedChangeDetail } from '../elements/multi-select'
-import type { ValueChangeDetail } from '../elements/select'
+import type { OpenChangeDetail } from '../components/dialog/dialog'
+import type { DragEndDetail } from '../components/drag-area/drag-area'
+import type { NavigateDetail } from '../components/markdown/markdown'
+import type { SelectedChangeDetail } from '../components/multi-select/multi-select'
+import type { ValueChangeDetail } from '../components/select/select'
 import {
   LumenConfirmDialog,
   LumenDialog,

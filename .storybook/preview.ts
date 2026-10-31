@@ -1,6 +1,6 @@
 import { setCustomElementsManifest, type Preview } from '@storybook/web-components-vite'
 import manifest from '../custom-elements.json'
-import '../src/css/lumen.css'
+import '../src/foundations/lumen.css'
 import '../src/index'
 
 setCustomElementsManifest(manifest)

@@ -3,7 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import StyleDictionary from 'style-dictionary'
 import { formattedVariables } from 'style-dictionary/utils'
 
-const destination = 'src/css/tokens.css'
+const destination = 'src/foundations/tokens.css'
 const prefix = 'lu'
 const darkSelectors = [":root[data-appearance='dark']", "@media (prefers-color-scheme: dark) { :root:not([data-appearance]) {"]
 
@@ -50,6 +50,6 @@ const css = [
   '',
 ].join('\n')
 
-await mkdir('src/css', { recursive: true })
+await mkdir('src/foundations', { recursive: true })
 await writeFile(destination, css)
 console.log(`tokens: ${destination}`)
