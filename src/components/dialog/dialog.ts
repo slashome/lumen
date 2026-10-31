@@ -69,7 +69,7 @@ export class LumenDialog extends LumenModal {
         <div class="panel" part="panel">
           <div class="header">
             <div class="titles">
-              <h2 id="title" class="title" part="title"><slot name="heading">${this.heading}</slot></h2>
+              <h2 id="title" class="title" part="title"><slot name="heading">${this.renderHeading()}</slot></h2>
               ${this.renderDescription()}
             </div>
             <button type="button" class="lu-icon-button close" aria-label=${this.messages.text('close', this.closeLabel, 'close-label') ?? nothing} @click=${this.onCloseButton}>

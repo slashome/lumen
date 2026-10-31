@@ -1,6 +1,7 @@
 import { setCustomElementsManifest, type Preview } from '@storybook/web-components-vite'
 import manifest from '../custom-elements.json'
 import { declarationOf, markDeprecated } from './deprecated'
+import { markRequired } from './required'
 import '../src/foundations/lumen.css'
 import '../src/index'
 import { registerDemoMessages } from '../stories/messages'
@@ -39,7 +40,7 @@ const preview: Preview = {
       return story()
     },
   ],
-  argTypesEnhancers: [(context) => markDeprecated(context.argTypes, declarationOf(manifest, context.component))],
+  argTypesEnhancers: [(context) => markRequired(markDeprecated(context.argTypes, declarationOf(manifest, context.component)), declarationOf(manifest, context.component))],
   parameters: {
     controls: { expanded: true },
     a11y: { test: 'error' },

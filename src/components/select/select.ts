@@ -1,6 +1,7 @@
-import { css, html, LitElement, type PropertyValues } from 'lit'
+import { css, html, LitElement, nothing, type PropertyValues } from 'lit'
 import type { ValueChangeDetail } from '../../lib/change'
 import { emit } from '../../lib/emit'
+import { requiredLabel } from '../../lib/messages'
 import { float } from '../../lib/floating'
 import { isPopoverOpen } from '../../lib/popover'
 import { define } from '../../lib/define'
@@ -90,7 +91,10 @@ export class LumenSelect extends LitElement {
     `,
   ]
 
-  /** The accessible name of the select and of its list. */
+  /**
+   * The accessible name of the select and of its list. Without it, the element logs an error.
+   * @required
+   */
   declare label: string
   /** The value of the selected option. An empty string, or a value no option has, selects nothing. */
   declare value: string
@@ -244,7 +248,7 @@ export class LumenSelect extends LitElement {
         role="combobox"
         aria-haspopup="listbox"
         aria-expanded=${String(this.expanded)}
-        aria-label=${this.label}
+        aria-label=${requiredLabel(this, this.label, 'label') ?? nothing}
         ?disabled=${this.disabled}
         @click=${this.open}
         @keydown=${this.onTriggerKeydown}
@@ -252,7 +256,7 @@ export class LumenSelect extends LitElement {
         <span class="value"><slot name="display">${this.selectedLabel}</slot></span>
         <lu-icon class="chevron" name="chevron-down"></lu-icon>
       </button>
-      <div popover="auto" role="listbox" part="listbox" aria-label=${this.label} @toggle=${this.onToggle} @keydown=${this.onListKeydown} @click=${this.onListClick}>
+      <div popover="auto" role="listbox" part="listbox" aria-label=${this.label || nothing} @toggle=${this.onToggle} @keydown=${this.onListKeydown} @click=${this.onListClick}>
         <slot @slotchange=${this.syncOptions}></slot>
       </div>
     `

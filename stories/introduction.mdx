@@ -58,7 +58,7 @@ vue({ template: { compilerOptions: { isCustomElement: isLumenElement } } })
 ```
 
 ```vue
-<lu-select :value="status" @lu-value-change="status = $event.detail.value">
+<lu-select label="Status" :value="status" @lu-value-change="status = $event.detail.value">
   <lu-option value="todo">To do</lu-option>
 </lu-select>
 ```

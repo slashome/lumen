@@ -137,3 +137,27 @@ export const Controlled: StoryObj = {
     })
   },
 }
+
+export const RegisteredLabel: StoryObj = {
+  name: 'Registered confirm label',
+  parameters: {
+    docs: {
+      description: {
+        story: 'Without `confirm-label`, the confirm button takes the `confirm` message registered with `registerLumenMessages()`. Prefer a `confirm-label` that names the action where it is destructive.',
+      },
+    },
+  },
+  render: () => html`
+    <button class="lu-button lu-button--outline" @click=${openNext}>Archive</button>
+    <lu-confirm-dialog heading="Archive T104?" @lu-confirm=${closeSelf}></lu-confirm-dialog>
+  `,
+  play: async ({ canvas, canvasElement, userEvent }) => {
+    const host = canvasElement.querySelector('lu-confirm-dialog')
+    const dialog = inShadow<HTMLDialogElement>(host, 'dialog')
+    await userEvent.click(canvas.getByRole('button', { name: 'Archive' }))
+    await waitFor(() => expect(dialog).toHaveAttribute('open'))
+    await expect(inShadow(host, '.actions .lu-button--danger')).toHaveTextContent('Confirm')
+    dialog.requestClose()
+    await waitFor(() => expect(dialog).not.toHaveAttribute('open'))
+  },
+}

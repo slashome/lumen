@@ -1,6 +1,7 @@
 import { css, html, LitElement, type PropertyValues } from 'lit'
 import type { OpenChangeDetail, OpenChangeSource } from '../../lib/change'
 import { emit } from '../../lib/emit'
+import { reportMissingAttribute } from '../../lib/messages'
 
 export class LumenModal extends LitElement {
   static properties = {
@@ -84,7 +85,7 @@ export class LumenModal extends LitElement {
 
   /** Whether the dialog is shown, as a modal. The dialog clears it when the user closes it, unless `lu-open-change` is cancelled. */
   declare open: boolean
-  /** The title of the dialog, which also names it for assistive technology. */
+  /** The title of the dialog, which also names it for assistive technology. Without it or a child in the `heading` slot, the element logs an error. */
   declare heading: string
   /** A sentence under the title, which also describes the dialog for assistive technology. */
   declare description: string
@@ -154,6 +155,13 @@ export class LumenModal extends LitElement {
     if (event.target === this.dialog) {
       this.requestOpen(false, 'outside')
     }
+  }
+
+  protected renderHeading(): string {
+    if (!this.heading && !this.querySelector(':scope > [slot="heading"]')) {
+      reportMissingAttribute(this, this.localName, 'heading (or a child in slot="heading")')
+    }
+    return this.heading
   }
 
   protected get described(): boolean {

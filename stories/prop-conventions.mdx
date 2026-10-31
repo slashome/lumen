@@ -73,8 +73,8 @@ The platform's rule: **present means true, absent means false**, and the default
 ## Text and labels
 
 - **Lumen ships no text** ([Labels](?path=/docs/foundations-labels--docs)). The application registers the generic labels once with `registerLumenMessages()`, and an attribute on an instance wins over them.
-- **`label` is the accessible name** of the element: `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-icon`, `lu-draggable`, `lu-drop-zone`, `lu-toaster`.
-- **Every text the element draws itself is an attribute named `*-label`**, with no default: `close-label`, `cancel-label`, `clear-label` fall back to the registry; `confirm-label`, which names one action, is required on every instance.
+- **`label` is the accessible name** of the element: `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-tabs`, `lu-icon`, `lu-draggable`, `lu-drop-zone`, `lu-toaster`. It is **required** where nothing else names the control, on `lu-select`, `lu-multi-select`, `lu-segmented` and `lu-tabs`: required in the React and Vue types, marked required in the props table, and a console error when it is missing.
+- **Every text the element draws itself is an attribute named `*-label`**, with no default: `close-label`, `confirm-label`, `cancel-label`, `clear-label` fall back to the registry. Prefer a `confirm-label` that names the action to the generic `confirm` message.
 - **Short text is an attribute; text that needs markup is a slot of the same name**: the `heading` attribute or `<span slot="heading">`, the `description` attribute or `<span slot="description">`.
 
 ## Slots

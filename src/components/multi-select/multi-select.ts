@@ -3,7 +3,7 @@ import type { SelectedChangeDetail, ValueChangeSource } from '../../lib/change'
 import { emit } from '../../lib/emit'
 import { float } from '../../lib/floating'
 import { define } from '../../lib/define'
-import { MessagesController } from '../../lib/messages'
+import { MessagesController, requiredLabel } from '../../lib/messages'
 import { nextIndex } from '../../lib/list-navigation'
 import { buttonStyles, popoverStyles } from '../../lib/styles'
 import '../icon/icon'
@@ -104,7 +104,10 @@ export class LumenMultiSelect extends LitElement {
     `,
   ]
 
-  /** The text of the button, which also names the menu. */
+  /**
+   * The text of the button, which also names the menu. Without it, the element logs an error.
+   * @required
+   */
   declare label: string
   /** The items of the menu, in order: `{ value, label }`. */
   declare options: MultiSelectOption[]
@@ -207,10 +210,10 @@ export class LumenMultiSelect extends LitElement {
         @click=${this.open}
         @keydown=${this.onTriggerKeydown}
       >
-        ${this.label} ${this.selected.length > 0 ? html`<span class="count">${this.selected.length}</span>` : nothing}
+        ${requiredLabel(this, this.label, 'label') ?? nothing} ${this.selected.length > 0 ? html`<span class="count">${this.selected.length}</span>` : nothing}
         <lu-icon class="chevron" name="chevron-down"></lu-icon>
       </button>
-      <div popover="auto" role="menu" part="menu" aria-label=${this.label} @toggle=${this.onToggle} @keydown=${this.onMenuKeydown}>
+      <div popover="auto" role="menu" part="menu" aria-label=${this.label || nothing} @toggle=${this.onToggle} @keydown=${this.onMenuKeydown}>
         ${this.options.map(
           (option) => html`
             <button

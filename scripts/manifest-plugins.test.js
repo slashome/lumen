@@ -1,7 +1,7 @@
 import { create, ts } from '@custom-elements-manifest/analyzer'
 import { litPlugin } from '@custom-elements-manifest/analyzer/src/features/framework-plugins/lit/lit.js'
 import { describe, expect, it } from 'vitest'
-import { deprecatedInClassTags, publicApiOnly, taggedElementsOnly } from './manifest-plugins.js'
+import { deprecatedInClassTags, publicApiOnly, requiredMembers, taggedElementsOnly } from './manifest-plugins.js'
 
 const source = `
 import { LitElement } from 'lit'
@@ -16,11 +16,17 @@ import { LitElement } from 'lit'
  */
 export class LumenFixture extends LitElement {
   static properties = {
+    label: {},
     value: {},
     tone: {},
     expanded: { state: true },
   }
 
+  /**
+   * The accessible name.
+   * @required
+   */
+  declare label: string
   /** The value. */
   declare value: string
   /**
@@ -34,15 +40,22 @@ export class LumenFixture extends LitElement {
 
 function analyze() {
   const module = ts.createSourceFile('src/fixture.ts', source, ts.ScriptTarget.ES2023, true)
-  const manifest = create({ modules: [module], plugins: [...litPlugin(), publicApiOnly(), deprecatedInClassTags()] })
+  const manifest = create({ modules: [module], plugins: [...litPlugin(), requiredMembers(), publicApiOnly(), deprecatedInClassTags()] })
   return manifest.modules[0].declarations[0]
 }
 
 describe('manifest plugins', () => {
   it('keeps internal state out of the attributes and the members', () => {
     const element = analyze()
-    expect(element.attributes.map((attribute) => attribute.name)).toEqual(['value', 'tone'])
-    expect(element.members.map((member) => member.name)).toEqual(['value', 'tone'])
+    expect(element.attributes.map((attribute) => attribute.name)).toEqual(['label', 'value', 'tone'])
+    expect(element.members.map((member) => member.name)).toEqual(['label', 'value', 'tone'])
+  })
+
+  it('marks a property tagged @required, and its attribute, as required', () => {
+    const element = analyze()
+    expect(element.members.find((member) => member.name === 'label')).toMatchObject({ required: true, description: 'The accessible name.' })
+    expect(element.attributes.find((attribute) => attribute.name === 'label')).toMatchObject({ required: true })
+    expect(element.members.find((member) => member.name === 'value').required).toBeUndefined()
   })
 
   it('carries @deprecated from a property to its attribute', () => {

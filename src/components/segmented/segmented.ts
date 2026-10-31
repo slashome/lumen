@@ -1,5 +1,6 @@
-import { css, html, LitElement } from 'lit'
+import { css, html, LitElement, nothing } from 'lit'
 import { emit } from '../../lib/emit'
+import { requiredLabel } from '../../lib/messages'
 import { define } from '../../lib/define'
 import type { ValueChangeDetail } from '../../lib/change'
 
@@ -59,7 +60,10 @@ export class LumenSegmented extends LitElement {
     }
   `
 
-  /** The accessible name of the group. */
+  /**
+   * The accessible name of the group. Without it, the element logs an error.
+   * @required
+   */
   declare label: string
   /** The values, one button each, shown as they are. */
   declare values: string[]
@@ -92,7 +96,7 @@ export class LumenSegmented extends LitElement {
 
   render() {
     return html`
-      <div class="group" role="group" aria-label=${this.label} part="group">
+      <div class="group" role="group" aria-label=${requiredLabel(this, this.label, 'label') ?? nothing} part="group">
         ${this.values.map(
           (entry) => html`
             <button type="button" tabindex=${this.skipTab || !this.focusable ? -1 : 0} aria-pressed=${String(this.value === entry)} @click=${(event: MouseEvent) => this.press(event, entry)}>

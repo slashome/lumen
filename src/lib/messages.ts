@@ -2,6 +2,7 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit'
 
 export interface LumenMessages {
   close: string
+  confirm: string
   cancel: string
   clear: string
   notifications: string
@@ -21,6 +22,7 @@ type FormatKey = Exclude<LumenMessageKey, TextKey>
 type Params<Key extends FormatKey> = Parameters<LumenMessages[Key]>[0]
 export const lumenMessageKeys = [
   'close',
+  'confirm',
   'cancel',
   'clear',
   'notifications',
@@ -115,7 +117,14 @@ export function reportMissingAttribute(owner: object, name: string, attribute: s
     return
   }
   seen.add(attribute)
-  console.error(`[lumen] <${name}> needs ${attribute}: this label is given per instance and has no registered default.`)
+  console.error(`[lumen] <${name}> needs ${attribute}: it gives the element its accessible name, and Lumen has no default for it.`)
+}
+
+export function requiredLabel(owner: Element, value: string | null | undefined, attribute: string): string | undefined {
+  if (!value) {
+    reportMissingAttribute(owner, owner.localName, attribute)
+  }
+  return value || undefined
 }
 
 export class MessagesController implements ReactiveController {
@@ -153,12 +162,5 @@ export class MessagesController implements ReactiveController {
       return ''
     }
     return found(params)
-  }
-
-  required(own: string | null | undefined, attribute: string): string | undefined {
-    if (!own) {
-      reportMissingAttribute(this.host, this.host.localName, attribute)
-    }
-    return own || undefined
   }
 }

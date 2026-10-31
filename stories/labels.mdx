@@ -9,9 +9,9 @@ import { Meta } from '@storybook/addon-docs/blocks'
 ## The rule
 
 - **Generic labels come from a registry.** The close button of a dialog, the cancel button of a confirm dialog, the drag-and-drop announcements: the application registers them once at start-up, for each language, with `registerLumenMessages()`.
-- **An attribute on an instance wins over the registry.** `close-label`, `cancel-label`, `clear-label`, the `label` of `lu-toaster`, the `role-description` of `lu-draggable`.
-- **A label that names one action is given per instance and has no registry key.** `confirm-label` on `lu-confirm-dialog` is required: a global « Confirm » is a poor name for « Delete the project ».
-- **A missing label is an error.** With neither an attribute nor a registered message, the element logs a `console.error` that names the element, the key or the attribute, and the language it looked for, and renders nothing in place of the text. A button left without a name then fails the accessibility test of its story.
+- **An attribute on an instance wins over the registry.** `close-label`, `confirm-label`, `cancel-label`, `clear-label`, the `label` of `lu-toaster`, the `role-description` of `lu-draggable`. The registry's `confirm` is a generic « Confirm »: give `confirm-label` a verb that names the action, « Delete the project », wherever the action is destructive.
+- **The name of a control is given per instance.** `label` is required on `lu-select`, `lu-multi-select`, `lu-segmented` and `lu-tabs`, and `heading` (or the `heading` slot) on `lu-dialog`, `lu-sheet` and `lu-confirm-dialog`: no registry key could name them. The React and Vue types require `label`, and the props table marks it required.
+- **A missing label is an error.** With neither an attribute nor a registered message, the element logs a `console.error` that names the element, the key or the attribute, and the language it looked for, and renders nothing in place of the text. A button left without a name then fails the accessibility test of its story, and the unit tests mount every element without any label to check that each one is reported.
 
 ## The order of resolution
 
@@ -37,6 +37,7 @@ The registry is kept on `globalThis` under `Symbol.for('@slashome/lumen/messages
 | Key | Type | Used by |
 | --- | --- | --- |
 | `close` | `string` | The close button of `lu-dialog`, `lu-sheet` and each toast of `lu-toaster`; attribute `close-label`. |
+| `confirm` | `string` | The confirm button of `lu-confirm-dialog`; attribute `confirm-label`, preferred. |
 | `cancel` | `string` | The cancel button of `lu-confirm-dialog`; attribute `cancel-label`. |
 | `clear` | `string` | The clear item of `lu-multi-select`; attribute `clear-label`. |
 | `notifications` | `string` | The region of `lu-toaster`; attribute `label`. |
@@ -58,6 +59,7 @@ import { t } from './i18n'
 
 registerLumenMessages('fr', {
   close: t('close'),
+  confirm: t('confirm'),
   cancel: t('cancel'),
   clear: t('clear'),
   notifications: t('notifications'),
@@ -73,7 +75,7 @@ registerLumenMessages('fr', {
 createRoot(document.getElementById('root')!).render(<App />)
 ```
 
-`ConfirmDialog` requires `confirmLabel`; `Dialog`, `Sheet`, `Toaster`, `MultiSelect`, `Draggable` and `LoadingState` take an optional label prop that wins over the registry.
+`Select`, `MultiSelect`, `Segmented` and `Tabs` require `label`, and so do their raw wrappers (`SelectElement`…). `Dialog`, `Sheet`, `ConfirmDialog` (`confirmLabel`, `cancelLabel`), `Toaster`, `MultiSelect` (`clearLabel`), `Draggable` and `LoadingState` take optional label props that win over the registry.
 
 ## Vue
 
@@ -85,4 +87,4 @@ import { en, fr } from './lumen-messages'
 createApp(App).use(lumen, { messages: { en, fr } }).mount('#app')
 ```
 
-The plugin calls `registerLumenMessages()` for each language. An instance overrides it with its attribute: `<lu-dialog close-label="Fermer la fiche">`.
+The plugin calls `registerLumenMessages()` for each language. An instance overrides it with its attribute: `<lu-dialog close-label="Fermer la fiche">`. The tags and `LuSelect`, `LuMultiSelect`, `LuSegmented` and `LuTabs` require `label` in their types.

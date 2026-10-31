@@ -234,13 +234,13 @@ export function ConfirmDialog({
   cancelLabel,
   pending = false,
   onConfirm,
-}: Omit<ModalProps, 'children' | 'className'> & { confirmLabel: string; cancelLabel?: string; pending?: boolean; onConfirm: () => void }) {
+}: Omit<ModalProps, 'children' | 'className'> & { confirmLabel?: string; cancelLabel?: string; pending?: boolean; onConfirm: () => void }) {
   return (
     <ConfirmDialogElement
       {...only('open', open)}
       onOpenChange={openChange(open, onOpenChange)}
       onConfirm={onConfirm}
-      confirmLabel={confirmLabel}
+      {...only('confirmLabel', confirmLabel)}
       {...only('cancelLabel', cancelLabel)}
       pending={pending}
     >

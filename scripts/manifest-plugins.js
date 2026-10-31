@@ -58,3 +58,35 @@ export function taggedElementsOnly() {
     },
   }
 }
+
+function hasRequiredTag(ts, member) {
+  return ts.getJSDocTags(member).some((tag) => tag.tagName.text === 'required')
+}
+
+export function requiredMembers() {
+  return {
+    name: 'lumen/required-members',
+    analyzePhase({ ts, node, moduleDoc }) {
+      if (!ts.isClassDeclaration(node) || !node.name) {
+        return
+      }
+      const declaration = moduleDoc.declarations?.find((candidate) => candidate.name === node.name.text)
+      const required = new Set(node.members.filter((member) => member.name && hasRequiredTag(ts, member)).map((member) => member.name.getText()))
+      for (const member of declaration?.members ?? []) {
+        if (required.has(member.name)) {
+          member.required = true
+        }
+      }
+    },
+    packageLinkPhase({ customElementsManifest }) {
+      for (const declaration of classesOf(customElementsManifest)) {
+        const required = new Set((declaration.members ?? []).filter((member) => member.required).map((member) => member.name))
+        for (const attribute of declaration.attributes ?? []) {
+          if (required.has(attribute.fieldName)) {
+            attribute.required = true
+          }
+        }
+      }
+    },
+  }
+}

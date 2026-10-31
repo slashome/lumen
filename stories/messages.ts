@@ -2,6 +2,7 @@ import { registerLumenMessages, type LumenMessages } from '../src/lib/messages'
 
 export const en: LumenMessages = {
   close: 'Close',
+  confirm: 'Confirm',
   cancel: 'Cancel',
   clear: 'Clear',
   notifications: 'Notifications',
@@ -16,6 +17,7 @@ export const en: LumenMessages = {
 
 export const fr: LumenMessages = {
   close: 'Fermer',
+  confirm: 'Confirmer',
   cancel: 'Annuler',
   clear: 'Effacer',
   notifications: 'Notifications',

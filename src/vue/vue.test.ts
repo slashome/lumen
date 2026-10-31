@@ -1,10 +1,11 @@
-import { afterEach, describe, expect, it } from 'vitest'
-import { createApp, defineComponent, h, nextTick, ref } from 'vue'
+import { afterEach, describe, expect, expectTypeOf, it } from 'vitest'
+import { createApp, defineComponent, h, nextTick, ref, type GlobalComponents } from 'vue'
 import type { LumenDialog } from '../components/dialog/dialog'
 import type { LumenSegmented } from '../components/segmented/segmented'
 import '../components/dialog/dialog'
 import '../components/segmented/segmented'
-import { LuDialog, LuSegmented } from './index'
+import { LuDialog, LuMultiSelect, LuSegmented, LuSelect, LuTabs } from './index'
+import './elements'
 
 afterEach(() => {
   document.body.innerHTML = ''
@@ -22,7 +23,21 @@ function pressEscape(dialog: LumenDialog) {
   dialog.shadowRoot!.querySelector('dialog')!.dispatchEvent(new Event('cancel', { cancelable: true }))
 }
 
+type PropsOf<Component> = Component extends new () => { $props: infer Props } ? Props : never
+
 describe('the Vue adapter', () => {
+  it('requires the label that names a select, a multi-select, a segmented or tabs, on the tags and on the components', () => {
+    expectTypeOf<PropsOf<GlobalComponents['lu-select']>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<PropsOf<GlobalComponents['lu-multi-select']>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<PropsOf<GlobalComponents['lu-segmented']>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<PropsOf<GlobalComponents['lu-tabs']>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<PropsOf<GlobalComponents['lu-confirm-dialog']>['confirmLabel']>().toEqualTypeOf<string | undefined>()
+    expectTypeOf<PropsOf<typeof LuSelect>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<PropsOf<typeof LuMultiSelect>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<PropsOf<typeof LuSegmented>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<PropsOf<typeof LuTabs>['label']>().toEqualTypeOf<string>()
+  })
+
   it('drives a dialog through v-model:open', async () => {
     const open = ref(true)
     const host = await mount(() => h(LuDialog, { open: open.value, 'onUpdate:open': (value: boolean) => (open.value = value), heading: 'Edit' }))

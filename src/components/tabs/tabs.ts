@@ -1,5 +1,6 @@
-import { css, html, LitElement } from 'lit'
+import { css, html, LitElement, nothing } from 'lit'
 import { emit } from '../../lib/emit'
+import { requiredLabel } from '../../lib/messages'
 import { define } from '../../lib/define'
 import type { ValueChangeDetail } from '../../lib/change'
 
@@ -97,7 +98,10 @@ export class LumenTabs extends LitElement {
     }
   `
 
-  /** The accessible name of the tab list. */
+  /**
+   * The accessible name of the tab list. Without it, the element logs an error.
+   * @required
+   */
   declare label: string
   /** The value of the selected tab. When no tab has it, the first tab is selected. */
   declare value: string | null
@@ -221,7 +225,7 @@ export class LumenTabs extends LitElement {
 
   render() {
     return html`
-      <div class="tablist" role="tablist" aria-label=${this.label} part="tablist" @click=${this.onClick} @keydown=${this.onKeydown}>
+      <div class="tablist" role="tablist" aria-label=${requiredLabel(this, this.label, 'label') ?? nothing} part="tablist" @click=${this.onClick} @keydown=${this.onKeydown}>
         <slot name="tab" @slotchange=${() => this.sync()}></slot>
       </div>
       <slot @slotchange=${() => this.sync()}></slot>

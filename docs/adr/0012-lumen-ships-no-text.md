@@ -1,8 +1,8 @@
 # ADR-0012 — Lumen ships no text
 
-- **Status:** Accepted
+- **Status:** Accepted, amended on 2026-10-31 (see [Amendment](#amendment-2026-10-31))
 - **Date:** 2026-10-31
-- **Concerns:** ADR-0001, ADR-0005, ADR-0011, `slashome/ariane#T024`
+- **Concerns:** ADR-0001, ADR-0005, ADR-0011, `slashome/ariane#T024`, `slashome/ariane#T025`
 
 ## Context
 
@@ -55,3 +55,15 @@ The event still reaches the document, where any listener sees it; an `@internal`
 ## Revisit if
 
 An element needs a text that depends on data the application cannot know in advance, so that a function key is not enough; or a consumer needs Lumen in a shadow tree whose `lang` the observer cannot see.
+
+## Amendment (2026-10-31)
+
+**Motive:** decision of the owner, `slashome/ariane#T025`, after the first version of this ADR left the frameworks unequal and the confirm label without a fallback.
+
+- **Nothing is required in one framework and optional in another.** What an element needs is required in the React types, in the Vue types and in the manifest, and logged as an error in plain HTML. The Vue element types are no longer `Partial` for those properties.
+- **`confirm` becomes a required key of `LumenMessages`.** `confirm-label` on `lu-confirm-dialog` becomes optional and wins over the key, like every other `*-label`. This replaces « a label that names one action is required per instance and has no key » above. The cost, accepted: every confirm dialog that omits `confirm-label` says the same generic word, where « Delete » is clearer than « Confirm »; the documentation recommends the attribute for destructive actions.
+- **`label` is required on `lu-select`, `lu-multi-select`, `lu-segmented` and `lu-tabs`**, whose accessible name it is and which no registry key could name. The property carries `@required` in its JSDoc; a manifest plugin (`requiredMembers` in `scripts/manifest-plugins.js`) writes `required: true` on the member and its attribute; `pnpm generate` makes it required in `src/react/elements.ts` and `src/vue/elements.ts`; the hand-written `Select`, `MultiSelect`, `Segmented`, `Tabs` and the Vue `LuSelect`, `LuMultiSelect`, `LuSegmented`, `LuTabs` require it too; the Storybook props table marks it required; and the element logs `console.error` when it is empty.
+- **`heading` names `lu-dialog`, `lu-sheet` and `lu-confirm-dialog`**, and the element logs an error when neither the attribute nor the `heading` slot gives it. It is not required in the types, because the slot is an alternative that a type cannot express; the React `Dialog`, `Sheet` and `ConfirmDialog` already require `title`.
+- **The tests check every label.** `src/labels.test.ts` mounts every element of the manifest without any label and checks that each missing one is reported once, then mounts each with the demonstration messages and checks that no button, dialog, listbox, menu, tab list, group or region is left without an accessible name, and that every `lu-draggable` has an `aria-roledescription`, which axe does not check.
+
+The consequence « The Vue element types stay `Partial`: `confirm-label` is required in the React types only » no longer holds.

@@ -81,14 +81,15 @@ describe('registerLumenMessages', () => {
     expect(error).toHaveBeenCalledWith(expect.stringContaining('close-label'))
   })
 
-  it('requires confirm-label on every confirm dialog, whatever is registered', async () => {
+  it('names the confirm button from the confirm message, unless confirm-label is set', async () => {
     registerLumenMessages('en', en)
-    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
-    const dialog = await mount<LumenConfirmDialog>('<lu-confirm-dialog heading="Delete T104?" open></lu-confirm-dialog>')
-    const [cancel, confirm] = dialog.shadowRoot!.querySelectorAll('.actions button')
+    const generic = await mount<LumenConfirmDialog>('<lu-confirm-dialog heading="Delete T104?" open></lu-confirm-dialog>')
+    const [cancel, confirm] = generic.shadowRoot!.querySelectorAll('.actions button')
     expect(cancel?.textContent?.trim()).toBe('Cancel')
-    expect(confirm?.textContent?.trim()).toBe('')
-    expect(error).toHaveBeenCalledWith(expect.stringContaining('<lu-confirm-dialog> needs confirm-label'))
+    expect(confirm?.textContent?.trim()).toBe('Confirm')
+
+    const specific = await mount<LumenConfirmDialog>('<lu-confirm-dialog heading="Delete T104?" confirm-label="Delete" open></lu-confirm-dialog>')
+    expect(specific.shadowRoot!.querySelectorAll('.actions button')[1]?.textContent?.trim()).toBe('Delete')
   })
 
   it('shares one registry between two copies of Lumen', async () => {

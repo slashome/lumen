@@ -12,7 +12,7 @@ export type { OpenChangeDetail } from '../../lib/change'
  *
  * It closes itself as `lu-dialog` does, on Escape or its cancel button, after a cancelable `lu-open-change`. The confirm button does not close it: it fires `lu-confirm`, and the owner runs the action, then clears `open`. It has no close button.
  *
- * `confirm-label` is required on every instance: a verb that names the action, never a generic « Confirm ». The cancel button is named by `cancel-label`, or else by the `cancel` message registered with `registerLumenMessages()`.
+ * The confirm button is named by `confirm-label`, or else by the `confirm` message; the cancel button by `cancel-label`, or else by the `cancel` message, both registered with `registerLumenMessages()`. Prefer a `confirm-label` that names the action, « Delete », to the generic message.
  *
  * @summary A dialog that asks to confirm a destructive action.
  * @tag lu-confirm-dialog
@@ -49,7 +49,7 @@ export class LumenConfirmDialog extends LumenModal {
     `,
   ]
 
-  /** Required. The text of the confirm button, a verb that names the action: "Delete". It has no registered default. */
+  /** The text of the confirm button, best a verb that names the action: "Delete". Overrides the `confirm` message registered with `registerLumenMessages()`. */
   declare confirmLabel: string
   /** The text of the cancel button. Overrides the `cancel` message registered with `registerLumenMessages()`. */
   declare cancelLabel: string
@@ -85,7 +85,7 @@ export class LumenConfirmDialog extends LumenModal {
         @close=${this.onClose}
       >
         <div class="panel" part="panel">
-          <h2 id="title" class="title" part="title"><slot name="heading">${this.heading}</slot></h2>
+          <h2 id="title" class="title" part="title"><slot name="heading">${this.renderHeading()}</slot></h2>
           ${this.renderDescription()}
           <slot></slot>
           <div class="actions">
@@ -93,7 +93,7 @@ export class LumenConfirmDialog extends LumenModal {
               ${this.messages.text('cancel', this.cancelLabel, 'cancel-label') ?? nothing}
             </button>
             <button type="button" class="lu-button lu-button--danger lu-button--sm" ?disabled=${this.pending} @click=${this.confirm}>
-              ${this.messages.required(this.confirmLabel, 'confirm-label') ?? nothing}
+              ${this.messages.text('confirm', this.confirmLabel, 'confirm-label') ?? nothing}
             </button>
           </div>
         </div>

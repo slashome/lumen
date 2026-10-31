@@ -14,23 +14,31 @@ const modelProps = {
   selected: { type: Array as PropType<string[] | undefined>, default: undefined },
 }
 
-function modelled<Name extends Model>(tag: string, model: Name) {
+const labelProps = {
+  label: { type: String, required: true },
+} as const
+
+type RequiredProps = typeof labelProps | Record<never, never>
+
+function modelled<Name extends Model, Required extends RequiredProps = Record<never, never>>(tag: string, model: Name, required = {} as Required) {
   return defineComponent({
     name: tag.replace(/(^|-)(\w)/g, (_, __, letter: string) => letter.toUpperCase()),
     inheritAttrs: false,
-    props: { [model]: modelProps[model] } as Pick<typeof modelProps, Name>,
+    props: { ...required, [model]: modelProps[model] } as Required & Pick<typeof modelProps, Name>,
     emits: [`update:${model}`],
     setup(props, { attrs, slots, emit }) {
       return () => {
-        const current = (props as Record<string, unknown>)[model]
+        const values = props as Record<string, unknown>
+        const current = values[model]
         const controlled = current !== undefined
+        const given = Object.fromEntries(Object.keys(required).map((name) => [name, values[name]]))
         const listener = (event: CustomEvent<Record<Model, unknown>>) => {
           if (controlled) {
             event.preventDefault()
           }
           emit(`update:${model}`, event.detail[model])
         }
-        return h(tag, mergeProps(attrs, controlled ? { [model]: current } : {}, { [modelEvents[model]]: listener }), slots.default?.())
+        return h(tag, mergeProps(attrs, given, controlled ? { [model]: current } : {}, { [modelEvents[model]]: listener }), slots.default?.())
       }
     },
   })
@@ -41,7 +49,7 @@ export const LuSheet = modelled('lu-sheet', 'open')
 export const LuConfirmDialog = modelled('lu-confirm-dialog', 'open')
 export const LuTooltip = modelled('lu-tooltip', 'open')
 export const LuHoverCard = modelled('lu-hover-card', 'open')
-export const LuSelect = modelled('lu-select', 'value')
-export const LuSegmented = modelled('lu-segmented', 'value')
-export const LuTabs = modelled('lu-tabs', 'value')
-export const LuMultiSelect = modelled('lu-multi-select', 'selected')
+export const LuSelect = modelled('lu-select', 'value', labelProps)
+export const LuSegmented = modelled('lu-segmented', 'value', labelProps)
+export const LuTabs = modelled('lu-tabs', 'value', labelProps)
+export const LuMultiSelect = modelled('lu-multi-select', 'selected', labelProps)
