@@ -3,6 +3,8 @@ dist
 storybook-static
 src/foundations/tokens.css
 src/icons/generated.ts
+src/react/elements.ts
+src/vue/elements.ts
 custom-elements.json
 *.tsbuildinfo
 .DS_Store

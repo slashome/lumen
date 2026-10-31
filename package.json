@@ -118,7 +118,7 @@
   },
   "customElements": "custom-elements.json",
   "scripts": {
-    "generate": "node scripts/tokens.js && node scripts/icons.js icons/lumen.json src/icons/generated.ts && cem analyze --quiet",
+    "generate": "node scripts/tokens.js && node scripts/icons.js icons/lumen.json src/icons/generated.ts && cem analyze --quiet && node scripts/adapters.js",
     "build": "pnpm generate && vite build && tsc -p tsconfig.build.json && node scripts/copy-css.js",
     "typecheck": "pnpm generate && tsc --noEmit",
     "lint": "eslint .",
