@@ -23,6 +23,7 @@ import {
   SelectElement,
   SheetElement,
   TabsElement,
+  TagElement,
   ToasterElement,
   TooltipElement,
 } from './elements'
@@ -60,6 +61,29 @@ export function Icon({ name, label, className }: { name: string; label?: string;
 
 export function Badge({ className, ...props }: ComponentProps<'span'>) {
   return <span className={classes('lu-badge', className)} {...props} />
+}
+
+export function Tag({
+  value,
+  onRemove,
+  disabled = false,
+  className,
+  children,
+}: {
+  value?: string
+  onRemove?: (value: string) => void
+  disabled?: boolean
+  className?: string
+  children: ReactNode
+}) {
+  if (!onRemove) {
+    return <span className={classes('lu-tag', className)}>{children}</span>
+  }
+  return (
+    <TagElement removable {...only('value', value)} disabled={disabled} onRemove={(event) => onRemove(event.detail.value)} className={className}>
+      {children}
+    </TagElement>
+  )
 }
 
 export function Input({ className, ...props }: ComponentProps<'input'>) {

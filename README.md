@@ -24,7 +24,7 @@ import '@slashome/lumen/select'
 import '@slashome/lumen/dialog'
 ```
 
-The entries are `icon`, `dialog`, `sheet`, `confirm-dialog`, `tooltip`, `hover-card`, `select` (with `lu-option`), `multi-select`, `segmented`, `tabs`, `toaster`, `markdown`, `highlight`, `drag-area` (with `lu-draggable` and `lu-drop-zone`) and `file-drop`.
+The entries are `icon`, `dialog`, `sheet`, `confirm-dialog`, `tooltip`, `hover-card`, `select` (with `lu-option`), `multi-select`, `segmented`, `tabs`, `toaster`, `markdown`, `highlight`, `drag-area` (with `lu-draggable` and `lu-drop-zone`), `file-drop` and `tag`.
 
 ## Use
 

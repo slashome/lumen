@@ -108,6 +108,7 @@ const cases: Case[] = [
       element.shadowRoot!.querySelector<HTMLButtonElement>('li button')!.click()
     },
   },
+  { tag: 'lu-tag', bare: '<lu-tag removable>Design</lu-tag>', labelled: '<lu-tag removable>Design</lu-tag>', missing: ['no label for "tagRemove"'] },
   { tag: 'lu-drop-zone', bare: '<lu-drop-zone zone-id="todo"></lu-drop-zone>', labelled: '<lu-drop-zone zone-id="todo" label="To do"></lu-drop-zone>', missing: [] },
   {
     tag: 'lu-tooltip',

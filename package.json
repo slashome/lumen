@@ -31,6 +31,7 @@
     "./dist/highlight.js",
     "./dist/drag-area.js",
     "./dist/file-drop.js",
+    "./dist/tag.js",
     "./dist/components/select/option.js",
     "./dist/components/drag-area/draggable.js",
     "./dist/components/drag-area/drop-zone.js",
@@ -105,6 +106,10 @@
     "./file-drop": {
       "types": "./dist/types/components/file-drop/file-drop.d.ts",
       "default": "./dist/file-drop.js"
+    },
+    "./tag": {
+      "types": "./dist/types/components/tag/tag.d.ts",
+      "default": "./dist/tag.js"
     },
     "./lib": {
       "types": "./dist/types/lib/index.d.ts",

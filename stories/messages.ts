@@ -19,6 +19,7 @@ export const en: LumenMessages = {
   filesAdded: ({ count }) => (count === 1 ? '1 file added.' : `${count} files added.`),
   fileRemoved: ({ name }) => `${name} removed.`,
   fileRejected: ({ name }) => `${name} is not accepted.`,
+  tagRemove: ({ label }) => `Remove ${label}`,
 }
 
 export const fr: LumenMessages = {
@@ -40,6 +41,7 @@ export const fr: LumenMessages = {
   filesAdded: ({ count }) => (count === 1 ? '1 fichier ajouté.' : `${count} fichiers ajoutés.`),
   fileRemoved: ({ name }) => `${name} retiré.`,
   fileRejected: ({ name }) => `${name} n’est pas accepté.`,
+  tagRemove: ({ label }) => `Retirer ${label}`,
 }
 
 export function registerDemoMessages() {

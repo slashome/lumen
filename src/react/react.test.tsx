@@ -4,7 +4,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vitest'
 import type { LumenDialog } from '../components/dialog/dialog'
 import type { LumenSegmented } from '../components/segmented/segmented'
 import type { LumenTooltip } from '../components/tooltip/tooltip'
-import { buttonClasses, ConfirmDialog, Dialog, Highlight, MultiSelect, Segmented, Select, Tabs, Tooltip } from './index'
+import { buttonClasses, ConfirmDialog, Dialog, Highlight, MultiSelect, Segmented, Select, Tabs, Tag, Tooltip } from './index'
 import { ConfirmDialogElement, FileDropElement, HighlightElement, MultiSelectElement, SegmentedElement, SelectElement, TabsElement } from './elements'
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
@@ -47,6 +47,24 @@ describe('the React adapter', () => {
   it('passes properties through the adapter component', async () => {
     const host = await mount(<Highlight text="Paint the fence" />)
     expect(host.textContent).toContain('Paint the fence')
+  })
+
+  it('draws a tag as the CSS class without onRemove, and as the removable element with it', async () => {
+    const onRemove = vi.fn()
+    const host = await mount(
+      <>
+        <Tag>Design</Tag>
+        <Tag value="a11y" onRemove={onRemove}>
+          Accessibility
+        </Tag>
+      </>,
+    )
+    expect(host.querySelector('span.lu-tag')?.textContent).toBe('Design')
+    const tag = host.querySelector<HTMLElement & { updateComplete: Promise<boolean> }>('lu-tag')!
+    await tag.updateComplete
+    expect(tag.hasAttribute('removable')).toBe(true)
+    tag.shadowRoot!.querySelector<HTMLButtonElement>('[part="remove"]')!.click()
+    expect(onRemove).toHaveBeenCalledWith('a11y')
   })
 
   it('draws the danger button, also under its deprecated name', () => {

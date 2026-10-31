@@ -54,6 +54,7 @@ The registry is kept on `globalThis` under `Symbol.for('@slashome/lumen/messages
 | `filesAdded` | `({ count }) => string` | Announced when files are added to `lu-file-drop`. |
 | `fileRemoved` | `({ name }) => string` | Announced when a file is removed. |
 | `fileRejected` | `({ name }) => string` | Announced for each file refused, by its type or because the element holds one file. |
+| `tagRemove` | `({ label }) => string` | The name of the remove button of `lu-tag`, given the text of the tag. |
 
 ## React
 
@@ -82,6 +83,7 @@ registerLumenMessages('fr', {
   filesAdded: ({ count }) => t('file.added', { count }),
   fileRemoved: ({ name }) => t('file.removed', { name }),
   fileRejected: ({ name }) => t('file.rejected', { name }),
+  tagRemove: ({ label }) => t('tag.remove', { label }),
 })
 
 createRoot(document.getElementById('root')!).render(<App />)

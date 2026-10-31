@@ -46,6 +46,7 @@ describe('custom-elements.json', () => {
       'lu-select',
       'lu-sheet',
       'lu-tabs',
+      'lu-tag',
       'lu-toaster',
       'lu-tooltip',
     ])

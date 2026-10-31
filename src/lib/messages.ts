@@ -19,6 +19,7 @@ export interface LumenMessages {
   filesAdded: (params: { count: number }) => string
   fileRemoved: (params: { name: string }) => string
   fileRejected: (params: { name: string }) => string
+  tagRemove: (params: { label: string }) => string
 }
 
 export type LumenMessageKey = keyof LumenMessages
@@ -45,6 +46,7 @@ export const lumenMessageKeys = [
   'filesAdded',
   'fileRemoved',
   'fileRejected',
+  'tagRemove',
 ] as const satisfies readonly LumenMessageKey[]
 
 interface Listener {
