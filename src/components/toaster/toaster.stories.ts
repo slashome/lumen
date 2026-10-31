@@ -2,10 +2,15 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite'
 import { html } from 'lit'
 import { toast } from '../../lib/toast'
 
-const meta: Meta = { title: 'Floor 1 (Lit)/Elements' }
+const meta: Meta = {
+  title: 'Feedback/Toaster',
+  component: 'lu-toaster',
+  tags: ['autodocs', 'floor-1'],
+  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+}
 export default meta
 
-export const Toaster: StoryObj = {
+export const Default: StoryObj = {
   render: () => html`
     <lu-toaster></lu-toaster>
     <div style="display:flex;gap:0.5rem;flex-wrap:wrap">

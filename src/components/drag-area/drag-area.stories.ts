@@ -1,10 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite'
 import { html } from 'lit'
 
-const meta: Meta = { title: 'Floor 1 (Lit)/Elements' }
+const meta: Meta = {
+  title: 'Actions/Drag and drop',
+  component: 'lu-drag-area',
+  subcomponents: { 'lu-draggable': 'lu-draggable', 'lu-drop-zone': 'lu-drop-zone' },
+  tags: ['autodocs', 'floor-1'],
+  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+}
 export default meta
 
-export const DragAndDrop: StoryObj = {
+export const Default: StoryObj = {
   render: () => {
     const move = (event: CustomEvent<{ active: string; over: string | null }>) => {
       const card = document.querySelector(`lu-draggable[drag-id="${event.detail.active}"]`)

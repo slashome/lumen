@@ -6,7 +6,7 @@ import { createApp, h, ref } from 'vue'
 import { Button, Select, SelectItem } from '../src/react'
 
 const meta: Meta = {
-  title: 'Frameworks/One component, three frameworks',
+  title: 'Foundations/Frameworks',
   parameters: {
     docs: {
       description: {

@@ -1,10 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite'
 import { html } from 'lit'
 
-const meta: Meta = { title: 'Floor 1 (Lit)/Elements' }
+const meta: Meta = {
+  title: 'Form/Select',
+  component: 'lu-select',
+  subcomponents: { 'lu-option': 'lu-option' },
+  tags: ['autodocs', 'floor-1'],
+  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+}
 export default meta
 
-export const Select: StoryObj = {
+export const Default: StoryObj = {
   render: () => html`
     <lu-select label="Status" value="todo" style="inline-size:14rem">
       <lu-option value="backlog">backlog</lu-option>

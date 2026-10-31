@@ -1,10 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite'
 import { html } from 'lit'
 
-const meta: Meta = { title: 'Floor 1 (Lit)/Elements' }
+const meta: Meta = {
+  title: 'Data/Markdown',
+  component: 'lu-markdown',
+  tags: ['autodocs', 'floor-1'],
+  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+}
 export default meta
 
-export const Markdown: StoryObj = {
+export const Default: StoryObj = {
   render: () =>
     html`<lu-markdown
       .source=${'## Découpage\n\n1. [T104](T104.md) — le jeton\n2. [T999](T999.md) — un lien mort\n\nSee [the spec](https://github.com/slashome/ariane).\n\n| Key | Value |\n| --- | --- |\n| status | `todo` |\n\n> La lumière marque l\'action.'}
