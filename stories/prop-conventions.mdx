@@ -33,11 +33,11 @@ A status is not a variant: success, danger, warning and info are kinds of toast 
 
 - **Every event is a `CustomEvent` named `lu-*`**, bubbling and composed, with a typed `detail` documented on the page of its element.
 - **An event is cancelable when it comes before a change the element makes itself**: the element fires first, changes only if `preventDefault()` was not called, and still holds its previous state while the event runs. An event that reports an action the owner performs is not cancelable: there is nothing for the element to prevent. The `@fires` line of each event says which it is.
-  - Cancelable: every `lu-*-change`. `lu-open-change` on `lu-dialog`, `lu-sheet`, `lu-confirm-dialog`, `lu-tooltip` and `lu-hover-card`; `lu-value-change` on `lu-select`, `lu-segmented` and `lu-tabs`; `lu-selected-change` on `lu-multi-select`; `lu-files-change` on `lu-file-drop`.
-  - Not cancelable: `lu-confirm`, `lu-open`, `lu-navigate`, `lu-drag-end`, `lu-reject`, `lu-remove`.
-- **A `lu-*` event is always public**: it is fired for the application and documented on the page of its element. Elements of Lumen talk to each other by calling methods, never by events: `lu-draggable` calls its `lu-drag-area` directly.
+  - Cancelable: every `lu-*-change`. `lu-open-change` on `lu-dialog`, `lu-sheet`, `lu-confirm-dialog`, `lu-tooltip` and `lu-hover-card`; `lu-value-change` on `lu-select`, `lu-segmented`, `lu-tabs` and `lu-combobox`; `lu-selected-change` on `lu-multi-select`; `lu-files-change` on `lu-file-drop`.
+  - Not cancelable: `lu-confirm`, `lu-open`, `lu-navigate`, `lu-drag-end`, `lu-reject`, `lu-remove`, `lu-search`.
+- **A `lu-*` event is always public**: it is fired for the application and documented on the page of its element. Elements of Lumen talk to each other by calling methods, never by events: `lu-draggable` calls its `lu-drag-area` directly. An element that renders another in its own shadow root is that one's owner, and listens to its public events as an application would: `lu-combobox` handles the `lu-remove` of its tags and stops it there, so the page sees only its `lu-value-change`.
 - **`lu-<noun>-change`** reports a change the user asked for, and its `detail` holds that noun and the `source`: `lu-open-change` → `{ open, source }`, `lu-value-change` → `{ value, source }`, `lu-selected-change` → `{ selected, source }`, `lu-files-change` → `{ files, source }`.
-- **`lu-<verb>`** reports an action, with what the owner needs to act: `lu-confirm`, `lu-open`, `lu-navigate` → `{ href }`, `lu-drag-end` → `{ active, over }`, `lu-reject` → `{ files }`, `lu-remove` → `{ value }`.
+- **`lu-<verb>`** reports an action, with what the owner needs to act: `lu-confirm`, `lu-open`, `lu-navigate` → `{ href }`, `lu-drag-end` → `{ active, over }`, `lu-reject` → `{ files }`, `lu-remove` → `{ value }`, `lu-search` → `{ query }`.
 - In React the event is the camel-cased prop without the prefix: `lu-value-change` is `onValueChange`. In Vue it is `@lu-value-change` in a template, `onLuValueChange` in a render function.
 
 ## Controlled and uncontrolled
@@ -61,22 +61,23 @@ A status is not a variant: success, danger, warning and info are kinds of toast 
 | `cancel` | Pressed the cancel button of a confirm dialog. |
 | `form` | Submitted a `<form method="dialog">` inside a dialog or a sheet. |
 | `option` | Chose an option, a segment or a tab. |
-| `clear` | Pressed the clear item of a multi-select. |
+| `clear` | Pressed the clear item of a multi-select, or emptied the text of a single combobox and left it. |
+| `create` | Created a value from the text typed in a combobox. |
 | `drop` | Dropped files on a file drop. |
 | `picker` | Chose files in the system picker of a file drop. |
-| `remove` | Pressed the remove button of a file in a file drop. |
+| `remove` | Pressed the remove button of a file in a file drop or of a tag in a combobox, or Backspace in the empty field of a multiple combobox. |
 
 The confirm button of `lu-confirm-dialog` changes nothing: it fires `lu-confirm`, and the owner closes the dialog once the action is done, with `pending` set in between.
 
 
 ## Boolean attributes
 
-The platform's rule: **present means true, absent means false**, and the default is false. `open`, `disabled`, `pending`, `pinned`, `selected`, `openable`, `manual`, `skip-tab`, `multiple`, `removable`. A boolean that would be true by default is named for its opposite: `skip-tab`, not `focusable`, whose `="false"` is deprecated. A boolean the CSS styles is reflected, so `:host([open])` and `lu-option[selected]` work.
+The platform's rule: **present means true, absent means false**, and the default is false. `open`, `disabled`, `pending`, `pinned`, `selected`, `openable`, `manual`, `skip-tab`, `multiple`, `removable`, `creatable`, `skip-filter`, `loading`. A boolean that would be true by default is named for its opposite: `skip-tab`, not `focusable`; `skip-filter`, not `filter`; whose `="false"` is deprecated. A boolean the CSS styles is reflected, so `:host([open])` and `lu-option[selected]` work.
 
 ## Text and labels
 
 - **Lumen ships no text** ([Labels](?path=/docs/foundations-labels--docs)). The application registers the generic labels once with `registerLumenMessages()`, and an attribute on an instance wins over them.
-- **`label` is the accessible name** of the element: `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-tabs`, `lu-file-drop`, `lu-icon`, `lu-draggable`, `lu-drop-zone`, `lu-toaster`. It is **required** where nothing else names the control, on `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-tabs` and `lu-file-drop`: required in the React and Vue types, marked required in the props table, and a console error when it is missing.
+- **`label` is the accessible name** of the element: `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-tabs`, `lu-file-drop`, `lu-combobox`, `lu-icon`, `lu-draggable`, `lu-drop-zone`, `lu-toaster`. It is **required** where nothing else names the control, on `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-tabs`, `lu-file-drop` and `lu-combobox`: required in the React and Vue types, marked required in the props table, and a console error when it is missing.
 - **Every text the element draws itself is an attribute named `*-label`**, with no default: `close-label`, `confirm-label`, `cancel-label`, `clear-label` fall back to the registry. Prefer a `confirm-label` that names the action to the generic `confirm` message.
 - **Short text is an attribute; text that needs markup is a slot of the same name**: the `heading` attribute or `<span slot="heading">`, the `description` attribute or `<span slot="description">`.
 

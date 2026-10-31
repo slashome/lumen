@@ -7,7 +7,9 @@ import { highlightTerms } from '../lib/highlight-terms'
 import { nextSort, sortRows, type SortDirection, type SortValue, type TableSort } from '../lib/sort'
 import { storedSort } from '../lib/sort-store'
 import { documentLang, messagesFor, reportMissing, subscribeToMessages } from '../lib/messages'
+import type { ComboboxOption, ComboboxValue } from '../components/combobox/combobox'
 import {
+  ComboboxElement,
   ConfirmDialogElement,
   DialogElement,
   DragAreaElement,
@@ -31,6 +33,7 @@ import {
 export { toast } from '../lib/toast'
 export type { LinkResolver, LinkTarget } from '../components/markdown/markdown'
 export type { MultiSelectOption } from '../components/multi-select/multi-select'
+export type { ComboboxOption, ComboboxValue } from '../components/combobox/combobox'
 export type { OpenChangeSource, ValueChangeSource } from '../lib/change'
 
 export function classes(...parts: (string | false | null | undefined)[]): string {
@@ -371,6 +374,54 @@ export function MultiSelect({
       {...only('selected', selected)}
       {...only('clearLabel', clearLabel)}
       onSelectedChange={controlledBy<{ selected: string[]; source: ValueChangeSource }>(selected !== undefined, (detail) => onChange?.(detail.selected, detail.source))}
+    />
+  )
+}
+
+export function Combobox({
+  label,
+  options,
+  value,
+  onValueChange,
+  onSearch,
+  multiple = false,
+  creatable = false,
+  skipFilter = false,
+  loading = false,
+  disabled = false,
+  name,
+  placeholder,
+  className,
+}: {
+  label: string
+  options: ComboboxOption[]
+  value?: ComboboxValue
+  onValueChange?: (value: ComboboxValue, source: ValueChangeSource) => void
+  onSearch?: (query: string) => void
+  multiple?: boolean
+  creatable?: boolean
+  skipFilter?: boolean
+  loading?: boolean
+  disabled?: boolean
+  name?: string
+  placeholder?: string
+  className?: string
+}) {
+  return (
+    <ComboboxElement
+      label={label}
+      options={options}
+      {...only('value', value)}
+      multiple={multiple}
+      creatable={creatable}
+      skipFilter={skipFilter}
+      loading={loading}
+      disabled={disabled}
+      {...only('name', name)}
+      {...only('placeholder', placeholder)}
+      onValueChange={controlledBy<{ value: ComboboxValue; source: ValueChangeSource }>(value !== undefined, (detail) => onValueChange?.(detail.value, detail.source))}
+      onSearch={(event) => onSearch?.(event.detail.query)}
+      className={className}
     />
   )
 }

@@ -20,6 +20,9 @@ export const en: LumenMessages = {
   fileRemoved: ({ name }) => `${name} removed.`,
   fileRejected: ({ name }) => `${name} is not accepted.`,
   tagRemove: ({ label }) => `Remove ${label}`,
+  comboboxNoResults: 'No results',
+  comboboxCreate: ({ value }) => `Create “${value}”`,
+  comboboxResults: ({ count }) => (count === 1 ? '1 result.' : `${count} results.`),
 }
 
 export const fr: LumenMessages = {
@@ -42,6 +45,9 @@ export const fr: LumenMessages = {
   fileRemoved: ({ name }) => `${name} retiré.`,
   fileRejected: ({ name }) => `${name} n’est pas accepté.`,
   tagRemove: ({ label }) => `Retirer ${label}`,
+  comboboxNoResults: 'Aucun résultat',
+  comboboxCreate: ({ value }) => `Créer « ${value} »`,
+  comboboxResults: ({ count }) => (count === 1 ? '1 résultat.' : `${count} résultats.`),
 }
 
 export function registerDemoMessages() {

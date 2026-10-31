@@ -10,7 +10,7 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 - **Generic labels come from a registry.** The close button of a dialog, the cancel button of a confirm dialog, the drag-and-drop announcements: the application registers them once at start-up, for each language, with `registerLumenMessages()`.
 - **An attribute on an instance wins over the registry.** `close-label`, `confirm-label`, `cancel-label`, `clear-label`, the `label` of `lu-toaster`, the `role-description` of `lu-draggable`. The registry's `confirm` is a generic « Confirm »: give `confirm-label` a verb that names the action, « Delete the project », wherever the action is destructive.
-- **The name of a control is given per instance.** `label` is required on `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-tabs` and `lu-file-drop`, and `heading` (or the `heading` slot) on `lu-dialog`, `lu-sheet` and `lu-confirm-dialog`: no registry key could name them. The React and Vue types require `label`, and the props table marks it required.
+- **The name of a control is given per instance.** `label` is required on `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-tabs`, `lu-file-drop` and `lu-combobox`, and `heading` (or the `heading` slot) on `lu-dialog`, `lu-sheet` and `lu-confirm-dialog`: no registry key could name them. The React and Vue types require `label`, and the props table marks it required.
 - **A missing label is an error.** With neither an attribute nor a registered message, the element logs a `console.error` that names the element, the key or the attribute, and the language it looked for, and renders nothing in place of the text. A button left without a name then fails the accessibility test of its story, and the unit tests mount every element without any label to check that each one is reported.
 
 ## The order of resolution
@@ -41,7 +41,7 @@ The registry is kept on `globalThis` under `Symbol.for('@slashome/lumen/messages
 | `cancel` | `string` | The cancel button of `lu-confirm-dialog`; attribute `cancel-label`. |
 | `clear` | `string` | The clear item of `lu-multi-select`; attribute `clear-label`. |
 | `notifications` | `string` | The region of `lu-toaster`; attribute `label`. |
-| `loading` | `string` | `LoadingState` in React; prop `label`. |
+| `loading` | `string` | `LoadingState` in React, prop `label`; the list of `lu-combobox` while `loading` is set. |
 | `draggable` | `string` | What assistive technology calls a `lu-draggable`; attribute `role-description`. |
 | `dragPickedUp` | `({ item }) => string` | Announced by `lu-drag-area` when an item is picked up with the keyboard; it says how to move, drop and cancel. |
 | `dragOver` | `({ zone }) => string` | Announced when a keyboard move reaches a zone. |
@@ -55,6 +55,9 @@ The registry is kept on `globalThis` under `Symbol.for('@slashome/lumen/messages
 | `fileRemoved` | `({ name }) => string` | Announced when a file is removed. |
 | `fileRejected` | `({ name }) => string` | Announced for each file refused, by its type or because the element holds one file. |
 | `tagRemove` | `({ label }) => string` | The name of the remove button of `lu-tag`, given the text of the tag. |
+| `comboboxNoResults` | `string` | Shown and announced by `lu-combobox` when no option matches the text typed. |
+| `comboboxCreate` | `({ value }) => string` | The option of a `creatable` combobox that creates the value typed. |
+| `comboboxResults` | `({ count }) => string` | Announced by `lu-combobox` when the options shown change. |
 
 ## React
 
@@ -84,6 +87,9 @@ registerLumenMessages('fr', {
   fileRemoved: ({ name }) => t('file.removed', { name }),
   fileRejected: ({ name }) => t('file.rejected', { name }),
   tagRemove: ({ label }) => t('tag.remove', { label }),
+  comboboxNoResults: t('combobox.noResults'),
+  comboboxCreate: ({ value }) => t('combobox.create', { value }),
+  comboboxResults: ({ count }) => t('combobox.results', { count }),
 })
 
 createRoot(document.getElementById('root')!).render(<App />)

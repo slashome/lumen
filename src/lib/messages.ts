@@ -20,6 +20,9 @@ export interface LumenMessages {
   fileRemoved: (params: { name: string }) => string
   fileRejected: (params: { name: string }) => string
   tagRemove: (params: { label: string }) => string
+  comboboxNoResults: string
+  comboboxCreate: (params: { value: string }) => string
+  comboboxResults: (params: { count: number }) => string
 }
 
 export type LumenMessageKey = keyof LumenMessages
@@ -47,6 +50,9 @@ export const lumenMessageKeys = [
   'fileRemoved',
   'fileRejected',
   'tagRemove',
+  'comboboxNoResults',
+  'comboboxCreate',
+  'comboboxResults',
 ] as const satisfies readonly LumenMessageKey[]
 
 interface Listener {

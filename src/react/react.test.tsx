@@ -4,8 +4,8 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vitest'
 import type { LumenDialog } from '../components/dialog/dialog'
 import type { LumenSegmented } from '../components/segmented/segmented'
 import type { LumenTooltip } from '../components/tooltip/tooltip'
-import { buttonClasses, ConfirmDialog, Dialog, Highlight, MultiSelect, Segmented, Select, Tabs, Tag, Tooltip } from './index'
-import { ConfirmDialogElement, FileDropElement, HighlightElement, MultiSelectElement, SegmentedElement, SelectElement, TabsElement } from './elements'
+import { buttonClasses, Combobox, ConfirmDialog, Dialog, Highlight, MultiSelect, Segmented, Select, Tabs, Tag, Tooltip } from './index'
+import { ComboboxElement, ConfirmDialogElement, FileDropElement, HighlightElement, MultiSelectElement, SegmentedElement, SelectElement, TabsElement } from './elements'
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
 
@@ -22,7 +22,9 @@ afterEach(() => {
 })
 
 describe('the React adapter', () => {
-  it('requires the label that names a select, a multi-select, a segmented, tabs or a file drop, as the elements do', () => {
+  it('requires the label that names a select, a multi-select, a segmented, tabs, a file drop or a combobox, as the elements do', () => {
+    expectTypeOf<ComponentProps<typeof ComboboxElement>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof Combobox>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof SelectElement>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof MultiSelectElement>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof SegmentedElement>['label']>().toEqualTypeOf<string>()
@@ -65,6 +67,23 @@ describe('the React adapter', () => {
     expect(tag.hasAttribute('removable')).toBe(true)
     tag.shadowRoot!.querySelector<HTMLButtonElement>('[part="remove"]')!.click()
     expect(onRemove).toHaveBeenCalledWith('a11y')
+  })
+
+  it('keeps a combobox given value where React puts it, and reports the choice and the search', async () => {
+    const onValueChange = vi.fn()
+    const onSearch = vi.fn()
+    const host = await mount(<Combobox label="Fruit" options={[{ value: 'apple', label: 'Apple' }]} value="" onValueChange={onValueChange} onSearch={onSearch} />)
+    const combobox = host.querySelector<HTMLElement & { updateComplete: Promise<boolean>; value: unknown }>('lu-combobox')!
+    await combobox.updateComplete
+    const input = combobox.shadowRoot!.querySelector('input')!
+    input.value = 'app'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    await combobox.updateComplete
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }))
+    await combobox.updateComplete
+    expect(onSearch).toHaveBeenCalledWith('app')
+    expect(onValueChange).toHaveBeenCalledWith('apple', 'option')
+    expect(combobox.value).toBe('')
   })
 
   it('draws the danger button, also under its deprecated name', () => {

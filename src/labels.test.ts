@@ -108,6 +108,24 @@ const cases: Case[] = [
       element.shadowRoot!.querySelector<HTMLButtonElement>('li button')!.click()
     },
   },
+  {
+    tag: 'lu-combobox',
+    bare: `<lu-combobox creatable multiple value='["apple"]'></lu-combobox>`,
+    labelled: `<lu-combobox label="Fruits" creatable multiple value='["apple"]'></lu-combobox>`,
+    missing: ['needs label', 'no label for "comboboxCreate"', 'no label for "comboboxNoResults"', 'no label for "comboboxResults"', 'no label for "loading"'],
+    act: async (element) => {
+      const input = element.shadowRoot!.querySelector('input')!
+      const type = async (text: string) => {
+        input.value = text
+        input.dispatchEvent(new Event('input', { bubbles: true }))
+        await (element as Updatable).updateComplete
+      }
+      Object.assign(element, { options: [{ value: 'apple', label: 'Apple' }] })
+      await type('mango')
+      await type('app')
+      Object.assign(element, { loading: true })
+    },
+  },
   { tag: 'lu-tag', bare: '<lu-tag removable>Design</lu-tag>', labelled: '<lu-tag removable>Design</lu-tag>', missing: ['no label for "tagRemove"'] },
   { tag: 'lu-drop-zone', bare: '<lu-drop-zone zone-id="todo"></lu-drop-zone>', labelled: '<lu-drop-zone zone-id="todo" label="To do"></lu-drop-zone>', missing: [] },
   {

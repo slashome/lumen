@@ -32,6 +32,7 @@
     "./dist/drag-area.js",
     "./dist/file-drop.js",
     "./dist/tag.js",
+    "./dist/combobox.js",
     "./dist/components/select/option.js",
     "./dist/components/drag-area/draggable.js",
     "./dist/components/drag-area/drop-zone.js",
@@ -110,6 +111,10 @@
     "./tag": {
       "types": "./dist/types/components/tag/tag.d.ts",
       "default": "./dist/tag.js"
+    },
+    "./combobox": {
+      "types": "./dist/types/components/combobox/combobox.d.ts",
+      "default": "./dist/combobox.js"
     },
     "./lib": {
       "types": "./dist/types/lib/index.d.ts",

@@ -6,7 +6,9 @@ import type { LumenTooltip } from '../components/tooltip/tooltip'
 import '../components/dialog/dialog'
 import '../components/tooltip/tooltip'
 import '../components/segmented/segmented'
-import { LuDialog, LuMultiSelect, LuSegmented, LuSelect, LuTabs, LuTooltip } from './index'
+import type { LumenCombobox } from '../components/combobox/combobox'
+import '../components/combobox/combobox'
+import { LuCombobox, LuDialog, LuMultiSelect, LuSegmented, LuSelect, LuTabs, LuTooltip } from './index'
 import './elements'
 
 afterEach(() => {
@@ -28,7 +30,9 @@ function pressEscape(dialog: LumenDialog) {
 type PropsOf<Component> = Component extends new () => { $props: infer Props } ? Props : never
 
 describe('the Vue adapter', () => {
-  it('requires the label that names a select, a multi-select, a segmented, tabs or a file drop, on the tags and on the components', () => {
+  it('requires the label that names a select, a multi-select, a segmented, tabs, a file drop or a combobox, on the tags and on the components', () => {
+    expectTypeOf<PropsOf<GlobalComponents['lu-combobox']>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<PropsOf<typeof LuCombobox>['label']>().toEqualTypeOf<string>()
     expectTypeOf<PropsOf<GlobalComponents['lu-select']>['label']>().toEqualTypeOf<string>()
     expectTypeOf<PropsOf<GlobalComponents['lu-multi-select']>['label']>().toEqualTypeOf<string>()
     expectTypeOf<PropsOf<GlobalComponents['lu-segmented']>['label']>().toEqualTypeOf<string>()
@@ -85,6 +89,23 @@ describe('the Vue adapter', () => {
     await segmented.updateComplete
     expect(value.value).toBe('M')
     expect(segmented.value).toBe('M')
+  })
+
+  it('drives a multiple combobox through v-model:value', async () => {
+    const value = ref<string | string[] | undefined>(['apple'])
+    const options = [
+      { value: 'apple', label: 'Apple' },
+      { value: 'kiwi', label: 'Kiwi' },
+    ]
+    const host = await mount(() => h(LuCombobox, { label: 'Fruits', multiple: true, options, value: value.value, 'onUpdate:value': (next: string | string[] | undefined) => (value.value = next) }))
+    const combobox = host.querySelector<LumenCombobox>('lu-combobox')!
+    await combobox.updateComplete
+    const input = combobox.shadowRoot!.querySelector('input')!
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true, cancelable: true }))
+    await nextTick()
+    await combobox.updateComplete
+    expect(value.value).toEqual([])
+    expect(combobox.value).toEqual([])
   })
 
   it('binds a tooltip to its trigger by the for attribute, or by an element given to anchor', async () => {

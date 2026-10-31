@@ -5,7 +5,7 @@ export interface OpenChangeDetail {
   source: OpenChangeSource
 }
 
-export type ValueChangeSource = 'option' | 'clear'
+export type ValueChangeSource = 'option' | 'clear' | 'create' | 'remove'
 
 export interface ValueChangeDetail<Value = string> {
   value: Value

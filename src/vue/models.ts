@@ -1,4 +1,4 @@
-import { defineComponent, h, mergeProps, type PropType } from 'vue'
+import { defineComponent, h, mergeProps, type ComponentObjectPropsOptions, type PropType } from 'vue'
 
 type Model = 'open' | 'value' | 'selected'
 
@@ -14,17 +14,26 @@ const modelProps = {
   selected: { type: Array as PropType<string[] | undefined>, default: undefined },
 }
 
+const comboboxValueProp = {
+  value: { type: null as unknown as PropType<string | string[] | undefined>, default: undefined },
+}
+
 const labelProps = {
   label: { type: String, required: true },
 } as const
 
 type RequiredProps = typeof labelProps | Record<never, never>
 
-function modelled<Name extends Model, Required extends RequiredProps = Record<never, never>>(tag: string, model: Name, required = {} as Required) {
+function modelled<Name extends Model, Required extends RequiredProps = Record<never, never>, Own extends ComponentObjectPropsOptions = Pick<typeof modelProps, Name>>(
+  tag: string,
+  model: Name,
+  required = {} as Required,
+  own = { [model]: modelProps[model] } as Own,
+) {
   return defineComponent({
     name: tag.replace(/(^|-)(\w)/g, (_, __, letter: string) => letter.toUpperCase()),
     inheritAttrs: false,
-    props: { ...required, [model]: modelProps[model] } as Required & Pick<typeof modelProps, Name>,
+    props: { ...required, ...own } as Required & Own,
     emits: [`update:${model}`],
     setup(props, { attrs, slots, emit }) {
       return () => {
@@ -53,3 +62,4 @@ export const LuSelect = modelled('lu-select', 'value', labelProps)
 export const LuSegmented = modelled('lu-segmented', 'value', labelProps)
 export const LuTabs = modelled('lu-tabs', 'value', labelProps)
 export const LuMultiSelect = modelled('lu-multi-select', 'selected', labelProps)
+export const LuCombobox = modelled('lu-combobox', 'value', labelProps, comboboxValueProp)

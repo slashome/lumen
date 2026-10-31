@@ -3,7 +3,7 @@ import { registerLumenMessages, type LumenMessages } from '../lib/messages'
 
 export type { LumenElementTag } from './elements'
 export type { LumenMessages } from '../lib/messages'
-export { LuConfirmDialog, LuDialog, LuHoverCard, LuMultiSelect, LuSegmented, LuSelect, LuSheet, LuTabs, LuTooltip } from './models'
+export { LuCombobox, LuConfirmDialog, LuDialog, LuHoverCard, LuMultiSelect, LuSegmented, LuSelect, LuSheet, LuTabs, LuTooltip } from './models'
 
 export interface LumenPluginOptions {
   messages: Record<string, LumenMessages>
