@@ -163,7 +163,7 @@ export class LumenDialog extends LitElement {
   }
 
   protected onClose() {
-    if (this.open) {
+    if (this.open && !this.dialog?.open) {
       this.open = false
       this.requestClose()
     }
