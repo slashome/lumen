@@ -1,0 +1,72 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Foundations/Prop conventions" />
+
+# Prop conventions
+
+The vocabulary every component shares, so that a name means the same thing on every page. A new component follows it; a component that breaks it is a bug, not a precedent.
+
+## Names
+
+- **Everything public is prefixed `lu-`**: elements (`<lu-select>`), classes (`.lu-button`), custom properties (`--lu-dialog-width`), events (`lu-value-change`) and cascade layers (`lu.components`).
+- **Attributes are kebab-case, properties camelCase**, one for the other: `close-label` sets `closeLabel`, `open-delay` sets `openDelay`.
+- **Floor 0 is BEM**: a block (`.lu-data-table`), its elements (`.lu-data-table__cell`) and its modifiers (`.lu-button--outline`). A modifier never works without its block.
+
+## Sizes
+
+- **default**: no modifier, `--lu-control-height`.
+- **`sm`**: the `--sm` modifier, `--lu-control-height-sm`.
+
+A size is a modifier of the block, never a separate class. `.lu-button--icon` is a shape, not a size: a square of the small height. An element that gains a size takes a `size` attribute with the same values, `sm` or none.
+
+## Variants
+
+- **default**: the one main action, on the primary fill. `.lu-button`.
+- **`outline`**: secondary, a border on the page fill. `.lu-button--outline`, `.lu-badge--outline`.
+- **`ghost`**: no fill until hovered, inside dense content. `.lu-button--ghost`.
+- **`destructive`**: deletes or cannot be undone, on the danger fill. `.lu-button--destructive`.
+- **`primary`**: the one badge that must stand out. `.lu-badge--primary`.
+
+A status is not a variant: success, error, warning and info are kinds of toast, drawn with the `success`, `danger`, `warning` and `info` tokens.
+
+## Events
+
+- **Every event is a `CustomEvent` named `lu-*`**, bubbling, composed and cancelable, with a typed `detail` documented on the page of its element.
+- **`lu-<noun>-change`** reports a new value, and its `detail` holds that noun: `lu-open-change` → `{ open }`, `lu-value-change` → `{ value }`, `lu-selected-change` → `{ selected }`.
+- **`lu-<verb>`** reports an action, with what the owner needs to act: `lu-confirm`, `lu-open`, `lu-navigate` → `{ href }`, `lu-drag-end` → `{ active, over }`.
+- **Overlays are controlled**: `lu-dialog`, `lu-sheet` and `lu-confirm-dialog` never close themselves; they fire `lu-open-change` and the owner sets `open`. **Form elements update themselves**: `lu-select`, `lu-segmented` and `lu-multi-select` set their own value, then fire their change event.
+- In React the event is the camel-cased prop without the prefix: `lu-value-change` is `onValueChange`. In Vue it is `@lu-value-change`.
+
+## Boolean attributes
+
+The platform's rule: **present means true, absent means false**, and the default is false. `open`, `disabled`, `pending`, `pinned`, `selected`, `openable`. A boolean the CSS styles is reflected, so `:host([open])` and `lu-option[selected]` work.
+
+## Text and labels
+
+- **`label` is the accessible name** of the element: `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-icon`, `lu-draggable`, `lu-drop-zone`.
+- **Every text the element draws itself is an attribute named `*-label`**, with an English default the application translates: `close-label`, `cancel-label`, `confirm-label`, `clear-label`.
+- **Short text is an attribute; text that needs markup is a slot of the same name**: the `heading` attribute or `<span slot="heading">`, the `description` attribute or `<span slot="description">`.
+
+## Slots
+
+- The **default slot** holds the content: the body of a dialog, the options of a select, the items of a drop zone.
+- **Named slots** hold a part with a role: `heading`, `description`, `display` (what the select's button shows), `trigger` (what opens the hover card).
+
+## Parts
+
+A part is named after what the shadow element is, never after its look: `dialog`, `panel`, `title`, `description`, `trigger`, `listbox`, `menu`, `card`, `tooltip`, `region`, `toast`, `group`, `svg`. Style them with `::part()`; nothing else in a shadow root is public.
+
+## CSS custom properties
+
+`--lu-<component>-<property>`, with a default in the element: `--lu-dialog-width`, `--lu-sheet-width`, `--lu-hover-card-width`, `--lu-icon-size`. Colors are never custom properties of a component: they come from the semantic tokens.
+
+## Data
+
+Arrays, objects and functions are properties: `.options`, `.selected`, `.values`, `.terms`, `.ranges`, `.resolveLink`. Arrays also read a JSON attribute, for plain HTML.
+
+## Deprecation
+
+- A token is deprecated with `$deprecated` in its JSON, `true` or the replacement as a sentence. The build writes it into the comment of the variable in `tokens.css` and lists it, and the Tokens page shows it.
+- An attribute or a property is deprecated with `@deprecated` in its JSDoc; an event, a slot, a part or a custom property with `@deprecated` at the end of its `@fires`, `@slot`, `@csspart` or `@cssprop` line; an element with `@deprecated` in its class JSDoc. The manifest carries it and the props table moves it to a **Deprecated** category.
+- A JavaScript export of `lib`, `react` or `vue` is deprecated with `@deprecated` in its JSDoc: TypeScript strikes it through in the consumer's editor.
+- **A deprecation lives at least one minor version before its removal, and the removal is a major version.** The deprecation names its replacement.
