@@ -1,0 +1,7 @@
+@layer lumen.components {
+  .lumen-mark {
+    border-radius: var(--lumen-radius-xs);
+    background: var(--lumen-color-highlight);
+    color: inherit;
+  }
+}

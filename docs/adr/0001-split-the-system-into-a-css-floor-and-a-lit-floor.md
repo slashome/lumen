@@ -1,0 +1,41 @@
+# ADR-0001 — Split the system into a CSS floor and a Lit floor
+
+- **Status:** Accepted
+- **Date:** 2026-10-31
+- **Concerns:** `slashome/ariane#R012` (private content tree)
+
+## Context
+
+Lumen is extracted from `ariane/web/src/shared/ui`: 23 React 19 exports on Radix, Tailwind 4 and `cva`. It must serve React, Vue, Svelte and plain HTML. Radix runs only in React. Kosmos, the design system of the ATLAS applications, already set the rule this repository follows: check the platform and the ARIA pattern before writing a component, and keep the semantic token layer full, so that no color travels as a prop or an inline style.
+
+## Decision
+
+- **Floor 0 is CSS.** Tokens, and every component without state, as BEM classes inside the cascade layers `lumen.tokens`, `lumen.base` and `lumen.components`: `.lumen-button`, `.lumen-icon-button`, `.lumen-badge`, `.lumen-input`, `.lumen-native-select`, `.lumen-switch` (a native checkbox with `role="switch"`), `.lumen-kbd`, the page states, `.lumen-markdown`, `.lumen-data-table`, `.lumen-mark`. Light DOM, no JavaScript.
+- **Floor 1 is Lit**, in Shadow DOM, for what has state: dialogs on `<dialog>`, floating panels on the popover API positioned by Floating UI, selects, toasts, Markdown, highlight, drag and drop. Elements are written with `static properties`, without decorators, so any TypeScript or JavaScript toolchain compiles them.
+- Floor 1 reuses floor 0 by importing its CSS files with `?inline` into its shadow roots.
+- Events are `CustomEvent`s named `lumen-*`, bubbling and composed.
+
+## Consequences
+
+- Vanilla, Vue and Svelte use the same classes and elements as React, with no adapter.
+- React gets `@slashome/lumen/react`, a thin adapter built on `@lit/react` that keeps React's idioms (`open`/`onOpenChange`, `value`/`onValueChange`) and renders floor 0 as components. The data table is a floor-0 pattern plus `sortRows` and `storedSort`; only the React adapter wraps it in a component, because its cells are arbitrary framework content.
+- Content slotted into floor 1 stays in the light DOM and keeps the page's styles; what a shadow root draws is themed only through tokens and `::part()`.
+- A floor-1 element exists only once its JavaScript runs: server-rendered or static pages get the floor-0 classes, never an empty custom element in place of content.
+
+## Alternatives considered
+
+### Keep the React components and wrap them as custom elements
+
+Least work, but every Vue or vanilla consumer then ships React, and Radix portals escape the shadow root they are rendered from.
+
+### One implementation per framework (Radix for React, Reka UI for Vue)
+
+Two interactive implementations to keep aligned forever, and none for vanilla.
+
+### Tailwind inside the components
+
+A shadow root does not see the page's utilities; each component would embed its own compiled Tailwind for an isolation it already has.
+
+## Revisit if
+
+Server rendering of custom elements (declarative shadow DOM from the framework) becomes something a consumer needs, or a framework's support for custom elements regresses.

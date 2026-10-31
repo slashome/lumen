@@ -1,0 +1,38 @@
+@layer lumen.components {
+  .lumen-native-select {
+    position: relative;
+    display: inline-flex;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline-end: var(--lumen-space-2-5);
+      inline-size: 1rem;
+      block-size: 1rem;
+      background: var(--lumen-color-muted-foreground);
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+  }
+
+  .lumen-native-select__control {
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: var(--lumen-control-height);
+    padding-inline: var(--lumen-space-2-5) var(--lumen-space-8);
+    border: 1px solid var(--lumen-color-border);
+    border-radius: var(--lumen-radius-md);
+    background: var(--lumen-color-background);
+    color: inherit;
+    font: inherit;
+    font-size: var(--lumen-font-size-sm);
+    appearance: none;
+
+    &:focus-visible {
+      outline: 2px solid var(--lumen-color-ring);
+      outline-offset: 0;
+    }
+  }
+}

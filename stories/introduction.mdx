@@ -1,0 +1,73 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Introduction" />
+
+# Lumen
+
+The design system of slashome. One implementation, used the same way from React, Vue, Svelte or plain HTML.
+
+## Two floors
+
+- **Floor 0, CSS.** Tokens, and every component without state: `.lumen-button`, `.lumen-badge`, `.lumen-input`, `.lumen-native-select`, `.lumen-switch`, `.lumen-kbd`, the page states, `.lumen-markdown`, `.lumen-data-table`. BEM classes in cascade layers: an application overrides them without `!important`, and they work without JavaScript.
+- **Floor 1, Lit.** Custom elements, only for what has state: `<lumen-dialog>`, `<lumen-sheet>`, `<lumen-confirm-dialog>`, `<lumen-tooltip>`, `<lumen-hover-card>`, `<lumen-select>`, `<lumen-multi-select>`, `<lumen-segmented>`, `<lumen-toaster>`, `<lumen-markdown>`, `<lumen-highlight>`, `<lumen-drag-area>`, `<lumen-icon>`. The platform first: `<dialog>`, the popover API.
+
+## Install
+
+```sh
+pnpm add @slashome/lumen
+```
+
+```js
+import '@slashome/lumen/lumen.css'
+import '@slashome/lumen'
+```
+
+## Theme
+
+Two colors, set on `:root` at run time; every other shade derives from them, in light and dark.
+
+```css
+:root {
+  --lumen-theme-primary: #3760c9;
+  --lumen-theme-secondary: #3760c9;
+}
+```
+
+Dark mode follows `data-appearance="dark"` on the root element, or the system when the attribute is absent.
+
+## React
+
+```tsx
+import { Button, Dialog, toast, Toaster } from '@slashome/lumen/react'
+```
+
+The adapter keeps React's idioms: `open` and `onOpenChange`, `value` and `onValueChange`.
+
+## Vue
+
+```ts
+import { isLumenElement } from '@slashome/lumen/vue'
+
+vue({ template: { compilerOptions: { isCustomElement: isLumenElement } } })
+```
+
+```vue
+<lumen-select :value="status" @lumen-value-change="status = $event.detail.value">
+  <lumen-option value="todo">To do</lumen-option>
+</lumen-select>
+```
+
+## Plain HTML
+
+```html
+<button class="lumen-button lumen-button--outline">Cancel</button>
+<lumen-tooltip content="Copy the command"><button class="lumen-icon-button"><lumen-icon name="copy"></lumen-icon></button></lumen-tooltip>
+```
+
+## Icons
+
+`<lumen-icon name="close">` draws a semantic name mapped to an Iconify id, embedded at build time: no request at run time. An application adds its own names with `lumen-icons <mapping.json> <output.ts>` and `registerIcons()`.
+
+## Events
+
+Every event is a `CustomEvent` named `lumen-*`, bubbling and composed: `lumen-open-change`, `lumen-value-change`, `lumen-selected-change`, `lumen-confirm`, `lumen-navigate`, `lumen-drag-end`, `lumen-open`.

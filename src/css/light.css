@@ -1,0 +1,24 @@
+@layer lumen.components {
+  @keyframes lumen-light {
+    from {
+      box-shadow:
+        0 0 0 0 color-mix(in oklab, var(--lumen-light-color, currentColor) var(--lumen-motion-light-intensity), transparent),
+        0 0 0.75rem 0.125rem color-mix(in oklab, var(--lumen-light-color, currentColor) var(--lumen-motion-light-intensity), transparent);
+    }
+    to {
+      box-shadow:
+        0 0 0 0.375rem transparent,
+        0 0 0.75rem 0.125rem transparent;
+    }
+  }
+
+  [data-lumen-lit] {
+    animation: lumen-light var(--lumen-motion-light-duration) var(--lumen-motion-light-easing);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-lumen-lit] {
+      animation: none;
+    }
+  }
+}

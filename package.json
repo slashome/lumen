@@ -1,0 +1,101 @@
+{
+  "name": "@slashome/lumen",
+  "version": "0.1.0",
+  "description": "The slashome design system: tokens, CSS and Lit custom elements for React, Vue, Svelte and plain HTML.",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slashome/lumen.git"
+  },
+  "homepage": "https://slashome.github.io/lumen/",
+  "files": [
+    "dist",
+    "custom-elements.json"
+  ],
+  "bin": {
+    "lumen-icons": "./scripts/icons.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./lib": {
+      "types": "./dist/types/lib/index.d.ts",
+      "default": "./dist/lib.js"
+    },
+    "./react": {
+      "types": "./dist/types/react/index.d.ts",
+      "default": "./dist/react.js"
+    },
+    "./vue": {
+      "types": "./dist/types/vue/index.d.ts",
+      "default": "./dist/vue.js"
+    },
+    "./lumen.css": "./dist/css/lumen.css",
+    "./tokens.css": "./dist/css/tokens.css",
+    "./css/*": "./dist/css/*",
+    "./custom-elements.json": "./custom-elements.json"
+  },
+  "customElements": "custom-elements.json",
+  "scripts": {
+    "generate": "node scripts/tokens.js && node scripts/icons.js icons/lumen.json src/icons/generated.ts && cem analyze --quiet",
+    "build": "pnpm generate && vite build && tsc -p tsconfig.build.json && node scripts/copy-css.js",
+    "typecheck": "pnpm generate && tsc --noEmit",
+    "lint": "eslint .",
+    "test": "pnpm generate && vitest run",
+    "storybook": "pnpm generate && storybook dev -p 6006",
+    "build-storybook": "pnpm generate && storybook build"
+  },
+  "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "4.0.0",
+    "@floating-ui/dom": "1.8.0",
+    "@iconify/utils": "3.1.7",
+    "dompurify": "3.4.17",
+    "lit": "3.3.3",
+    "marked": "18.1.2"
+  },
+  "peerDependencies": {
+    "@lit/react": "^1.0.8",
+    "react": "^19.0.0",
+    "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "@lit/react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "0.11.0",
+    "@eslint/js": "10.0.1",
+    "@iconify-json/lucide": "1.2.149",
+    "@lit/react": "1.0.8",
+    "@storybook/addon-a11y": "10.6.5",
+    "@storybook/addon-docs": "10.6.5",
+    "@storybook/web-components-vite": "10.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "10.13.0",
+    "eslint-plugin-lit": "2.3.1",
+    "eslint-plugin-wc": "3.1.0",
+    "globals": "17.13.0",
+    "jsdom": "30.1.3",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "storybook": "10.6.5",
+    "style-dictionary": "5.7.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1",
+    "vite": "8.3.5",
+    "vitest": "5.0.5",
+    "vue": "3.5.44"
+  },
+  "packageManager": "pnpm@12.16.1"
+}

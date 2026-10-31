@@ -1,0 +1,22 @@
+{
+  "color": {
+    "$type": "color",
+    "background": { "$value": "{color.gray.170}" },
+    "foreground": { "$value": "{color.gray.940}" },
+    "muted": { "$value": "{color.gray.240}" },
+    "muted-foreground": { "$value": "{color.gray.680}" },
+    "border": { "$value": "{color.gray.300}" },
+    "popover": { "$value": "{color.gray.210}" },
+    "sidebar": { "$value": "{color.gray.150}" },
+    "primary": { "$value": "oklch(from {theme.primary} max(l, 0.66) min(c, 0.17) h)" },
+    "ring": { "$value": "oklch(from {theme.primary} max(l, 0.68) min(c, 0.15) h)" },
+    "accent": { "$value": "oklch(from {theme.secondary} max(l, 0.7) min(c, 0.16) h)" },
+    "halo": { "$value": "color-mix(in oklab, {color.accent} 24%, transparent)" },
+    "danger": { "$value": "{color.red.400}" },
+    "danger-foreground": { "$value": "{color.gray.150}" },
+    "success": { "$value": "{color.green.400}" },
+    "warning": { "$value": "{color.amber.400}" },
+    "info": { "$value": "{color.blue.400}" },
+    "highlight": { "$value": "oklch(from {color.amber.400} l c h / 0.3)" }
+  }
+}

@@ -1,0 +1,28 @@
+@layer lumen.components {
+  .lumen-input {
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: var(--lumen-control-height);
+    padding-inline: var(--lumen-space-3);
+    border: 1px solid var(--lumen-color-border);
+    border-radius: var(--lumen-radius-md);
+    background: var(--lumen-color-background);
+    color: inherit;
+    font: inherit;
+    font-size: var(--lumen-font-size-sm);
+
+    &::placeholder {
+      color: var(--lumen-color-muted-foreground);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--lumen-color-ring);
+      outline-offset: 0;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+}

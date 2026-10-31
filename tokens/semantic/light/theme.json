@@ -1,0 +1,8 @@
+{
+  "theme": {
+    "$type": "color",
+    "$description": "The two colors an application chooses, set on :root at run time; every other shade derives from them.",
+    "primary": { "$value": "#3760c9" },
+    "secondary": { "$value": "#3760c9" }
+  }
+}

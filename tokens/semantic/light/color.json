@@ -1,0 +1,30 @@
+{
+  "color": {
+    "$type": "color",
+    "background": { "$value": "{color.gray.990}" },
+    "foreground": { "$value": "{color.gray.200}" },
+    "muted": { "$value": "{color.gray.950}" },
+    "muted-foreground": { "$value": "{color.gray.500}" },
+    "border": { "$value": "{color.gray.900}" },
+    "popover": { "$value": "{color.gray.1000}" },
+    "sidebar": { "$value": "{color.gray.975}" },
+    "primary": { "$value": "{theme.primary}" },
+    "primary-foreground": {
+      "$value": "oklch(from {color.primary} clamp(0, (0.62 - l) * 1000, 1) 0 0)",
+      "$description": "White or black text on the primary, whichever reads on it."
+    },
+    "ring": { "$value": "{theme.primary}" },
+    "accent": { "$value": "{theme.secondary}" },
+    "halo": {
+      "$value": "color-mix(in oklab, {color.accent} 14%, transparent)",
+      "$description": "The disc behind an icon button on hover."
+    },
+    "overlay": { "$value": "oklch(0 0 0 / 0.3)" },
+    "danger": { "$value": "{color.red.600}" },
+    "danger-foreground": { "$value": "{color.white}" },
+    "success": { "$value": "{color.green.600}" },
+    "warning": { "$value": "{color.amber.600}" },
+    "info": { "$value": "{color.blue.600}" },
+    "highlight": { "$value": "oklch(from {color.amber.200} l c h / 0.8)" }
+  }
+}
