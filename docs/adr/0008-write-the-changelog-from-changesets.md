@@ -1,6 +1,6 @@
 # ADR-0008 — Write the changelog from changesets
 
-- **Status:** Accepted
+- **Status:** Accepted, amended by [ADR-0010](0010-integrate-on-develop-publish-from-main.md)
 - **Date:** 2026-10-31
 - **Concerns:** ADR-0006, ADR-0007
 

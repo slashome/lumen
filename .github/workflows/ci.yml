@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [develop, main]
 
 jobs:
   check:
@@ -18,10 +18,14 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - if: github.event_name == 'pull_request'
+      - if: github.event_name == 'pull_request' && github.base_ref != 'main'
         run: pnpm changeset status --since="origin/$BASE_REF"
         env:
           BASE_REF: ${{ github.base_ref }}
+      - if: github.event_name == 'push' && github.ref_name == 'develop' && github.event.before != '0000000000000000000000000000000000000000'
+        run: pnpm changeset status --since="$BEFORE"
+        env:
+          BEFORE: ${{ github.event.before }}
       - id: playwright
         run: echo "version=$(pnpm exec playwright --version | cut -d ' ' -f 2)" >> "$GITHUB_OUTPUT"
       - id: playwright-cache
