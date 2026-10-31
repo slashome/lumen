@@ -9,7 +9,7 @@ The design system of slashome. One implementation, used the same way from React,
 ## Two ways to use a component
 
 - **A CSS class, no JavaScript.** Load the stylesheet and put the class on native HTML: `.lu-button`, `.lu-icon-button`, `.lu-badge`, `.lu-field`, `.lu-input`, `.lu-date-input`, `.lu-textarea`, `.lu-native-select`, `.lu-switch`, `.lu-checkbox`, `.lu-radio`, `.lu-radio-card`, `.lu-kbd`, the page states, `.lu-alert`, `.lu-skeleton`, `.lu-progress`, `.lu-breadcrumb`, `.lu-pagination`, `.lu-stepper`, `.lu-markdown`, `.lu-data-table`, `.lu-mark`, and the utilities `.lu-visually-hidden`, `.lu-truncate`, `.lu-line-clamp`, `.lu-spin`. The data table sorts with `sortRows` and `storedSort()`. The classes sit in cascade layers: an application overrides them without `!important`.
-- **A custom element, imported once.** Components that hold state (open or closed, a selection, the focus) are tags that work in any framework: `<lu-dialog>`, `<lu-sheet>`, `<lu-confirm-dialog>`, `<lu-tooltip>`, `<lu-hover-card>`, `<lu-select>` with its `<lu-option>`, `<lu-multi-select>`, which takes its options as data, `<lu-segmented>`, `<lu-tabs>`, `<lu-toaster>`, `<lu-markdown>`, `<lu-highlight>`, `<lu-drag-area>` with `<lu-draggable>` and `<lu-drop-zone>`, `<lu-icon>`. Import `@slashome/lumen` for all of them, or `@slashome/lumen/<name>` for one.
+- **A custom element, imported once.** Components that hold state (open or closed, a selection, the focus) are tags that work in any framework: `<lu-dialog>`, `<lu-sheet>`, `<lu-confirm-dialog>`, `<lu-tooltip>`, `<lu-hover-card>`, `<lu-select>` with its `<lu-option>`, `<lu-multi-select>`, which takes its options as data, `<lu-segmented>`, `<lu-tabs>`, `<lu-toaster>`, `<lu-markdown>`, `<lu-highlight>`, `<lu-drag-area>` with `<lu-draggable>` and `<lu-drop-zone>`, `<lu-file-drop>`, `<lu-icon>`. Import `@slashome/lumen` for all of them, or `@slashome/lumen/<name>` for one.
 
 The Storybook is sorted by use: Foundations, Actions, Form, Feedback, Navigation, Data, Overlays. Each page says under its title how the component is used, and its props table is read from `custom-elements.json`. The shared vocabulary of names, sizes, variants and events is on [Prop conventions](?path=/docs/foundations-prop-conventions--docs).
 
@@ -99,6 +99,6 @@ A tooltip or a hover card names its trigger with `for`; a template ref given to 
 
 ## Events
 
-Every event is a `CustomEvent` named `lu-*`, bubbling and composed: `lu-open-change`, `lu-value-change`, `lu-selected-change`, `lu-confirm`, `lu-navigate`, `lu-drag-end`, `lu-open`. The type of each `detail` is on the page of its element.
+Every event is a `CustomEvent` named `lu-*`, bubbling and composed: `lu-open-change`, `lu-value-change`, `lu-selected-change`, `lu-files-change`, `lu-confirm`, `lu-navigate`, `lu-drag-end`, `lu-reject`, `lu-open`. The type of each `detail` is on the page of its element.
 
 An element changes its own state when the user acts: a dialog closes on Escape, a select takes the option picked. It fires a cancelable `lu-*-change` first; cancel it and set the property to control the element yourself. The rule and the sources are on [Prop conventions](?path=/docs/foundations-prop-conventions--docs).

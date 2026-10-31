@@ -30,6 +30,7 @@
     "./dist/markdown.js",
     "./dist/highlight.js",
     "./dist/drag-area.js",
+    "./dist/file-drop.js",
     "./dist/components/select/option.js",
     "./dist/components/drag-area/draggable.js",
     "./dist/components/drag-area/drop-zone.js",
@@ -100,6 +101,10 @@
     "./drag-area": {
       "types": "./dist/types/components/drag-area/drag-area.d.ts",
       "default": "./dist/drag-area.js"
+    },
+    "./file-drop": {
+      "types": "./dist/types/components/file-drop/file-drop.d.ts",
+      "default": "./dist/file-drop.js"
     },
     "./lib": {
       "types": "./dist/types/lib/index.d.ts",

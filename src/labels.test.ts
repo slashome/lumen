@@ -91,6 +91,23 @@ const cases: Case[] = [
       press(outside!, ' ')
     },
   },
+  {
+    tag: 'lu-file-drop',
+    bare: '<lu-file-drop></lu-file-drop>',
+    labelled: '<lu-file-drop label="Attachments"></lu-file-drop>',
+    missing: ['needs label', 'no label for "fileDrop"', 'no label for "fileBrowse"', 'no label for "fileRemove"', 'no label for "filesAdded"', 'no label for "fileRemoved"', 'no label for "fileRejected"'],
+    act: async (element) => {
+      const drop = (files: File[]) => {
+        const event = new Event('drop', { bubbles: true, cancelable: true })
+        Object.assign(event, { dataTransfer: { types: ['Files'], files } })
+        element.shadowRoot!.querySelector('[part="zone"]')!.dispatchEvent(event)
+      }
+      element.setAttribute('accept', '.pdf')
+      drop([new File([''], 'notes.txt'), new File([''], 'report.pdf')])
+      await (element as Updatable).updateComplete
+      element.shadowRoot!.querySelector<HTMLButtonElement>('li button')!.click()
+    },
+  },
   { tag: 'lu-drop-zone', bare: '<lu-drop-zone zone-id="todo"></lu-drop-zone>', labelled: '<lu-drop-zone zone-id="todo" label="To do"></lu-drop-zone>', missing: [] },
   {
     tag: 'lu-tooltip',

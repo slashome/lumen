@@ -13,6 +13,12 @@ export const en: LumenMessages = {
   dragDropped: ({ zone }) => `Dropped on ${zone}.`,
   dragDroppedOutside: 'Dropped.',
   dragCancelled: 'Move cancelled.',
+  fileDrop: 'Drop files here',
+  fileBrowse: 'Choose files',
+  fileRemove: ({ name }) => `Remove ${name}`,
+  filesAdded: ({ count }) => (count === 1 ? '1 file added.' : `${count} files added.`),
+  fileRemoved: ({ name }) => `${name} removed.`,
+  fileRejected: ({ name }) => `${name} is not accepted.`,
 }
 
 export const fr: LumenMessages = {
@@ -28,6 +34,12 @@ export const fr: LumenMessages = {
   dragDropped: ({ zone }) => `Déposé sur ${zone}.`,
   dragDroppedOutside: 'Déposé.',
   dragCancelled: 'Déplacement annulé.',
+  fileDrop: 'Déposez des fichiers ici',
+  fileBrowse: 'Choisir des fichiers',
+  fileRemove: ({ name }) => `Retirer ${name}`,
+  filesAdded: ({ count }) => (count === 1 ? '1 fichier ajouté.' : `${count} fichiers ajoutés.`),
+  fileRemoved: ({ name }) => `${name} retiré.`,
+  fileRejected: ({ name }) => `${name} n’est pas accepté.`,
 }
 
 export function registerDemoMessages() {

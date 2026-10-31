@@ -35,6 +35,7 @@ describe('custom-elements.json', () => {
       'lu-drag-area',
       'lu-draggable',
       'lu-drop-zone',
+      'lu-file-drop',
       'lu-highlight',
       'lu-hover-card',
       'lu-icon',
@@ -70,9 +71,9 @@ describe('custom-elements.json', () => {
     }
   })
 
-  it('marks as required the label that names a select, a multi-select, a segmented or tabs, and nothing else', () => {
+  it('marks as required the label that names a select, a multi-select, a segmented, tabs or a file drop, and nothing else', () => {
     const required = elements.flatMap((element) => (element.attributes ?? []).filter((attribute) => attribute.required).map((attribute) => `${element.tagName} ${attribute.name}`))
-    expect(required.sort()).toEqual(['lu-multi-select label', 'lu-segmented label', 'lu-select label', 'lu-tabs label'])
+    expect(required.sort()).toEqual(['lu-file-drop label', 'lu-multi-select label', 'lu-segmented label', 'lu-select label', 'lu-tabs label'])
   })
 
   it('gives lu-confirm-dialog no close-label, which it has no button for', () => {

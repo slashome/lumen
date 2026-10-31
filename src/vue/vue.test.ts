@@ -28,11 +28,12 @@ function pressEscape(dialog: LumenDialog) {
 type PropsOf<Component> = Component extends new () => { $props: infer Props } ? Props : never
 
 describe('the Vue adapter', () => {
-  it('requires the label that names a select, a multi-select, a segmented or tabs, on the tags and on the components', () => {
+  it('requires the label that names a select, a multi-select, a segmented, tabs or a file drop, on the tags and on the components', () => {
     expectTypeOf<PropsOf<GlobalComponents['lu-select']>['label']>().toEqualTypeOf<string>()
     expectTypeOf<PropsOf<GlobalComponents['lu-multi-select']>['label']>().toEqualTypeOf<string>()
     expectTypeOf<PropsOf<GlobalComponents['lu-segmented']>['label']>().toEqualTypeOf<string>()
     expectTypeOf<PropsOf<GlobalComponents['lu-tabs']>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<PropsOf<GlobalComponents['lu-file-drop']>['label']>().toEqualTypeOf<string>()
     expectTypeOf<PropsOf<GlobalComponents['lu-confirm-dialog']>['confirmLabel']>().toEqualTypeOf<string | undefined>()
     expectTypeOf<PropsOf<typeof LuSelect>['label']>().toEqualTypeOf<string>()
     expectTypeOf<PropsOf<typeof LuMultiSelect>['label']>().toEqualTypeOf<string>()

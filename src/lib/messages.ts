@@ -13,6 +13,12 @@ export interface LumenMessages {
   dragDropped: (params: { zone: string }) => string
   dragDroppedOutside: string
   dragCancelled: string
+  fileDrop: string
+  fileBrowse: string
+  fileRemove: (params: { name: string }) => string
+  filesAdded: (params: { count: number }) => string
+  fileRemoved: (params: { name: string }) => string
+  fileRejected: (params: { name: string }) => string
 }
 
 export type LumenMessageKey = keyof LumenMessages
@@ -33,6 +39,12 @@ export const lumenMessageKeys = [
   'dragDropped',
   'dragDroppedOutside',
   'dragCancelled',
+  'fileDrop',
+  'fileBrowse',
+  'fileRemove',
+  'filesAdded',
+  'fileRemoved',
+  'fileRejected',
 ] as const satisfies readonly LumenMessageKey[]
 
 interface Listener {

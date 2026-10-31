@@ -5,7 +5,7 @@ import type { LumenDialog } from '../components/dialog/dialog'
 import type { LumenSegmented } from '../components/segmented/segmented'
 import type { LumenTooltip } from '../components/tooltip/tooltip'
 import { buttonClasses, ConfirmDialog, Dialog, Highlight, MultiSelect, Segmented, Select, Tabs, Tooltip } from './index'
-import { ConfirmDialogElement, HighlightElement, MultiSelectElement, SegmentedElement, SelectElement, TabsElement } from './elements'
+import { ConfirmDialogElement, FileDropElement, HighlightElement, MultiSelectElement, SegmentedElement, SelectElement, TabsElement } from './elements'
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
 
@@ -22,11 +22,12 @@ afterEach(() => {
 })
 
 describe('the React adapter', () => {
-  it('requires the label that names a select, a multi-select, a segmented or tabs, as the elements do', () => {
+  it('requires the label that names a select, a multi-select, a segmented, tabs or a file drop, as the elements do', () => {
     expectTypeOf<ComponentProps<typeof SelectElement>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof MultiSelectElement>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof SegmentedElement>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof TabsElement>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof FileDropElement>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof Select>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof MultiSelect>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof Segmented>['label']>().toEqualTypeOf<string>()

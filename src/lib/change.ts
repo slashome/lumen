@@ -16,3 +16,10 @@ export interface SelectedChangeDetail {
   selected: string[]
   source: ValueChangeSource
 }
+
+export type FilesChangeSource = 'drop' | 'picker' | 'remove'
+
+export interface FilesChangeDetail {
+  files: File[]
+  source: FilesChangeSource
+}
