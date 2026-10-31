@@ -36,7 +36,11 @@
     "./lumen.css": "./dist/css/lumen.css",
     "./tokens.css": "./dist/css/tokens.css",
     "./css/*": "./dist/css/*",
-    "./custom-elements.json": "./custom-elements.json"
+    "./custom-elements.json": "./custom-elements.json",
+    "./testing": {
+      "types": "./dist/types/testing/index.d.ts",
+      "default": "./dist/testing.js"
+    }
   },
   "customElements": "custom-elements.json",
   "scripts": {

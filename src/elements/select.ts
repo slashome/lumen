@@ -1,6 +1,7 @@
 import { css, html, LitElement, type PropertyValues } from 'lit'
 import { emit } from '../lib/emit'
 import { float } from '../lib/floating'
+import { isPopoverOpen } from '../lib/popover'
 import { define } from './define'
 import { nextIndex, typeahead } from './list-navigation'
 import { LumenOption } from './option'
@@ -146,8 +147,8 @@ export class LumenSelect extends LitElement {
   }
 
   private close() {
-    if (this.listbox?.matches(':popover-open')) {
-      this.listbox.hidePopover()
+    if (isPopoverOpen(this.listbox)) {
+      this.listbox?.hidePopover()
     }
     this.trigger?.focus()
   }
@@ -225,6 +226,7 @@ export class LumenSelect extends LitElement {
         type="button"
         class="trigger"
         part="trigger"
+        role="combobox"
         aria-haspopup="listbox"
         aria-expanded=${String(this.expanded)}
         aria-label=${this.label}

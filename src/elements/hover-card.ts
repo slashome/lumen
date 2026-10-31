@@ -1,6 +1,7 @@
 import type { Placement } from '@floating-ui/dom'
 import { css, html, LitElement, type PropertyValues } from 'lit'
 import { float } from '../lib/floating'
+import { isPopoverOpen } from '../lib/popover'
 import { define } from './define'
 import { popoverStyles } from './styles'
 
@@ -83,7 +84,7 @@ export class LumenHoverCard extends LitElement {
     clearTimeout(this.timer)
     const trigger = this.trigger
     const panel = this.panel
-    if (!trigger || !panel || panel.matches(':popover-open')) {
+    if (!trigger || !panel || isPopoverOpen(panel)) {
       return
     }
     panel.showPopover()
@@ -94,8 +95,8 @@ export class LumenHoverCard extends LitElement {
     clearTimeout(this.timer)
     this.stopFloating?.()
     this.stopFloating = undefined
-    if (this.panel?.matches(':popover-open')) {
-      this.panel.hidePopover()
+    if (isPopoverOpen(this.panel)) {
+      this.panel?.hidePopover()
     }
   }
 

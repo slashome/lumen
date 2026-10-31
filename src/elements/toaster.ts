@@ -1,6 +1,7 @@
 import { css, html, LitElement, type PropertyValues } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import { dismiss, toasts, type Toast, type ToastKind } from '../lib/toast'
+import { isPopoverOpen } from '../lib/popover'
 import { define } from './define'
 import { buttonStyles, visuallyHidden } from './styles'
 import './icon'
@@ -138,7 +139,7 @@ export class LumenToaster extends LitElement {
     if (!region) {
       return
     }
-    if (region.matches(':popover-open')) {
+    if (isPopoverOpen(region)) {
       region.hidePopover()
     }
     if (this.entries.length > 0) {

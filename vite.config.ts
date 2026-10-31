@@ -15,6 +15,7 @@ export default defineConfig({
         lib: 'src/lib/index.ts',
         react: 'src/react/index.tsx',
         vue: 'src/vue/index.ts',
+        testing: 'src/testing/index.ts',
       },
       formats: ['es'],
     },
@@ -23,6 +24,7 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    setupFiles: ['./src/testing/setup.ts'],
     alias: [{ find: /^@lit\/react$/, replacement: litReactForBrowsers }],
     exclude: [...configDefaults.exclude, 'storybook-static/**'],
   },

@@ -108,3 +108,29 @@ describe('lu-markdown', () => {
     expect(navigations).toEqual(['/items/T1'])
   })
 })
+
+describe('lu-dialog', () => {
+  it('opens as a modal and asks to close on Escape', async () => {
+    const dialog = await mount<HTMLElement & { open: boolean; updateComplete: Promise<boolean> }>('<lu-dialog heading="Edit"><p>Body</p></lu-dialog>')
+    dialog.open = true
+    await dialog.updateComplete
+    expect(dialog.shadowRoot!.querySelector('dialog')?.hasAttribute('open')).toBe(true)
+    const changes: boolean[] = []
+    dialog.addEventListener('lu-open-change', (event) => changes.push((event as CustomEvent<{ open: boolean }>).detail.open))
+    dialog.shadowRoot!.querySelector('dialog')!.dispatchEvent(new Event('cancel', { cancelable: true }))
+    expect(changes).toEqual([false])
+  })
+})
+
+describe('lu-select in a page without the popover API', () => {
+  it('opens its list and chooses an option', async () => {
+    const select = await mount<LumenSelect>('<lu-select label="Status" value="a"><lu-option value="a">Alpha</lu-option><lu-option value="b">Beta</lu-option></lu-select>')
+    await select.updateComplete
+    const values: string[] = []
+    select.addEventListener('lu-value-change', (event) => values.push((event as CustomEvent<{ value: string }>).detail.value))
+    const trigger = select.shadowRoot!.querySelector<HTMLButtonElement>('[role="combobox"]')!
+    trigger.click()
+    select.options[1]!.click()
+    expect(values).toEqual(['b'])
+  })
+})

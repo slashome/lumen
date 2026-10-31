@@ -1,6 +1,7 @@
 import type { Placement } from '@floating-ui/dom'
 import { css, html, LitElement, type PropertyValues } from 'lit'
 import { float } from '../lib/floating'
+import { isPopoverOpen } from '../lib/popover'
 import { define } from './define'
 import { popoverStyles } from './styles'
 
@@ -90,8 +91,8 @@ export class LumenTooltip extends LitElement {
     clearTimeout(this.timer)
     this.stopFloating?.()
     this.stopFloating = undefined
-    if (this.panel?.matches(':popover-open')) {
-      this.panel.hidePopover()
+    if (isPopoverOpen(this.panel)) {
+      this.panel?.hidePopover()
     }
   }
 

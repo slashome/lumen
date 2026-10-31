@@ -77,6 +77,7 @@ export function Switch({
       role="switch"
       className={classes('lu-switch', className)}
       checked={checked}
+      aria-checked={checked}
       onChange={(event) => onCheckedChange?.(event.target.checked)}
       {...props}
     />
