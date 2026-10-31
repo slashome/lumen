@@ -1,6 +1,6 @@
 # ADR-0005 — Document the API in JSDoc and read it from the manifest
 
-- **Status:** Accepted
+- **Status:** Accepted, amended by [ADR-0009](0009-describe-components-by-usage-not-by-floor.md)
 - **Date:** 2026-10-31
 - **Concerns:** ADR-0001, ADR-0004
 

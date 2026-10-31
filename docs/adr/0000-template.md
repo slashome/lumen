@@ -2,7 +2,7 @@
 
 - **Status:** Proposed
 - **Date:** YYYY-MM-DD
-- **Concerns:** PLAN §N, §N
+- **Concerns:** ADR-NNNN, `slashome/ariane#RNNN`
 
 ## Context
 

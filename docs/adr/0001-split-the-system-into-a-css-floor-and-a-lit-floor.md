@@ -1,6 +1,6 @@
 # ADR-0001 — Split the system into a CSS floor and a Lit floor
 
-- **Status:** Accepted
+- **Status:** Accepted, amended by [ADR-0009](0009-describe-components-by-usage-not-by-floor.md)
 - **Date:** 2026-10-31
 - **Concerns:** `slashome/ariane#R012` (private content tree)
 

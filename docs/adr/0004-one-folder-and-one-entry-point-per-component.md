@@ -1,6 +1,6 @@
 # ADR-0004 — One folder and one entry point per component
 
-- **Status:** Accepted
+- **Status:** Accepted, amended by [ADR-0009](0009-describe-components-by-usage-not-by-floor.md)
 - **Date:** 2026-10-31
 - **Concerns:** ADR-0001
 
