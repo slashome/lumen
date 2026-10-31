@@ -25,6 +25,7 @@
     "./dist/select.js",
     "./dist/multi-select.js",
     "./dist/segmented.js",
+    "./dist/tabs.js",
     "./dist/toaster.js",
     "./dist/markdown.js",
     "./dist/highlight.js",
@@ -79,6 +80,10 @@
     "./segmented": {
       "types": "./dist/types/components/segmented/segmented.d.ts",
       "default": "./dist/segmented.js"
+    },
+    "./tabs": {
+      "types": "./dist/types/components/tabs/tabs.d.ts",
+      "default": "./dist/tabs.js"
     },
     "./toaster": {
       "types": "./dist/types/components/toaster/toaster.d.ts",

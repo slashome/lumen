@@ -20,6 +20,7 @@ import {
   SegmentedElement,
   SelectElement,
   SheetElement,
+  TabsElement,
   ToasterElement,
   TooltipElement,
 } from './elements'
@@ -282,6 +283,28 @@ export function Segmented({
   focusable?: boolean
 }) {
   return <SegmentedElement label={label} values={values} value={value} focusable={focusable} onValueChange={(event) => onChange(event.detail.value)} />
+}
+
+export function Tabs({
+  label,
+  value,
+  onChange,
+  manual = false,
+  children,
+  className,
+}: {
+  label: string
+  value: string
+  onChange: (value: string) => void
+  manual?: boolean
+  children: ReactNode
+  className?: string
+}) {
+  return (
+    <TabsElement label={label} value={value} manual={manual} onValueChange={(event) => onChange(event.detail.value)} className={className}>
+      {children}
+    </TabsElement>
+  )
 }
 
 export function Toaster() {
