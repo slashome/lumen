@@ -33,30 +33,30 @@ export class LumenMultiSelect extends LitElement {
       }
 
       .count {
-        padding-inline: var(--lumen-space-1);
-        border-radius: var(--lumen-radius-sm);
-        background: var(--lumen-color-muted);
-        font-size: var(--lumen-font-size-xs);
+        padding-inline: var(--lu-space-1);
+        border-radius: var(--lu-radius-sm);
+        background: var(--lu-color-muted);
+        font-size: var(--lu-font-size-xs);
       }
 
       .chevron {
-        --lumen-icon-size: 0.875rem;
+        --lu-icon-size: 0.875rem;
         opacity: 0.6;
       }
 
       [popover] {
         min-inline-size: 11rem;
-        padding: var(--lumen-space-1);
+        padding: var(--lu-space-1);
       }
 
       .item {
         display: flex;
         align-items: center;
-        gap: var(--lumen-space-2);
+        gap: var(--lu-space-2);
         inline-size: 100%;
-        padding: var(--lumen-space-1-5) var(--lumen-space-2);
+        padding: var(--lu-space-1-5) var(--lu-space-2);
         border: 0;
-        border-radius: var(--lumen-radius-sm);
+        border-radius: var(--lu-radius-sm);
         background: none;
         color: inherit;
         font: inherit;
@@ -67,7 +67,7 @@ export class LumenMultiSelect extends LitElement {
 
       .item:hover,
       .item:focus {
-        background: var(--lumen-color-muted);
+        background: var(--lu-color-muted);
       }
 
       .box {
@@ -76,19 +76,19 @@ export class LumenMultiSelect extends LitElement {
         justify-content: center;
         inline-size: 1rem;
         block-size: 1rem;
-        border: 1px solid var(--lumen-color-border);
-        border-radius: var(--lumen-radius-sm);
-        --lumen-icon-size: 0.75rem;
+        border: 1px solid var(--lu-color-border);
+        border-radius: var(--lu-radius-sm);
+        --lu-icon-size: 0.75rem;
       }
 
       .clear {
-        color: var(--lumen-color-muted-foreground);
+        color: var(--lu-color-muted-foreground);
       }
 
       hr {
-        margin-block: var(--lumen-space-1);
+        margin-block: var(--lu-space-1);
         border: 0;
-        border-block-start: 1px solid var(--lumen-color-border);
+        border-block-start: 1px solid var(--lu-color-border);
       }
     `,
   ]
@@ -147,7 +147,7 @@ export class LumenMultiSelect extends LitElement {
 
   private change(selected: string[]) {
     this.selected = selected
-    emit<SelectedChangeDetail>(this, 'lumen-selected-change', { selected })
+    emit<SelectedChangeDetail>(this, 'lu-selected-change', { selected })
   }
 
   private toggle(value: string) {
@@ -183,7 +183,7 @@ export class LumenMultiSelect extends LitElement {
     return html`
       <button
         type="button"
-        class="trigger lumen-button lumen-button--outline lumen-button--sm"
+        class="trigger lu-button lu-button--outline lu-button--sm"
         part="trigger"
         aria-haspopup="menu"
         aria-expanded=${String(this.expanded)}
@@ -191,7 +191,7 @@ export class LumenMultiSelect extends LitElement {
         @keydown=${this.onTriggerKeydown}
       >
         ${this.label} ${this.selected.length > 0 ? html`<span class="count">${this.selected.length}</span>` : nothing}
-        <lumen-icon class="chevron" name="chevron-down"></lumen-icon>
+        <lu-icon class="chevron" name="chevron-down"></lu-icon>
       </button>
       <div popover="auto" role="menu" part="menu" aria-label=${this.label} @toggle=${this.onToggle} @keydown=${this.onMenuKeydown}>
         ${this.options.map(
@@ -204,7 +204,7 @@ export class LumenMultiSelect extends LitElement {
               aria-checked=${String(this.selected.includes(option.value))}
               @click=${() => this.toggle(option.value)}
             >
-              <span class="box">${this.selected.includes(option.value) ? html`<lumen-icon name="check"></lumen-icon>` : nothing}</span>
+              <span class="box">${this.selected.includes(option.value) ? html`<lu-icon name="check"></lu-icon>` : nothing}</span>
               ${option.label}
             </button>
           `,
@@ -217,10 +217,10 @@ export class LumenMultiSelect extends LitElement {
   }
 }
 
-define('lumen-multi-select', LumenMultiSelect)
+define('lu-multi-select', LumenMultiSelect)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-multi-select': LumenMultiSelect
+    'lu-multi-select': LumenMultiSelect
   }
 }

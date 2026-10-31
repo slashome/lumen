@@ -10,7 +10,7 @@ Ariane uses about fifty Lucide icons through `lucide-react`, which only React ca
 
 ## Decision
 
-- `<lumen-icon name="close">` draws an icon by **semantic name**. `icons/lumen.json` maps each name to an Iconify id (`close` → `lucide:x`).
+- `<lu-icon name="close">` draws an icon by **semantic name**. `icons/lumen.json` maps each name to an Iconify id (`close` → `lucide:x`).
 - `lumen-icons <mapping.json> <output.ts>` reads the SVG data from the installed `@iconify-json/*` sets and writes a module. Lumen builds its own set with it; an application builds its names the same way and passes the module to `registerIcons()`.
 - Nothing is fetched at run time.
 

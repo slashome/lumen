@@ -31,8 +31,8 @@ export const Colors: StoryObj = {
       ${colors.map(
         (name) => html`
           <figure style="margin:0">
-            <div style="block-size:3rem;border:1px solid var(--lumen-color-border);border-radius:var(--lumen-radius-md);background:var(--lumen-color-${name})"></div>
-            <figcaption><code>--lumen-color-${name}</code></figcaption>
+            <div style="block-size:3rem;border:1px solid var(--lu-color-border);border-radius:var(--lu-radius-md);background:var(--lu-color-${name})"></div>
+            <figcaption><code>--lu-color-${name}</code></figcaption>
           </figure>
         `,
       )}
@@ -43,8 +43,8 @@ export const Colors: StoryObj = {
 export const Light: StoryObj = {
   render: () => html`
     <p>Every action lights up for a moment, then gets its color back; the state is read from the color, never from the light.</p>
-    <button class="lumen-button" @click=${(event: Event) => import('../src/lib/light').then(({ light }) => light(event.currentTarget as Element))}>Click me</button>
-    <input type="checkbox" role="switch" class="lumen-switch" aria-label="Sub-nodes"
+    <button class="lu-button" @click=${(event: Event) => import('../src/lib/light').then(({ light }) => light(event.currentTarget as Element))}>Click me</button>
+    <input type="checkbox" role="switch" class="lu-switch" aria-label="Sub-nodes"
       @click=${(event: Event) => import('../src/lib/light').then(({ light }) => light(event.currentTarget as Element))} />
   `,
 }

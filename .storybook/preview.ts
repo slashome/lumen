@@ -31,8 +31,8 @@ const preview: Preview = {
     (story, context) => {
       const root = document.documentElement
       root.dataset.appearance = context.globals.appearance
-      root.style.setProperty('--lumen-theme-primary', context.globals.primary)
-      root.style.setProperty('--lumen-theme-secondary', context.globals.primary)
+      root.style.setProperty('--lu-theme-primary', context.globals.primary)
+      root.style.setProperty('--lu-theme-secondary', context.globals.primary)
       return story()
     },
   ],

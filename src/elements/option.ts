@@ -15,9 +15,9 @@ export class LumenOption extends LitElement {
       position: relative;
       display: flex;
       align-items: center;
-      padding-block: var(--lumen-space-1);
-      padding-inline: 1.75rem var(--lumen-space-2);
-      border-radius: var(--lumen-radius-sm);
+      padding-block: var(--lu-space-1);
+      padding-inline: 1.75rem var(--lu-space-2);
+      border-radius: var(--lu-radius-sm);
       outline: none;
       cursor: pointer;
       user-select: none;
@@ -25,11 +25,11 @@ export class LumenOption extends LitElement {
 
     :host(:hover),
     :host(:focus) {
-      background: var(--lumen-color-muted);
+      background: var(--lu-color-muted);
     }
 
     :host([selected]) {
-      font-weight: var(--lumen-font-weight-medium);
+      font-weight: var(--lu-font-weight-medium);
     }
 
     :host([disabled]) {
@@ -39,9 +39,9 @@ export class LumenOption extends LitElement {
 
     .check {
       position: absolute;
-      inset-inline-start: var(--lumen-space-2);
+      inset-inline-start: var(--lu-space-2);
       display: inline-flex;
-      --lumen-icon-size: 0.875rem;
+      --lu-icon-size: 0.875rem;
     }
   `
 
@@ -78,14 +78,14 @@ export class LumenOption extends LitElement {
   }
 
   render() {
-    return html`<span class="check">${this.selected ? html`<lumen-icon name="check"></lumen-icon>` : nothing}</span><slot></slot>`
+    return html`<span class="check">${this.selected ? html`<lu-icon name="check"></lu-icon>` : nothing}</span><slot></slot>`
   }
 }
 
-define('lumen-option', LumenOption)
+define('lu-option', LumenOption)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-option': LumenOption
+    'lu-option': LumenOption
   }
 }

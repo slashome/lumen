@@ -1,17 +1,17 @@
-@layer lumen.components {
-  .lumen-switch {
-    --lumen-light-color: var(--lumen-color-primary);
+@layer lu.components {
+  .lu-switch {
+    --lu-light-color: var(--lu-color-primary);
     position: relative;
     display: inline-flex;
     flex-shrink: 0;
     inline-size: 2.25rem;
     block-size: 1.25rem;
     margin: 0;
-    border-radius: var(--lumen-radius-full);
-    background: var(--lumen-color-muted);
+    border-radius: var(--lu-radius-full);
+    background: var(--lu-color-muted);
     appearance: none;
     cursor: pointer;
-    transition: background-color var(--lumen-motion-hover-duration) var(--lumen-motion-hover-easing);
+    transition: background-color var(--lu-motion-hover-duration) var(--lu-motion-hover-easing);
 
     &::before {
       content: '';
@@ -20,14 +20,14 @@
       inset-inline-start: 0.125rem;
       inline-size: 1rem;
       block-size: 1rem;
-      border-radius: var(--lumen-radius-full);
-      background: var(--lumen-color-background);
-      box-shadow: var(--lumen-shadow-sm);
-      transition: translate var(--lumen-motion-hover-duration) var(--lumen-motion-hover-easing);
+      border-radius: var(--lu-radius-full);
+      background: var(--lu-color-background);
+      box-shadow: var(--lu-shadow-sm);
+      transition: translate var(--lu-motion-hover-duration) var(--lu-motion-hover-easing);
     }
 
     &:checked {
-      background: var(--lumen-color-primary);
+      background: var(--lu-color-primary);
     }
 
     &:checked::before {
@@ -35,7 +35,7 @@
     }
 
     &:focus-visible {
-      outline: 2px solid var(--lumen-color-ring);
+      outline: 2px solid var(--lu-color-ring);
       outline-offset: 2px;
     }
 
@@ -46,8 +46,8 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .lumen-switch,
-    .lumen-switch::before {
+    .lu-switch,
+    .lu-switch::before {
       transition: none;
     }
   }

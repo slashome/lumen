@@ -1,10 +1,9 @@
 import DOMPurify from 'dompurify'
-import { css, html, LitElement } from 'lit'
+import { html, LitElement } from 'lit'
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'
 import { marked } from 'marked'
 import { emit } from '../lib/emit'
 import { define } from './define'
-import { markdownStyles } from './styles'
 import './icon'
 
 export type LinkTarget = { kind: 'external'; href: string } | { kind: 'internal'; href: string } | { kind: 'unresolved'; title?: string }
@@ -25,26 +24,6 @@ export class LumenMarkdown extends LitElement {
     resolveLink: { attribute: false },
   }
 
-  static styles = [
-    markdownStyles,
-    css`
-      :host {
-        display: block;
-      }
-
-      .external {
-        --lumen-icon-size: 0.75rem;
-        margin-inline-start: 0.125rem;
-        vertical-align: baseline;
-      }
-
-      .unresolved {
-        color: var(--lumen-color-muted-foreground);
-        text-decoration: underline dotted;
-      }
-    `,
-  ]
-
   declare source: string
   declare resolveLink: LinkResolver | undefined
 
@@ -52,6 +31,10 @@ export class LumenMarkdown extends LitElement {
     super()
     this.source = ''
     this.resolveLink = undefined
+  }
+
+  protected createRenderRoot() {
+    return this
   }
 
   private renderHtml(): string {
@@ -72,13 +55,13 @@ export class LumenMarkdown extends LitElement {
       anchor.href = target.href
       anchor.target = '_blank'
       anchor.rel = 'noreferrer'
-      anchor.insertAdjacentHTML('beforeend', '<lumen-icon class="external" name="external-link"></lumen-icon>')
+      anchor.insertAdjacentHTML('beforeend', '<lu-icon class="lu-markdown__external" name="external-link"></lu-icon>')
     } else if (target.kind === 'internal') {
       anchor.href = target.href
-      anchor.dataset.lumenInternal = ''
+      anchor.dataset.luInternal = ''
     } else {
       const span = document.createElement('span')
-      span.className = 'unresolved'
+      span.className = 'lu-markdown__unresolved'
       span.title = target.title ?? anchor.getAttribute('href') ?? ''
       span.append(...anchor.childNodes)
       anchor.replaceWith(span)
@@ -87,22 +70,22 @@ export class LumenMarkdown extends LitElement {
 
   private onClick(event: MouseEvent) {
     const anchor = event.composedPath().find((node): node is HTMLAnchorElement => node instanceof HTMLAnchorElement)
-    if (!anchor || !('lumenInternal' in anchor.dataset) || isModified(event)) {
+    if (!anchor || !('luInternal' in anchor.dataset) || isModified(event)) {
       return
     }
     event.preventDefault()
-    emit<NavigateDetail>(this, 'lumen-navigate', { href: anchor.getAttribute('href') ?? '' })
+    emit<NavigateDetail>(this, 'lu-navigate', { href: anchor.getAttribute('href') ?? '' })
   }
 
   render() {
-    return html`<div class="lumen-markdown" part="body" @click=${this.onClick}>${unsafeHTML(this.renderHtml())}</div>`
+    return html`<div class="lu-markdown" @click=${this.onClick}>${unsafeHTML(this.renderHtml())}</div>`
   }
 }
 
-define('lumen-markdown', LumenMarkdown)
+define('lu-markdown', LumenMarkdown)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-markdown': LumenMarkdown
+    'lu-markdown': LumenMarkdown
   }
 }

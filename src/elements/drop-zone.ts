@@ -2,7 +2,7 @@ import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element
 import { css, html, LitElement, type PropertyValues } from 'lit'
 import { define } from './define'
 
-export const zoneKey = 'lumenZoneId'
+export const zoneKey = 'luZoneId'
 
 export class LumenDropZone extends LitElement {
   static properties = {
@@ -17,7 +17,7 @@ export class LumenDropZone extends LitElement {
     }
 
     :host([over]) {
-      outline: 2px solid color-mix(in oklab, var(--lumen-color-primary) 60%, transparent);
+      outline: 2px solid color-mix(in oklab, var(--lu-color-primary) 60%, transparent);
       outline-offset: -2px;
     }
   `
@@ -67,10 +67,10 @@ export class LumenDropZone extends LitElement {
   }
 }
 
-define('lumen-drop-zone', LumenDropZone)
+define('lu-drop-zone', LumenDropZone)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-drop-zone': LumenDropZone
+    'lu-drop-zone': LumenDropZone
   }
 }

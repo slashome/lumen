@@ -19,28 +19,28 @@ import type {
 } from '../index'
 
 export function isLumenElement(tag: string): boolean {
-  return tag.startsWith('lumen-')
+  return tag.startsWith('lu-')
 }
 
 type Element<Props> = DefineComponent<Partial<Omit<Props, keyof HTMLElement>>>
 
 declare module 'vue' {
   interface GlobalComponents {
-    'lumen-icon': Element<LumenIcon>
-    'lumen-dialog': Element<LumenDialog>
-    'lumen-sheet': Element<LumenSheet>
-    'lumen-confirm-dialog': Element<LumenConfirmDialog>
-    'lumen-tooltip': Element<LumenTooltip>
-    'lumen-hover-card': Element<LumenHoverCard>
-    'lumen-option': Element<LumenOption>
-    'lumen-select': Element<LumenSelect>
-    'lumen-multi-select': Element<LumenMultiSelect>
-    'lumen-segmented': Element<LumenSegmented>
-    'lumen-toaster': Element<LumenToaster>
-    'lumen-markdown': Element<LumenMarkdown>
-    'lumen-highlight': Element<LumenHighlight>
-    'lumen-draggable': Element<LumenDraggable>
-    'lumen-drop-zone': Element<LumenDropZone>
-    'lumen-drag-area': Element<LumenDragArea>
+    'lu-icon': Element<LumenIcon>
+    'lu-dialog': Element<LumenDialog>
+    'lu-sheet': Element<LumenSheet>
+    'lu-confirm-dialog': Element<LumenConfirmDialog>
+    'lu-tooltip': Element<LumenTooltip>
+    'lu-hover-card': Element<LumenHoverCard>
+    'lu-option': Element<LumenOption>
+    'lu-select': Element<LumenSelect>
+    'lu-multi-select': Element<LumenMultiSelect>
+    'lu-segmented': Element<LumenSegmented>
+    'lu-toaster': Element<LumenToaster>
+    'lu-markdown': Element<LumenMarkdown>
+    'lu-highlight': Element<LumenHighlight>
+    'lu-draggable': Element<LumenDraggable>
+    'lu-drop-zone': Element<LumenDropZone>
+    'lu-drag-area': Element<LumenDragArea>
   }
 }

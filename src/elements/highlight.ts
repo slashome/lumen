@@ -1,8 +1,7 @@
-import { html, LitElement, css } from 'lit'
+import { html, LitElement } from 'lit'
 import { highlightRanges, splitByRanges, type Range } from '../lib/highlight'
 import { highlightTerms } from '../lib/highlight-terms'
 import { define } from './define'
-import { markStyles } from './styles'
 
 export class LumenHighlight extends LitElement {
   static properties = {
@@ -10,15 +9,6 @@ export class LumenHighlight extends LitElement {
     terms: { type: Array },
     ranges: { type: Array },
   }
-
-  static styles = [
-    markStyles,
-    css`
-      :host {
-        display: inline;
-      }
-    `,
-  ]
 
   declare text: string
   declare terms: readonly string[] | undefined
@@ -30,6 +20,10 @@ export class LumenHighlight extends LitElement {
     this.text = ''
     this.terms = undefined
     this.ranges = undefined
+  }
+
+  protected createRenderRoot() {
+    return this
   }
 
   connectedCallback() {
@@ -44,14 +38,14 @@ export class LumenHighlight extends LitElement {
 
   render() {
     const ranges = this.ranges ?? highlightRanges(this.text, this.terms ?? highlightTerms.get())
-    return splitByRanges(this.text, ranges).map((segment) => (segment.match ? html`<mark class="lumen-mark" part="mark">${segment.text}</mark>` : segment.text))
+    return splitByRanges(this.text, ranges).map((segment) => (segment.match ? html`<mark class="lu-mark">${segment.text}</mark>` : segment.text))
   }
 }
 
-define('lumen-highlight', LumenHighlight)
+define('lu-highlight', LumenHighlight)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-highlight': LumenHighlight
+    'lu-highlight': LumenHighlight
   }
 }

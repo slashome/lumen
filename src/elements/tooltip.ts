@@ -20,11 +20,11 @@ export class LumenTooltip extends LitElement {
 
       [popover] {
         max-inline-size: 28rem;
-        padding: var(--lumen-space-1) var(--lumen-space-2);
-        font-family: var(--lumen-font-family-mono);
-        font-size: var(--lumen-font-size-xs);
+        padding: var(--lu-space-1) var(--lu-space-2);
+        font-family: var(--lu-font-family-mono);
+        font-size: var(--lu-font-size-xs);
         white-space: pre-line;
-        box-shadow: var(--lumen-shadow-md);
+        box-shadow: var(--lu-shadow-md);
         pointer-events: none;
       }
     `,
@@ -101,10 +101,10 @@ export class LumenTooltip extends LitElement {
   }
 }
 
-define('lumen-tooltip', LumenTooltip)
+define('lu-tooltip', LumenTooltip)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-tooltip': LumenTooltip
+    'lu-tooltip': LumenTooltip
   }
 }

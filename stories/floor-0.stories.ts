@@ -7,39 +7,39 @@ export default meta
 export const Button: StoryObj = {
   render: () => html`
     <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
-      <button class="lumen-button">Default</button>
-      <button class="lumen-button lumen-button--outline">Outline</button>
-      <button class="lumen-button lumen-button--ghost">Ghost</button>
-      <button class="lumen-button lumen-button--destructive">Delete</button>
-      <button class="lumen-button lumen-button--sm">Small</button>
-      <button class="lumen-button lumen-button--outline lumen-button--icon" aria-label="Add"><lumen-icon name="add"></lumen-icon></button>
-      <button class="lumen-icon-button" aria-label="Copy"><lumen-icon name="copy"></lumen-icon></button>
-      <button class="lumen-button" disabled>Disabled</button>
+      <button class="lu-button">Default</button>
+      <button class="lu-button lu-button--outline">Outline</button>
+      <button class="lu-button lu-button--ghost">Ghost</button>
+      <button class="lu-button lu-button--destructive">Delete</button>
+      <button class="lu-button lu-button--sm">Small</button>
+      <button class="lu-button lu-button--outline lu-button--icon" aria-label="Add"><lu-icon name="add"></lu-icon></button>
+      <button class="lu-icon-button" aria-label="Copy"><lu-icon name="copy"></lu-icon></button>
+      <button class="lu-button" disabled>Disabled</button>
     </div>
   `,
 }
 
 export const Badge: StoryObj = {
   render: () => html`
-    <span class="lumen-badge">todo</span>
-    <span class="lumen-badge lumen-badge--outline">backlog</span>
-    <span class="lumen-badge lumen-badge--primary">in progress</span>
+    <span class="lu-badge">todo</span>
+    <span class="lu-badge lu-badge--outline">backlog</span>
+    <span class="lu-badge lu-badge--primary">in progress</span>
   `,
 }
 
 export const Fields: StoryObj = {
   render: () => html`
     <div style="display:grid;gap:0.75rem;max-inline-size:20rem">
-      <input class="lumen-input" placeholder="Search items" aria-label="Search items" />
-      <span class="lumen-native-select">
-        <select class="lumen-native-select__control" aria-label="Status">
+      <input class="lu-input" placeholder="Search items" aria-label="Search items" />
+      <span class="lu-native-select">
+        <select class="lu-native-select__control" aria-label="Status">
           <option>todo</option>
           <option>in progress</option>
           <option>done</option>
         </select>
       </span>
-      <label style="display:flex;gap:0.5rem;align-items:center"><input type="checkbox" role="switch" class="lumen-switch" checked /> Sub-nodes</label>
-      <p>Press <kbd class="lumen-kbd">⌘</kbd> <kbd class="lumen-kbd">K</kbd></p>
+      <label style="display:flex;gap:0.5rem;align-items:center"><input type="checkbox" role="switch" class="lu-switch" checked /> Sub-nodes</label>
+      <p>Press <kbd class="lu-kbd">⌘</kbd> <kbd class="lu-kbd">K</kbd></p>
     </div>
   `,
 }
@@ -47,45 +47,45 @@ export const Fields: StoryObj = {
 export const States: StoryObj = {
   render: () => html`
     <div style="display:grid;gap:1.5rem">
-      <div class="lumen-page-header">
-        <div class="lumen-page-header__main">
-          <h1 class="lumen-page-header__title">Tasks</h1>
-          <p class="lumen-page-header__description">Every task of the tree.</p>
+      <div class="lu-page-header">
+        <div class="lu-page-header__main">
+          <h1 class="lu-page-header__title">Tasks</h1>
+          <p class="lu-page-header__description">Every task of the tree.</p>
         </div>
-        <div class="lumen-page-header__actions"><button class="lumen-button lumen-button--sm">New task</button></div>
+        <div class="lu-page-header__actions"><button class="lu-button lu-button--sm">New task</button></div>
       </div>
-      <div class="lumen-empty-state">
-        <lumen-icon class="lumen-empty-state__icon" name="inbox"></lumen-icon>
-        <p class="lumen-empty-state__title">Nothing to do</p>
+      <div class="lu-empty-state">
+        <lu-icon class="lu-empty-state__icon" name="inbox"></lu-icon>
+        <p class="lu-empty-state__title">Nothing to do</p>
         Every task is done.
       </div>
-      <div role="status" aria-label="Loading…" class="lumen-loading-state">
-        <div class="lumen-loading-state__row"></div>
-        <div class="lumen-loading-state__row"></div>
-        <div class="lumen-loading-state__row"></div>
+      <div role="status" aria-label="Loading…" class="lu-loading-state">
+        <div class="lu-loading-state__row"></div>
+        <div class="lu-loading-state__row"></div>
+        <div class="lu-loading-state__row"></div>
       </div>
-      <p role="alert" class="lumen-error-state">The content repository could not be read.</p>
+      <p role="alert" class="lu-error-state">The content repository could not be read.</p>
     </div>
   `,
 }
 
 export const DataTable: StoryObj = {
   render: () => html`
-    <div class="lumen-data-table">
-      <table class="lumen-data-table__table" aria-label="Tasks">
-        <thead class="lumen-data-table__head">
+    <div class="lu-data-table">
+      <table class="lu-data-table__table" aria-label="Tasks">
+        <thead class="lu-data-table__head">
           <tr>
-            <th class="lumen-data-table__header" scope="col" aria-sort="ascending">
-              <button class="lumen-data-table__sort" data-direction="asc">Id <lumen-icon class="lumen-data-table__sort-icon" name="sort-asc"></lumen-icon></button>
+            <th class="lu-data-table__header" scope="col" aria-sort="ascending">
+              <button class="lu-data-table__sort" data-direction="asc">Id <lu-icon class="lu-data-table__sort-icon" name="sort-asc"></lu-icon></button>
             </th>
-            <th class="lumen-data-table__header" scope="col" aria-sort="none">
-              <button class="lumen-data-table__sort">Title <lumen-icon class="lumen-data-table__sort-icon" name="sort"></lumen-icon></button>
+            <th class="lu-data-table__header" scope="col" aria-sort="none">
+              <button class="lu-data-table__sort">Title <lu-icon class="lu-data-table__sort-icon" name="sort"></lu-icon></button>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr class="lumen-data-table__row"><td class="lumen-data-table__cell">T1</td><td class="lumen-data-table__cell">Draw the fairy</td></tr>
-          <tr class="lumen-data-table__row"><td class="lumen-data-table__cell">T2</td><td class="lumen-data-table__cell">Beat the wings</td></tr>
+          <tr class="lu-data-table__row"><td class="lu-data-table__cell">T1</td><td class="lu-data-table__cell">Draw the fairy</td></tr>
+          <tr class="lu-data-table__row"><td class="lu-data-table__cell">T2</td><td class="lu-data-table__cell">Beat the wings</td></tr>
         </tbody>
       </table>
     </div>

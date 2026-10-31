@@ -1,5 +1,9 @@
 import { defineConfig } from 'vite'
+import { createRequire } from 'node:module'
+import { dirname, join } from 'node:path'
 import { configDefaults } from 'vitest/config'
+
+const litReactForBrowsers = join(dirname(createRequire(import.meta.url).resolve('@lit/react')), '..', 'development', 'index.js')
 
 const external = [/^lit/, /^@lit\//, /^@floating-ui\//, /^@atlaskit\//, 'marked', 'dompurify', /^react/, 'vue']
 
@@ -19,6 +23,7 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    alias: [{ find: /^@lit\/react$/, replacement: litReactForBrowsers }],
     exclude: [...configDefaults.exclude, 'storybook-static/**'],
   },
 })

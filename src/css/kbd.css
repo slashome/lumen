@@ -1,11 +1,11 @@
-@layer lumen.components {
-  .lumen-kbd {
-    padding: 1px var(--lumen-space-1);
-    border: 1px solid var(--lumen-color-border);
-    border-radius: var(--lumen-radius-sm);
-    background: var(--lumen-color-muted);
-    color: var(--lumen-color-muted-foreground);
-    font-family: var(--lumen-font-family-mono);
+@layer lu.components {
+  .lu-kbd {
+    padding: 1px var(--lu-space-1);
+    border: 1px solid var(--lu-color-border);
+    border-radius: var(--lu-radius-sm);
+    background: var(--lu-color-muted);
+    color: var(--lu-color-muted-foreground);
+    font-family: var(--lu-font-family-mono);
     font-size: 0.625rem;
   }
 }

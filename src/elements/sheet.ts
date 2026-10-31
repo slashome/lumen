@@ -9,7 +9,7 @@ export class LumenSheet extends LumenDialog {
       dialog {
         inset-block: 0;
         inset-inline: auto 0;
-        inline-size: var(--lumen-sheet-width, 42rem);
+        inline-size: var(--lu-sheet-width, 42rem);
         max-inline-size: 100%;
         block-size: 100%;
         max-block-size: 100%;
@@ -20,7 +20,7 @@ export class LumenSheet extends LumenDialog {
       }
 
       .panel {
-        gap: var(--lumen-space-4);
+        gap: var(--lu-space-4);
         block-size: 100%;
         overflow-y: auto;
       }
@@ -32,10 +32,10 @@ export class LumenSheet extends LumenDialog {
   ]
 }
 
-define('lumen-sheet', LumenSheet)
+define('lu-sheet', LumenSheet)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-sheet': LumenSheet
+    'lu-sheet': LumenSheet
   }
 }

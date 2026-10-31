@@ -29,10 +29,10 @@ export class LumenToaster extends LitElement {
 
       [popover] {
         position: fixed;
-        inset: auto var(--lumen-space-6) var(--lumen-space-6) auto;
+        inset: auto var(--lu-space-6) var(--lu-space-6) auto;
         display: flex;
         flex-direction: column;
-        gap: var(--lumen-space-2);
+        gap: var(--lu-space-2);
         inline-size: min(22rem, calc(100vw - 2rem));
         margin: 0;
         padding: 0;
@@ -46,28 +46,28 @@ export class LumenToaster extends LitElement {
       }
 
       .toast {
-        --tone: var(--lumen-color-foreground);
+        --tone: var(--lu-color-foreground);
         display: flex;
         align-items: flex-start;
-        gap: var(--lumen-space-2);
-        padding: var(--lumen-space-3) var(--lumen-space-4);
-        border: 1px solid color-mix(in oklab, var(--tone) 30%, var(--lumen-color-border));
-        border-radius: var(--lumen-radius-lg);
-        background: color-mix(in oklab, var(--tone) 8%, var(--lumen-color-popover));
-        color: var(--lumen-color-foreground);
-        font-family: var(--lumen-font-family-sans);
-        font-size: var(--lumen-font-size-sm);
-        box-shadow: var(--lumen-shadow-lg);
-        animation: enter var(--lumen-motion-hover-duration) var(--lumen-motion-hover-easing);
+        gap: var(--lu-space-2);
+        padding: var(--lu-space-3) var(--lu-space-4);
+        border: 1px solid color-mix(in oklab, var(--tone) 30%, var(--lu-color-border));
+        border-radius: var(--lu-radius-lg);
+        background: color-mix(in oklab, var(--tone) 8%, var(--lu-color-popover));
+        color: var(--lu-color-foreground);
+        font-family: var(--lu-font-family-sans);
+        font-size: var(--lu-font-size-sm);
+        box-shadow: var(--lu-shadow-lg);
+        animation: enter var(--lu-motion-hover-duration) var(--lu-motion-hover-easing);
       }
 
-      .toast[data-kind='success'] { --tone: var(--lumen-color-success); }
-      .toast[data-kind='error'] { --tone: var(--lumen-color-danger); }
-      .toast[data-kind='info'] { --tone: var(--lumen-color-info); }
-      .toast[data-kind='warning'] { --tone: var(--lumen-color-warning); }
+      .toast[data-kind='success'] { --tone: var(--lu-color-success); }
+      .toast[data-kind='error'] { --tone: var(--lu-color-danger); }
+      .toast[data-kind='info'] { --tone: var(--lu-color-info); }
+      .toast[data-kind='warning'] { --tone: var(--lu-color-warning); }
 
       .kind {
-        --lumen-icon-size: 1rem;
+        --lu-icon-size: 1rem;
         margin-block-start: 0.125rem;
         color: var(--tone);
       }
@@ -78,7 +78,7 @@ export class LumenToaster extends LitElement {
       }
 
       .close {
-        --lumen-icon-size: 0.875rem;
+        --lu-icon-size: 0.875rem;
         inline-size: 1.25rem;
         block-size: 1.25rem;
       }
@@ -186,10 +186,10 @@ export class LumenToaster extends LitElement {
               @pointerenter=${() => this.pause(entry)}
               @pointerleave=${() => this.resume(entry)}
             >
-              ${icons[entry.kind] ? html`<lumen-icon class="kind" name=${icons[entry.kind]}></lumen-icon>` : null}
+              ${icons[entry.kind] ? html`<lu-icon class="kind" name=${icons[entry.kind]}></lu-icon>` : null}
               <span class="message">${entry.message}</span>
-              <button type="button" class="lumen-icon-button close" aria-label=${this.closeLabel} @click=${() => this.close(entry.id)}>
-                <lumen-icon name="close"></lumen-icon>
+              <button type="button" class="lu-icon-button close" aria-label=${this.closeLabel} @click=${() => this.close(entry.id)}>
+                <lu-icon name="close"></lu-icon>
               </button>
             </div>
           `,
@@ -199,10 +199,10 @@ export class LumenToaster extends LitElement {
   }
 }
 
-define('lumen-toaster', LumenToaster)
+define('lu-toaster', LumenToaster)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-toaster': LumenToaster
+    'lu-toaster': LumenToaster
   }
 }

@@ -18,9 +18,9 @@ export function float(anchor: Element, floating: HTMLElement, { placement = 'bot
         size({
           padding: 8,
           apply({ availableHeight, rects }) {
-            floating.style.setProperty('--lumen-available-height', `${Math.max(0, availableHeight)}px`)
+            floating.style.setProperty('--lu-available-height', `${Math.max(0, availableHeight)}px`)
             if (matchWidth) {
-              floating.style.setProperty('--lumen-anchor-width', `${rects.reference.width}px`)
+              floating.style.setProperty('--lu-anchor-width', `${rects.reference.width}px`)
             }
           },
         }),

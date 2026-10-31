@@ -21,10 +21,10 @@ export class LumenHoverCard extends LitElement {
 
       [popover] {
         box-sizing: border-box;
-        inline-size: var(--lumen-hover-card-width, 24rem);
+        inline-size: var(--lu-hover-card-width, 24rem);
         max-inline-size: calc(100vw - 1rem);
-        padding: var(--lumen-space-3);
-        border-radius: var(--lumen-radius-lg);
+        padding: var(--lu-space-3);
+        border-radius: var(--lu-radius-lg);
       }
     `,
   ]
@@ -130,10 +130,10 @@ export class LumenHoverCard extends LitElement {
   }
 }
 
-define('lumen-hover-card', LumenHoverCard)
+define('lu-hover-card', LumenHoverCard)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-hover-card': LumenHoverCard
+    'lu-hover-card': LumenHoverCard
   }
 }

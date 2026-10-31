@@ -1,10 +1,10 @@
-const litSelector = '.lumen-button, .lumen-icon-button, .lumen-switch, [data-lumen-light]'
+const litSelector = '.lu-button, .lu-icon-button, .lu-switch, [data-lu-light]'
 
 export function light(element: Element) {
-  element.removeAttribute('data-lumen-lit')
+  element.removeAttribute('data-lu-lit')
   void (element as HTMLElement).offsetWidth
-  element.setAttribute('data-lumen-lit', '')
-  element.addEventListener('animationend', () => element.removeAttribute('data-lumen-lit'), { once: true })
+  element.setAttribute('data-lu-lit', '')
+  element.addEventListener('animationend', () => element.removeAttribute('data-lu-lit'), { once: true })
 }
 
 export function attachLight(root: Document | ShadowRoot | HTMLElement = document): () => void {

@@ -1,4 +1,4 @@
-@layer lumen.tokens, lumen.base, lumen.components;
+@layer lu.tokens, lu.base, lu.components;
 
 @import './tokens.css';
 @import './base.css';

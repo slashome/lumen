@@ -4,7 +4,7 @@ import StyleDictionary from 'style-dictionary'
 import { formattedVariables } from 'style-dictionary/utils'
 
 const destination = 'src/css/tokens.css'
-const prefix = 'lumen'
+const prefix = 'lu'
 const darkSelectors = [":root[data-appearance='dark']", "@media (prefers-color-scheme: dark) { :root:not([data-appearance]) {"]
 
 function onlyFrom(directory) {
@@ -31,7 +31,7 @@ const light = await render(['tokens/primitive/**/*.json', 'tokens/semantic/light
 const dark = await render(['tokens/primitive/**/*.json', 'tokens/semantic/light/**/*.json', 'tokens/semantic/dark/**/*.json'], onlyFrom('semantic/dark'))
 
 const css = [
-  '@layer lumen.tokens {',
+  '@layer lu.tokens {',
   `:root {\n${light}\n}`,
   `${darkSelectors[0]} {\n${dark}\n}`,
   `${darkSelectors[1]}\n${dark}\n} }`,

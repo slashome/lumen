@@ -24,56 +24,56 @@ import {
   LumenTooltip,
 } from '../index'
 
-const openChange = { onOpenChange: 'lumen-open-change' as EventName<CustomEvent<OpenChangeDetail>> }
+const openChange = { onOpenChange: 'lu-open-change' as EventName<CustomEvent<OpenChangeDetail>> }
 
-export const IconElement = createComponent({ tagName: 'lumen-icon', elementClass: LumenIcon, react: React })
-export const DialogElement = createComponent({ tagName: 'lumen-dialog', elementClass: LumenDialog, react: React, events: openChange })
-export const SheetElement = createComponent({ tagName: 'lumen-sheet', elementClass: LumenSheet, react: React, events: openChange })
+export const IconElement = createComponent({ tagName: 'lu-icon', elementClass: LumenIcon, react: React })
+export const DialogElement = createComponent({ tagName: 'lu-dialog', elementClass: LumenDialog, react: React, events: openChange })
+export const SheetElement = createComponent({ tagName: 'lu-sheet', elementClass: LumenSheet, react: React, events: openChange })
 export const ConfirmDialogElement = createComponent({
-  tagName: 'lumen-confirm-dialog',
+  tagName: 'lu-confirm-dialog',
   elementClass: LumenConfirmDialog,
   react: React,
-  events: { ...openChange, onConfirm: 'lumen-confirm' as EventName<CustomEvent<object>> },
+  events: { ...openChange, onConfirm: 'lu-confirm' as EventName<CustomEvent<object>> },
 })
-export const TooltipElement = createComponent({ tagName: 'lumen-tooltip', elementClass: LumenTooltip, react: React })
-export const HoverCardElement = createComponent({ tagName: 'lumen-hover-card', elementClass: LumenHoverCard, react: React })
-export const OptionElement = createComponent({ tagName: 'lumen-option', elementClass: LumenOption, react: React })
+export const TooltipElement = createComponent({ tagName: 'lu-tooltip', elementClass: LumenTooltip, react: React })
+export const HoverCardElement = createComponent({ tagName: 'lu-hover-card', elementClass: LumenHoverCard, react: React })
+export const OptionElement = createComponent({ tagName: 'lu-option', elementClass: LumenOption, react: React })
 export const SelectElement = createComponent({
-  tagName: 'lumen-select',
+  tagName: 'lu-select',
   elementClass: LumenSelect,
   react: React,
-  events: { onValueChange: 'lumen-value-change' as EventName<CustomEvent<ValueChangeDetail>> },
+  events: { onValueChange: 'lu-value-change' as EventName<CustomEvent<ValueChangeDetail>> },
 })
 export const MultiSelectElement = createComponent({
-  tagName: 'lumen-multi-select',
+  tagName: 'lu-multi-select',
   elementClass: LumenMultiSelect,
   react: React,
-  events: { onSelectedChange: 'lumen-selected-change' as EventName<CustomEvent<SelectedChangeDetail>> },
+  events: { onSelectedChange: 'lu-selected-change' as EventName<CustomEvent<SelectedChangeDetail>> },
 })
 export const SegmentedElement = createComponent({
-  tagName: 'lumen-segmented',
+  tagName: 'lu-segmented',
   elementClass: LumenSegmented,
   react: React,
-  events: { onValueChange: 'lumen-value-change' as EventName<CustomEvent<ValueChangeDetail<string | null>>> },
+  events: { onValueChange: 'lu-value-change' as EventName<CustomEvent<ValueChangeDetail<string | null>>> },
 })
-export const ToasterElement = createComponent({ tagName: 'lumen-toaster', elementClass: LumenToaster, react: React })
+export const ToasterElement = createComponent({ tagName: 'lu-toaster', elementClass: LumenToaster, react: React })
 export const MarkdownElement = createComponent({
-  tagName: 'lumen-markdown',
+  tagName: 'lu-markdown',
   elementClass: LumenMarkdown,
   react: React,
-  events: { onNavigate: 'lumen-navigate' as EventName<CustomEvent<NavigateDetail>> },
+  events: { onNavigate: 'lu-navigate' as EventName<CustomEvent<NavigateDetail>> },
 })
-export const HighlightElement = createComponent({ tagName: 'lumen-highlight', elementClass: LumenHighlight, react: React })
+export const HighlightElement = createComponent({ tagName: 'lu-highlight', elementClass: LumenHighlight, react: React })
 export const DragAreaElement = createComponent({
-  tagName: 'lumen-drag-area',
+  tagName: 'lu-drag-area',
   elementClass: LumenDragArea,
   react: React,
-  events: { onDragEnd: 'lumen-drag-end' as EventName<CustomEvent<DragEndDetail>> },
+  events: { onDragEnd: 'lu-drag-end' as EventName<CustomEvent<DragEndDetail>> },
 })
 export const DraggableElement = createComponent({
-  tagName: 'lumen-draggable',
+  tagName: 'lu-draggable',
   elementClass: LumenDraggable,
   react: React,
-  events: { onOpen: 'lumen-open' as EventName<CustomEvent<object>> },
+  events: { onOpen: 'lu-open' as EventName<CustomEvent<object>> },
 })
-export const DropZoneElement = createComponent({ tagName: 'lumen-drop-zone', elementClass: LumenDropZone, react: React })
+export const DropZoneElement = createComponent({ tagName: 'lu-drop-zone', elementClass: LumenDropZone, react: React })

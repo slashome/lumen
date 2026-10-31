@@ -19,31 +19,31 @@ export class LumenSegmented extends LitElement {
     .group {
       display: inline-flex;
       overflow: hidden;
-      border: 1px solid var(--lumen-color-border);
-      border-radius: var(--lumen-radius-md);
+      border: 1px solid var(--lu-color-border);
+      border-radius: var(--lu-radius-md);
     }
 
     button {
-      padding: 0.125rem var(--lumen-space-1-5);
+      padding: 0.125rem var(--lu-space-1-5);
       border: 0;
       background: none;
-      color: var(--lumen-color-muted-foreground);
+      color: var(--lu-color-muted-foreground);
       font: inherit;
-      font-size: var(--lumen-font-size-2xs);
+      font-size: var(--lu-font-size-2xs);
       cursor: pointer;
     }
 
     button:hover {
-      background: var(--lumen-color-muted);
+      background: var(--lu-color-muted);
     }
 
     button[aria-pressed='true'] {
-      background: var(--lumen-color-primary);
-      color: var(--lumen-color-primary-foreground);
+      background: var(--lu-color-primary);
+      color: var(--lu-color-primary-foreground);
     }
 
     button:focus-visible {
-      outline: 2px solid var(--lumen-color-ring);
+      outline: 2px solid var(--lu-color-ring);
       outline-offset: -2px;
     }
   `
@@ -65,7 +65,7 @@ export class LumenSegmented extends LitElement {
     event.stopPropagation()
     const value = this.value === entry ? null : entry
     this.value = value
-    emit<ValueChangeDetail<string | null>>(this, 'lumen-value-change', { value })
+    emit<ValueChangeDetail<string | null>>(this, 'lu-value-change', { value })
   }
 
   render() {
@@ -83,10 +83,10 @@ export class LumenSegmented extends LitElement {
   }
 }
 
-define('lumen-segmented', LumenSegmented)
+define('lu-segmented', LumenSegmented)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-segmented': LumenSegmented
+    'lu-segmented': LumenSegmented
   }
 }

@@ -3,7 +3,7 @@ import { css, html, LitElement } from 'lit'
 import { emit } from '../lib/emit'
 import { define } from './define'
 
-export const dragKey = 'lumenDragId'
+export const dragKey = 'luDragId'
 
 export interface PickupDetail {
   id: string
@@ -20,7 +20,7 @@ export class LumenDraggable extends LitElement {
   static styles = css`
     :host {
       display: block;
-      border-radius: var(--lumen-radius-md);
+      border-radius: var(--lu-radius-md);
       cursor: grab;
       touch-action: none;
     }
@@ -30,7 +30,7 @@ export class LumenDraggable extends LitElement {
     }
 
     :host([openable]:hover) {
-      box-shadow: 0 0 0 1px color-mix(in oklab, var(--lumen-color-primary) 40%, transparent);
+      box-shadow: 0 0 0 1px color-mix(in oklab, var(--lu-color-primary) 40%, transparent);
     }
 
     :host(:active) {
@@ -42,7 +42,7 @@ export class LumenDraggable extends LitElement {
     }
 
     :host(:focus-visible) {
-      outline: 2px solid var(--lumen-color-ring);
+      outline: 2px solid var(--lu-color-ring);
       outline-offset: 2px;
     }
   `
@@ -59,7 +59,7 @@ export class LumenDraggable extends LitElement {
     this.label = ''
     this.openable = false
     this.dragging = false
-    this.addEventListener('click', () => this.openable && !this.dragging && emit(this, 'lumen-open', {}))
+    this.addEventListener('click', () => this.openable && !this.dragging && emit(this, 'lu-open', {}))
     this.addEventListener('keydown', (event) => this.onKeydown(event))
   }
 
@@ -95,10 +95,10 @@ export class LumenDraggable extends LitElement {
     }
     if (event.key === ' ') {
       event.preventDefault()
-      emit<PickupDetail>(this, 'lumen-pickup', { id: this.dragId })
+      emit<PickupDetail>(this, 'lu-pickup', { id: this.dragId })
     } else if (event.key === 'Enter' && this.openable) {
       event.preventDefault()
-      emit(this, 'lumen-open', {})
+      emit(this, 'lu-open', {})
     }
   }
 
@@ -107,10 +107,10 @@ export class LumenDraggable extends LitElement {
   }
 }
 
-define('lumen-draggable', LumenDraggable)
+define('lu-draggable', LumenDraggable)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-draggable': LumenDraggable
+    'lu-draggable': LumenDraggable
   }
 }

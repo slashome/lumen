@@ -26,20 +26,20 @@ export class LumenDialog extends LitElement {
 
       dialog {
         box-sizing: border-box;
-        inline-size: var(--lumen-dialog-width, 56rem);
+        inline-size: var(--lu-dialog-width, 56rem);
         max-inline-size: calc(100% - 2rem);
         max-block-size: 85vh;
         padding: 0;
-        border: 1px solid var(--lumen-color-border);
-        border-radius: var(--lumen-radius-lg);
-        background: var(--lumen-color-background);
-        color: var(--lumen-color-foreground);
-        font-family: var(--lumen-font-family-sans);
-        box-shadow: var(--lumen-shadow-xl);
+        border: 1px solid var(--lu-color-border);
+        border-radius: var(--lu-radius-lg);
+        background: var(--lu-color-background);
+        color: var(--lu-color-foreground);
+        font-family: var(--lu-font-family-sans);
+        box-shadow: var(--lu-shadow-xl);
       }
 
       dialog::backdrop {
-        background: var(--lumen-color-overlay);
+        background: var(--lu-color-overlay);
       }
 
       dialog:focus {
@@ -49,31 +49,31 @@ export class LumenDialog extends LitElement {
       .panel {
         display: flex;
         flex-direction: column;
-        gap: var(--lumen-space-3);
+        gap: var(--lu-space-3);
         box-sizing: border-box;
         max-block-size: inherit;
-        padding: var(--lumen-space-5);
+        padding: var(--lu-space-5);
       }
 
       .header {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        gap: var(--lumen-space-3);
+        gap: var(--lu-space-3);
       }
 
       .titles {
         display: flex;
         flex-direction: column;
-        gap: var(--lumen-space-1);
+        gap: var(--lu-space-1);
         min-inline-size: 0;
       }
 
       .title {
         margin: 0;
         overflow: hidden;
-        font-size: var(--lumen-font-size-base);
-        font-weight: var(--lumen-font-weight-semibold);
+        font-size: var(--lu-font-size-base);
+        font-weight: var(--lu-font-weight-semibold);
         text-overflow: ellipsis;
         white-space: nowrap;
       }
@@ -84,8 +84,8 @@ export class LumenDialog extends LitElement {
 
       .description {
         margin: 0;
-        color: var(--lumen-color-muted-foreground);
-        font-size: var(--lumen-font-size-sm);
+        color: var(--lu-color-muted-foreground);
+        font-size: var(--lu-font-size-sm);
       }
 
       .close {
@@ -133,7 +133,7 @@ export class LumenDialog extends LitElement {
   }
 
   protected requestClose() {
-    emit<OpenChangeDetail>(this, 'lumen-open-change', { open: false })
+    emit<OpenChangeDetail>(this, 'lu-open-change', { open: false })
   }
 
   protected onCancel(event: Event) {
@@ -184,8 +184,8 @@ export class LumenDialog extends LitElement {
               <h2 id="title" class="title" part="title"><slot name="heading">${this.heading}</slot></h2>
               ${this.renderDescription()}
             </div>
-            <button type="button" class="lumen-icon-button close" aria-label=${this.closeLabel} @click=${this.requestClose}>
-              <lumen-icon name="close"></lumen-icon>
+            <button type="button" class="lu-icon-button close" aria-label=${this.closeLabel} @click=${this.requestClose}>
+              <lu-icon name="close"></lu-icon>
             </button>
           </div>
           <slot></slot>
@@ -195,10 +195,10 @@ export class LumenDialog extends LitElement {
   }
 }
 
-define('lumen-dialog', LumenDialog)
+define('lu-dialog', LumenDialog)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-dialog': LumenDialog
+    'lu-dialog': LumenDialog
   }
 }

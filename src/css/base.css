@@ -1,8 +1,8 @@
-@layer lumen.base {
+@layer lu.base {
   body {
-    background-color: var(--lumen-color-background);
-    color: var(--lumen-color-foreground);
-    font-family: var(--lumen-font-family-sans);
+    background-color: var(--lu-color-background);
+    color: var(--lu-color-foreground);
+    font-family: var(--lu-font-family-sans);
   }
 
   :where(button, [role='button']):not(:disabled) {
@@ -10,7 +10,7 @@
   }
 
   :where(:focus-visible) {
-    outline: 2px solid var(--lumen-color-ring);
+    outline: 2px solid var(--lu-color-ring);
     outline-offset: 2px;
   }
 }

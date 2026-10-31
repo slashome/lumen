@@ -38,7 +38,7 @@ export class LumenDragArea extends LitElement {
   constructor() {
     super()
     this.announcement = ''
-    this.addEventListener('lumen-pickup', (event) => this.pickUp(event as CustomEvent<PickupDetail>))
+    this.addEventListener('lu-pickup', (event) => this.pickUp(event as CustomEvent<PickupDetail>))
     this.addEventListener('keydown', (event) => this.onKeydown(event))
   }
 
@@ -60,11 +60,11 @@ export class LumenDragArea extends LitElement {
   }
 
   private get zones(): LumenDropZone[] {
-    return [...this.querySelectorAll('lumen-drop-zone')]
+    return [...this.querySelectorAll('lu-drop-zone')]
   }
 
   private end(detail: DragEndDetail) {
-    emit<DragEndDetail>(this, 'lumen-drag-end', detail)
+    emit<DragEndDetail>(this, 'lu-drag-end', detail)
   }
 
   private describe(zone: LumenDropZone | undefined): string {
@@ -131,10 +131,10 @@ export class LumenDragArea extends LitElement {
   }
 }
 
-define('lumen-drag-area', LumenDragArea)
+define('lu-drag-area', LumenDragArea)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-drag-area': LumenDragArea
+    'lu-drag-area': LumenDragArea
   }
 }

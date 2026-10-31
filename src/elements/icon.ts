@@ -13,8 +13,8 @@ export class LumenIcon extends LitElement {
     :host {
       display: inline-block;
       flex-shrink: 0;
-      inline-size: var(--lumen-icon-size, 1em);
-      block-size: var(--lumen-icon-size, 1em);
+      inline-size: var(--lu-icon-size, 1em);
+      block-size: var(--lu-icon-size, 1em);
       line-height: 0;
       vertical-align: -0.125em;
     }
@@ -66,10 +66,10 @@ export class LumenIcon extends LitElement {
   }
 }
 
-define('lumen-icon', LumenIcon)
+define('lu-icon', LumenIcon)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-icon': LumenIcon
+    'lu-icon': LumenIcon
   }
 }

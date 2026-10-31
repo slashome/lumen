@@ -10,7 +10,8 @@ Lumen is extracted from `ariane/web/src/shared/ui`: 23 React 19 exports on Radix
 
 ## Decision
 
-- **Floor 0 is CSS.** Tokens, and every component without state, as BEM classes inside the cascade layers `lumen.tokens`, `lumen.base` and `lumen.components`: `.lumen-button`, `.lumen-icon-button`, `.lumen-badge`, `.lumen-input`, `.lumen-native-select`, `.lumen-switch` (a native checkbox with `role="switch"`), `.lumen-kbd`, the page states, `.lumen-markdown`, `.lumen-data-table`, `.lumen-mark`. Light DOM, no JavaScript.
+- **Everything public is prefixed `lu-`**: elements (`<lu-dialog>`), classes (`.lu-button`), custom properties (`--lu-color-primary`), events (`lu-open-change`) and cascade layers (`lu.components`). The package keeps the full name, `@slashome/lumen`.
+- **Floor 0 is CSS.** Tokens, and every component without state, as BEM classes inside the cascade layers `lu.tokens`, `lu.base` and `lu.components`: `.lu-button`, `.lu-icon-button`, `.lu-badge`, `.lu-input`, `.lu-native-select`, `.lu-switch` (a native checkbox with `role="switch"`), `.lu-kbd`, the page states, `.lu-markdown`, `.lu-data-table`, `.lu-mark`. Light DOM, no JavaScript.
 - **Floor 1 is Lit**, in Shadow DOM, for what has state: dialogs on `<dialog>`, floating panels on the popover API positioned by Floating UI, selects, toasts, Markdown, highlight, drag and drop. Elements are written with `static properties`, without decorators, so any TypeScript or JavaScript toolchain compiles them.
 - Floor 1 reuses floor 0 by importing its CSS files with `?inline` into its shadow roots.
 - Events are `CustomEvent`s named `lumen-*`, bubbling and composed.
@@ -19,6 +20,8 @@ Lumen is extracted from `ariane/web/src/shared/ui`: 23 React 19 exports on Radix
 
 - Vanilla, Vue and Svelte use the same classes and elements as React, with no adapter.
 - React gets `@slashome/lumen/react`, a thin adapter built on `@lit/react` that keeps React's idioms (`open`/`onOpenChange`, `value`/`onValueChange`) and renders floor 0 as components. The data table is a floor-0 pattern plus `sortRows` and `storedSort`; only the React adapter wraps it in a component, because its cells are arbitrary framework content.
+- Text content is not encapsulated: `<lu-markdown>` and `<lu-highlight>` render into the light DOM, so the page can select it, search it and style it, and tests can query it. Their styles are floor 0 (`.lu-markdown`, `.lu-mark`).
+- `@lit/react` resolves to its server-rendering build under the `node` export condition, which never sets properties. A React consumer testing under Vitest aliases `@lit/react` to its `development/index.js` browser build, as `vite.config.ts` does here.
 - Content slotted into floor 1 stays in the light DOM and keeps the page's styles; what a shadow root draws is themed only through tokens and `::part()`.
 - A floor-1 element exists only once its JavaScript runs: server-rendered or static pages get the floor-0 classes, never an empty custom element in place of content.
 

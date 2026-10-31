@@ -15,7 +15,7 @@ export class LumenConfirmDialog extends LumenDialog {
     ...LumenDialog.styles,
     css`
       dialog {
-        inline-size: var(--lumen-dialog-width, 28rem);
+        inline-size: var(--lu-dialog-width, 28rem);
       }
 
       .description {
@@ -25,8 +25,8 @@ export class LumenConfirmDialog extends LumenDialog {
       .actions {
         display: flex;
         justify-content: flex-end;
-        gap: var(--lumen-space-2);
-        margin-block-start: var(--lumen-space-2);
+        gap: var(--lu-space-2);
+        margin-block-start: var(--lu-space-2);
       }
     `,
   ]
@@ -45,7 +45,7 @@ export class LumenConfirmDialog extends LumenDialog {
   protected onBackdropClick() {}
 
   private confirm() {
-    emit(this, 'lumen-confirm', {})
+    emit(this, 'lu-confirm', {})
   }
 
   render() {
@@ -63,10 +63,10 @@ export class LumenConfirmDialog extends LumenDialog {
           ${this.renderDescription()}
           <slot></slot>
           <div class="actions">
-            <button type="button" class="lumen-button lumen-button--outline lumen-button--sm" @click=${this.requestClose} autofocus>
+            <button type="button" class="lu-button lu-button--outline lu-button--sm" @click=${this.requestClose} autofocus>
               ${this.cancelLabel}
             </button>
-            <button type="button" class="lumen-button lumen-button--destructive lumen-button--sm" ?disabled=${this.pending} @click=${this.confirm}>
+            <button type="button" class="lu-button lu-button--destructive lu-button--sm" ?disabled=${this.pending} @click=${this.confirm}>
               ${this.confirmLabel}
             </button>
           </div>
@@ -76,10 +76,10 @@ export class LumenConfirmDialog extends LumenDialog {
   }
 }
 
-define('lumen-confirm-dialog', LumenConfirmDialog)
+define('lu-confirm-dialog', LumenConfirmDialog)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-confirm-dialog': LumenConfirmDialog
+    'lu-confirm-dialog': LumenConfirmDialog
   }
 }

@@ -36,7 +36,7 @@ export type ButtonVariant = 'default' | 'outline' | 'ghost' | 'destructive'
 export type ButtonSize = 'default' | 'sm' | 'icon'
 
 export function buttonClasses({ variant = 'default', size = 'default' }: { variant?: ButtonVariant | null; size?: ButtonSize | null } = {}): string {
-  return classes('lumen-button', variant && variant !== 'default' && `lumen-button--${variant}`, size && size !== 'default' && `lumen-button--${size}`)
+  return classes('lu-button', variant && variant !== 'default' && `lu-button--${variant}`, size && size !== 'default' && `lu-button--${size}`)
 }
 
 export type ButtonProps = ComponentProps<'button'> & { variant?: ButtonVariant | null; size?: ButtonSize | null }
@@ -50,17 +50,17 @@ export function Icon({ name, label, className }: { name: string; label?: string;
 }
 
 export function Badge({ className, ...props }: ComponentProps<'span'>) {
-  return <span className={classes('lumen-badge', className)} {...props} />
+  return <span className={classes('lu-badge', className)} {...props} />
 }
 
 export function Input({ className, ...props }: ComponentProps<'input'>) {
-  return <input className={classes('lumen-input', className)} {...props} />
+  return <input className={classes('lu-input', className)} {...props} />
 }
 
 export function NativeSelect({ className, ...props }: ComponentProps<'select'>) {
   return (
-    <span className="lumen-native-select">
-      <select className={classes('lumen-native-select__control', className)} {...props} />
+    <span className="lu-native-select">
+      <select className={classes('lu-native-select__control', className)} {...props} />
     </span>
   )
 }
@@ -75,7 +75,7 @@ export function Switch({
     <input
       type="checkbox"
       role="switch"
-      className={classes('lumen-switch', className)}
+      className={classes('lu-switch', className)}
       checked={checked}
       onChange={(event) => onCheckedChange?.(event.target.checked)}
       {...props}
@@ -84,14 +84,14 @@ export function Switch({
 }
 
 export function Kbd({ children }: { children: ReactNode }) {
-  return <kbd className="lumen-kbd">{children}</kbd>
+  return <kbd className="lu-kbd">{children}</kbd>
 }
 
 export function EmptyState({ icon, title, children, className }: { icon?: string; title: string; children?: ReactNode; className?: string }) {
   return (
-    <div className={classes('lumen-empty-state', className)}>
-      {icon && <IconElement name={icon} className="lumen-empty-state__icon" />}
-      <p className="lumen-empty-state__title">{title}</p>
+    <div className={classes('lu-empty-state', className)}>
+      {icon && <IconElement name={icon} className="lu-empty-state__icon" />}
+      <p className="lu-empty-state__title">{title}</p>
       {children}
     </div>
   )
@@ -99,9 +99,9 @@ export function EmptyState({ icon, title, children, className }: { icon?: string
 
 export function LoadingState({ rows = 4, label = 'Loading…' }: { rows?: number; label?: string }) {
   return (
-    <div role="status" aria-label={label} className="lumen-loading-state">
+    <div role="status" aria-label={label} className="lu-loading-state">
       {Array.from({ length: rows }, (_, index) => (
-        <div key={index} className="lumen-loading-state__row" />
+        <div key={index} className="lu-loading-state__row" />
       ))}
     </div>
   )
@@ -109,7 +109,7 @@ export function LoadingState({ rows = 4, label = 'Loading…' }: { rows?: number
 
 export function ErrorState({ message }: { message: string }) {
   return (
-    <p role="alert" className="lumen-error-state">
+    <p role="alert" className="lu-error-state">
       {message}
     </p>
   )
@@ -117,22 +117,22 @@ export function ErrorState({ message }: { message: string }) {
 
 export function PageHeader({ title, description, actions, children }: { title: ReactNode; description?: ReactNode; actions?: ReactNode; children?: ReactNode }) {
   return (
-    <div className="lumen-page-header">
-      <div className="lumen-page-header__main">
-        <h1 className="lumen-page-header__title">{title}</h1>
-        {description && <p className="lumen-page-header__description">{description}</p>}
+    <div className="lu-page-header">
+      <div className="lu-page-header__main">
+        <h1 className="lu-page-header__title">{title}</h1>
+        {description && <p className="lu-page-header__description">{description}</p>}
         {children}
       </div>
-      {actions && <div className="lumen-page-header__actions">{actions}</div>}
+      {actions && <div className="lu-page-header__actions">{actions}</div>}
     </div>
   )
 }
 
 export function ComingSoon({ title, children }: { title: string; children?: ReactNode }) {
   return (
-    <div className="lumen-coming-soon">
-      <h1 className="lumen-coming-soon__title">{title}</h1>
-      {children && <p className="lumen-coming-soon__text">{children}</p>}
+    <div className="lu-coming-soon">
+      <h1 className="lu-coming-soon__title">{title}</h1>
+      {children && <p className="lu-coming-soon__text">{children}</p>}
     </div>
   )
 }
@@ -394,9 +394,9 @@ export function DataTable<Row>({
   const sorted = useMemo(() => (sort && sortedBy?.sortValue ? sortRows(rows, sortedBy.sortValue, sort.direction) : rows), [rows, sort, sortedBy])
 
   return (
-    <div className={classes('lumen-data-table', className)}>
-      <table aria-label={label} className="lumen-data-table__table">
-        <thead className="lumen-data-table__head">
+    <div className={classes('lu-data-table', className)}>
+      <table aria-label={label} className="lu-data-table__table">
+        <thead className="lu-data-table__head">
           <tr>
             {columns.map((column) => {
               const direction = sortedBy?.id === column.id ? sort?.direction : undefined
@@ -405,12 +405,12 @@ export function DataTable<Row>({
                   key={column.id}
                   scope="col"
                   aria-sort={column.sortValue ? ariaSort(direction) : undefined}
-                  className={classes('lumen-data-table__header', column.headerClassName)}
+                  className={classes('lu-data-table__header', column.headerClassName)}
                 >
                   {column.sortValue ? (
-                    <button type="button" className="lumen-data-table__sort" data-direction={direction} onClick={() => setSort(nextSort(sort, column.id))}>
+                    <button type="button" className="lu-data-table__sort" data-direction={direction} onClick={() => setSort(nextSort(sort, column.id))}>
                       {column.header}
-                      <IconElement name={sortIcon(direction)} className="lumen-data-table__sort-icon" />
+                      <IconElement name={sortIcon(direction)} className="lu-data-table__sort-icon" />
                     </button>
                   ) : (
                     column.header
@@ -424,9 +424,9 @@ export function DataTable<Row>({
           {sorted.map((row, index) => {
             const props = rowProps?.(row, index) ?? {}
             return (
-              <tr key={rowKey(row)} {...props} className={classes('lumen-data-table__row', props.className)}>
+              <tr key={rowKey(row)} {...props} className={classes('lu-data-table__row', props.className)}>
                 {columns.map((column) => (
-                  <td key={column.id} className={classes('lumen-data-table__cell', column.className)}>
+                  <td key={column.id} className={classes('lu-data-table__cell', column.className)}>
                     {column.cell(row)}
                   </td>
                 ))}
@@ -435,7 +435,7 @@ export function DataTable<Row>({
           })}
         </tbody>
       </table>
-      {rows.length === 0 && empty && <p className="lumen-data-table__empty">{empty}</p>}
+      {rows.length === 0 && empty && <p className="lu-data-table__empty">{empty}</p>}
     </div>
   )
 }

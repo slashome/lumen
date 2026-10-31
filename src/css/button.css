@@ -1,32 +1,32 @@
-@layer lumen.components {
-  .lumen-button {
-    --lumen-light-color: var(--lumen-color-primary);
+@layer lu.components {
+  .lu-button {
+    --lu-light-color: var(--lu-color-primary);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--lumen-space-1-5);
-    block-size: var(--lumen-control-height);
-    padding-inline: var(--lumen-space-3);
+    gap: var(--lu-space-1-5);
+    block-size: var(--lu-control-height);
+    padding-inline: var(--lu-space-3);
     border: 1px solid transparent;
-    border-radius: var(--lumen-radius-md);
-    background: var(--lumen-color-primary);
-    color: var(--lumen-color-primary-foreground);
+    border-radius: var(--lu-radius-md);
+    background: var(--lu-color-primary);
+    color: var(--lu-color-primary-foreground);
     font: inherit;
-    font-size: var(--lumen-font-size-sm);
-    font-weight: var(--lumen-font-weight-medium);
+    font-size: var(--lu-font-size-sm);
+    font-weight: var(--lu-font-weight-medium);
     line-height: 1;
     white-space: nowrap;
     cursor: pointer;
     transition:
-      background-color var(--lumen-motion-hover-duration) var(--lumen-motion-hover-easing),
-      color var(--lumen-motion-hover-duration) var(--lumen-motion-hover-easing);
+      background-color var(--lu-motion-hover-duration) var(--lu-motion-hover-easing),
+      color var(--lu-motion-hover-duration) var(--lu-motion-hover-easing);
 
     &:hover {
-      background: color-mix(in oklab, var(--lumen-color-primary) 90%, transparent);
+      background: color-mix(in oklab, var(--lu-color-primary) 90%, transparent);
     }
 
     &:focus-visible {
-      outline: 2px solid var(--lumen-color-ring);
+      outline: 2px solid var(--lu-color-ring);
       outline-offset: 2px;
     }
 
@@ -37,51 +37,51 @@
     }
   }
 
-  .lumen-button--outline {
-    --lumen-light-color: var(--lumen-color-accent);
-    border-color: var(--lumen-color-border);
-    background: var(--lumen-color-background);
-    color: var(--lumen-color-foreground);
+  .lu-button--outline {
+    --lu-light-color: var(--lu-color-accent);
+    border-color: var(--lu-color-border);
+    background: var(--lu-color-background);
+    color: var(--lu-color-foreground);
 
     &:hover {
-      background: var(--lumen-color-muted);
+      background: var(--lu-color-muted);
     }
   }
 
-  .lumen-button--ghost {
-    --lumen-light-color: var(--lumen-color-accent);
+  .lu-button--ghost {
+    --lu-light-color: var(--lu-color-accent);
     background: transparent;
     color: inherit;
 
     &:hover {
-      background: var(--lumen-color-muted);
+      background: var(--lu-color-muted);
     }
   }
 
-  .lumen-button--destructive {
-    --lumen-light-color: var(--lumen-color-danger);
-    background: var(--lumen-color-danger);
-    color: var(--lumen-color-danger-foreground);
+  .lu-button--destructive {
+    --lu-light-color: var(--lu-color-danger);
+    background: var(--lu-color-danger);
+    color: var(--lu-color-danger-foreground);
 
     &:hover {
-      background: color-mix(in oklab, var(--lumen-color-danger) 90%, transparent);
+      background: color-mix(in oklab, var(--lu-color-danger) 90%, transparent);
     }
   }
 
-  .lumen-button--sm {
-    block-size: var(--lumen-control-height-sm);
-    padding-inline: var(--lumen-space-2-5);
-    font-size: var(--lumen-font-size-xs);
+  .lu-button--sm {
+    block-size: var(--lu-control-height-sm);
+    padding-inline: var(--lu-space-2-5);
+    font-size: var(--lu-font-size-xs);
   }
 
-  .lumen-button--icon {
-    inline-size: var(--lumen-control-height-sm);
-    block-size: var(--lumen-control-height-sm);
+  .lu-button--icon {
+    inline-size: var(--lu-control-height-sm);
+    block-size: var(--lu-control-height-sm);
     padding-inline: 0;
   }
 
-  .lumen-icon-button {
-    --lumen-light-color: var(--lumen-color-accent);
+  .lu-icon-button {
+    --lu-light-color: var(--lu-color-accent);
     position: relative;
     isolation: isolate;
     display: inline-flex;
@@ -89,30 +89,30 @@
     justify-content: center;
     padding: 0;
     border: 0;
-    border-radius: var(--lumen-radius-full);
+    border-radius: var(--lu-radius-full);
     background: none;
-    color: var(--lumen-color-muted-foreground);
+    color: var(--lu-color-muted-foreground);
     font: inherit;
     cursor: pointer;
-    transition: color var(--lumen-motion-hover-duration) var(--lumen-motion-hover-easing);
+    transition: color var(--lu-motion-hover-duration) var(--lu-motion-hover-easing);
 
     &::before {
       content: '';
       position: absolute;
-      inset: calc(-1 * var(--lumen-space-1));
+      inset: calc(-1 * var(--lu-space-1));
       z-index: -1;
       border-radius: inherit;
-      background: var(--lumen-color-halo);
+      background: var(--lu-color-halo);
       opacity: 0;
       transform: scale(0.6);
       transition:
-        opacity var(--lumen-motion-hover-duration) var(--lumen-motion-hover-easing),
-        transform var(--lumen-motion-hover-duration) var(--lumen-motion-hover-easing);
+        opacity var(--lu-motion-hover-duration) var(--lu-motion-hover-easing),
+        transform var(--lu-motion-hover-duration) var(--lu-motion-hover-easing);
     }
 
     &:hover,
     &:focus-visible {
-      color: var(--lumen-color-foreground);
+      color: var(--lu-color-foreground);
     }
 
     &:hover::before,
@@ -122,7 +122,7 @@
     }
 
     &:focus-visible {
-      outline: 2px solid var(--lumen-color-ring);
+      outline: 2px solid var(--lu-color-ring);
       outline-offset: 2px;
     }
 
@@ -133,9 +133,9 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .lumen-button,
-    .lumen-icon-button,
-    .lumen-icon-button::before {
+    .lu-button,
+    .lu-icon-button,
+    .lu-icon-button::before {
       transition: none;
     }
   }

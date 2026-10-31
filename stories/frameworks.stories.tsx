@@ -10,7 +10,7 @@ const meta: Meta = {
   parameters: {
     docs: {
       description: {
-        component: 'The same `lumen-select` and `.lumen-button`, from plain HTML, from React through `@slashome/lumen/react`, and from Vue with no adapter.',
+        component: 'The same `lu-select` and `.lu-button`, from plain HTML, from React through `@slashome/lumen/react`, and from Vue with no adapter.',
       },
     },
   },
@@ -44,11 +44,11 @@ const VueDemo = {
     return () =>
       h('div', { style: 'display:flex;gap:0.5rem;align-items:center' }, [
         h(
-          'lumen-select',
+          'lu-select',
           { label: 'Status (Vue)', value: status.value, onLumenValueChange: (event: CustomEvent<{ value: string }>) => (status.value = event.detail.value) },
-          statuses.map((entry) => h('lumen-option', { value: entry }, entry)),
+          statuses.map((entry) => h('lu-option', { value: entry }, entry)),
         ),
-        h('button', { class: 'lumen-button lumen-button--outline', onClick: () => (status.value = 'todo') }, 'Reset'),
+        h('button', { class: 'lu-button lu-button--outline', onClick: () => (status.value = 'todo') }, 'Reset'),
         h('output', null, status.value),
       ])
   },
@@ -67,12 +67,12 @@ export const Side_by_side: StoryObj = {
     return html`
       ${section('Plain HTML')}
       <div style="display:flex;gap:0.5rem;align-items:center">
-        <lumen-select label="Status (HTML)" value="todo" @lumen-value-change=${(event: CustomEvent<{ value: string }>) => {
+        <lu-select label="Status (HTML)" value="todo" @lu-value-change=${(event: CustomEvent<{ value: string }>) => {
           const output = (event.currentTarget as HTMLElement).parentElement?.querySelector('output')
           if (output) output.textContent = event.detail.value
         }}>
-          ${statuses.map((entry) => html`<lumen-option value=${entry}>${entry}</lumen-option>`)}
-        </lumen-select>
+          ${statuses.map((entry) => html`<lu-option value=${entry}>${entry}</lu-option>`)}
+        </lu-select>
         <output>todo</output>
       </div>
       ${section('React 19')} ${reactHost} ${section('Vue 3')} ${vueHost}

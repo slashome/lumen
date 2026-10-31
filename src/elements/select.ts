@@ -32,22 +32,22 @@ export class LumenSelect extends LitElement {
         flex: 1;
         align-items: center;
         justify-content: space-between;
-        gap: var(--lumen-space-2);
+        gap: var(--lu-space-2);
         min-inline-size: 0;
-        block-size: var(--lumen-control-height);
-        padding-inline: var(--lumen-space-2-5);
-        border: 1px solid var(--lumen-color-border);
-        border-radius: var(--lumen-radius-md);
-        background: var(--lumen-color-background);
+        block-size: var(--lu-control-height);
+        padding-inline: var(--lu-space-2-5);
+        border: 1px solid var(--lu-color-border);
+        border-radius: var(--lu-radius-md);
+        background: var(--lu-color-background);
         color: inherit;
         font: inherit;
-        font-size: var(--lumen-font-size-sm);
+        font-size: var(--lu-font-size-sm);
         text-align: start;
         cursor: pointer;
       }
 
       .trigger:focus-visible {
-        outline: 2px solid var(--lumen-color-ring);
+        outline: 2px solid var(--lu-color-ring);
         outline-offset: 0;
       }
 
@@ -64,14 +64,14 @@ export class LumenSelect extends LitElement {
       }
 
       .chevron {
-        color: var(--lumen-color-muted-foreground);
+        color: var(--lu-color-muted-foreground);
       }
 
       [popover] {
         box-sizing: border-box;
-        min-inline-size: var(--lumen-anchor-width);
-        max-block-size: min(32rem, var(--lumen-available-height, 32rem));
-        padding: var(--lumen-space-1);
+        min-inline-size: var(--lu-anchor-width);
+        max-block-size: min(32rem, var(--lu-available-height, 32rem));
+        padding: var(--lu-space-1);
         overflow-y: auto;
       }
     `,
@@ -96,7 +96,7 @@ export class LumenSelect extends LitElement {
   }
 
   get options(): LumenOption[] {
-    return [...this.querySelectorAll('lumen-option')]
+    return [...this.querySelectorAll('lu-option')]
   }
 
   private get enabledOptions(): LumenOption[] {
@@ -167,7 +167,7 @@ export class LumenSelect extends LitElement {
     this.close()
     if (option.value !== this.value) {
       this.value = option.value
-      emit<ValueChangeDetail>(this, 'lumen-value-change', { value: option.value })
+      emit<ValueChangeDetail>(this, 'lu-value-change', { value: option.value })
     }
   }
 
@@ -233,7 +233,7 @@ export class LumenSelect extends LitElement {
         @keydown=${this.onTriggerKeydown}
       >
         <span class="value"><slot name="display">${this.selectedLabel}</slot></span>
-        <lumen-icon class="chevron" name="chevron-down"></lumen-icon>
+        <lu-icon class="chevron" name="chevron-down"></lu-icon>
       </button>
       <div popover="auto" role="listbox" part="listbox" aria-label=${this.label} @toggle=${this.onToggle} @keydown=${this.onListKeydown} @click=${this.onListClick}>
         <slot @slotchange=${this.syncOptions}></slot>
@@ -242,10 +242,10 @@ export class LumenSelect extends LitElement {
   }
 }
 
-define('lumen-select', LumenSelect)
+define('lu-select', LumenSelect)
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lumen-select': LumenSelect
+    'lu-select': LumenSelect
   }
 }
