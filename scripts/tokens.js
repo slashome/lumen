@@ -16,6 +16,15 @@ function declarations(dictionary, keep) {
   return formattedVariables({ format: 'css', dictionary: { ...dictionary, allTokens }, outputReferences: true, usesDtcg: true })
 }
 
+function requireDescriptions(dictionary) {
+  const undescribed = dictionary.allTokens
+    .filter((token) => !token.filePath.includes('primitive') && !token.filePath.includes('semantic/dark') && !token.$description)
+    .map((token) => token.name)
+  if (undescribed.length > 0) {
+    throw new Error(`tokens: semantic tokens without a $description: ${undescribed.join(', ')}`)
+  }
+}
+
 async function render(source, keep) {
   const dictionary = new StyleDictionary({
     source,
@@ -24,6 +33,7 @@ async function render(source, keep) {
     platforms: { css: { prefix, transforms: ['name/kebab'] } },
   })
   const platform = await dictionary.getPlatformTokens('css')
+  requireDescriptions(platform)
   return declarations(platform, keep)
 }
 

@@ -1,19 +1,45 @@
 {
   "motion": {
     "hover": {
-      "duration": { "$type": "duration", "$value": "160ms" },
-      "easing": { "$type": "cubicBezier", "$value": "cubic-bezier(0.2, 0, 0, 1)" }
+      "duration": {
+        "$type": "duration",
+        "$value": "160ms",
+        "$description": "How long a hover, a toggle or a small entrance takes. Not for the flash of an action: use motion.light."
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "cubic-bezier(0.2, 0, 0, 1)",
+        "$description": "The curve of hover and toggle transitions. Goes with motion.hover.duration."
+      }
     },
     "light": {
       "$description": "The flash that marks an action: one place sets its duration, curve and intensity.",
-      "duration": { "$type": "duration", "$value": "250ms" },
-      "easing": { "$type": "cubicBezier", "$value": "cubic-bezier(0.2, 0, 0, 1)" },
-      "intensity": { "$type": "number", "$value": "45%" }
+      "duration": {
+        "$type": "duration",
+        "$value": "250ms",
+        "$description": "How long the flash of an action lasts. Only for light(); not for state changes, which the color carries."
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "cubic-bezier(0.2, 0, 0, 1)",
+        "$description": "The curve of the flash of an action. Only for light()."
+      },
+      "intensity": {
+        "$type": "number",
+        "$value": "45%",
+        "$description": "How strongly the flash mixes the element's color into its glow. Only for light()."
+      }
     }
   },
   "control": {
     "$type": "dimension",
-    "height": { "$value": "2.25rem" },
-    "height-sm": { "$value": "2rem" }
+    "height": {
+      "$value": "2.25rem",
+      "$description": "The block size of buttons, inputs and selects, so they line up in a row. Not for icons or text."
+    },
+    "height-sm": {
+      "$value": "2rem",
+      "$description": "The block size of small buttons and the side of icon buttons. Not to shrink an input: keep inputs at control.height."
+    }
   }
 }
