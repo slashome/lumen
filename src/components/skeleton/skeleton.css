@@ -1,0 +1,31 @@
+@layer lu.components {
+  .lu-skeleton {
+    display: block;
+    block-size: var(--lu-control-height);
+    border-radius: var(--lu-radius-md);
+    background: var(--lu-color-muted);
+    animation: lu-skeleton 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .lu-skeleton--text {
+    block-size: 1em;
+    border-radius: var(--lu-radius-sm);
+  }
+
+  .lu-skeleton--circle {
+    inline-size: var(--lu-control-height);
+    border-radius: var(--lu-radius-full);
+  }
+
+  @keyframes lu-skeleton {
+    50% {
+      background: color-mix(in oklab, var(--lu-color-muted) 50%, transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lu-skeleton {
+      animation: none;
+    }
+  }
+}
