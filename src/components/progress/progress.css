@@ -1,0 +1,59 @@
+@layer lu.components {
+  .lu-progress {
+    display: block;
+    inline-size: 100%;
+    block-size: var(--lu-space-2);
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--lu-radius-full);
+    background: var(--lu-color-muted);
+    color: var(--lu-color-primary);
+    appearance: none;
+
+    &::-webkit-progress-bar {
+      background: transparent;
+    }
+
+    &::-webkit-progress-value {
+      border-radius: inherit;
+      background: var(--lu-color-primary);
+      transition: inline-size var(--lu-motion-hover-duration) var(--lu-motion-hover-easing);
+    }
+
+    &::-moz-progress-bar {
+      border-radius: inherit;
+      background: var(--lu-color-primary);
+    }
+
+    &:indeterminate {
+      background:
+        linear-gradient(to right, var(--lu-color-primary), var(--lu-color-primary)) no-repeat 0 0 / 40% 100%,
+        var(--lu-color-muted);
+      animation: lu-progress 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    &:indeterminate::-moz-progress-bar {
+      background: transparent;
+    }
+  }
+
+  @keyframes lu-progress {
+    from {
+      background-position: -70% 0, 0 0;
+    }
+    to {
+      background-position: 170% 0, 0 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lu-progress::-webkit-progress-value {
+      transition: none;
+    }
+
+    .lu-progress:indeterminate {
+      background-position: 50% 0, 0 0;
+      animation: none;
+    }
+  }
+}
