@@ -8,6 +8,7 @@
 @import '../components/field/field.css';
 @import '../components/input/input.css';
 @import '../components/textarea/textarea.css';
+@import '../components/date-input/date-input.css';
 @import '../components/native-select/native-select.css';
 @import '../components/switch/switch.css';
 @import '../components/checkbox/checkbox.css';
