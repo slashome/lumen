@@ -38,4 +38,8 @@ describe('package.json', () => {
       .map(([path]) => builtPath(path))
     expect(manifest.sideEffects.filter((path) => path.startsWith('./dist/') && path.endsWith('.js')).sort()).toEqual(['./dist/index.js', ...defining].sort())
   })
+
+  it('ships the changelog', () => {
+    expect(manifest.files).toContain('CHANGELOG.md')
+  })
 })

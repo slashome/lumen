@@ -43,7 +43,7 @@ const preview: Preview = {
     a11y: { test: 'error' },
     options: {
       storySort: {
-        order: ['Foundations', ['Introduction', 'Prop conventions', 'Tokens', 'Icons', 'Light', 'Frameworks'], 'Actions', 'Form', 'Feedback', 'Navigation', 'Data', 'Overlays'],
+        order: ['Foundations', ['Introduction', 'Prop conventions', 'Tokens', 'Icons', 'Light', 'Frameworks', 'Changelog'], 'Actions', 'Form', 'Feedback', 'Navigation', 'Data', 'Overlays'],
       },
     },
   },
