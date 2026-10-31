@@ -30,4 +30,20 @@ describe('lu-select in a page without the popover API', () => {
     select.options[1]!.click()
     expect(values).toEqual(['b'])
   })
+
+  it('keeps its value when a listener cancels lu-value-change', async () => {
+    const select = await mount<LumenSelect>('<lu-select label="Status" value="a"><lu-option value="a">Alpha</lu-option><lu-option value="b">Beta</lu-option></lu-select>')
+    await select.updateComplete
+    const seen: string[] = []
+    select.addEventListener('lu-value-change', (event) => {
+      seen.push(select.value)
+      event.preventDefault()
+    })
+    select.shadowRoot!.querySelector<HTMLButtonElement>('[role="combobox"]')!.click()
+    select.options[1]!.click()
+    await select.updateComplete
+    expect(seen).toEqual(['a'])
+    expect(select.value).toBe('a')
+    expect(select.options.map((option) => option.selected)).toEqual([true, false])
+  })
 })

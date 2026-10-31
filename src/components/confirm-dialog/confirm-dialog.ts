@@ -11,7 +11,7 @@ import { LumenDialog } from '../dialog/dialog'
  * @summary A dialog that asks to confirm a destructive action.
  * @tag lu-confirm-dialog
  * @cssprop --lu-dialog-width - The inline size of the dialog, capped by the viewport. Defaults to 28rem.
- * @fires {CustomEvent<Record<string, never>>} lu-confirm - The user pressed the confirm button. The owner runs the action, then closes the dialog.
+ * @fires {CustomEvent<Record<string, never>>} lu-confirm - The user pressed the confirm button. The owner runs the action, then closes the dialog. Not cancelable: the dialog runs nothing itself.
  */
 export class LumenConfirmDialog extends LumenDialog {
   static properties = {

@@ -23,7 +23,7 @@ export interface OpenChangeDetail {
  * @csspart title - The `<h2>` that holds the title.
  * @csspart description - The paragraph that holds the description.
  * @cssprop --lu-dialog-width - The inline size of the dialog, capped by the viewport. Defaults to 56rem.
- * @fires {CustomEvent<OpenChangeDetail>} lu-open-change - The user asked to close the dialog: Escape, the backdrop, the close button. `detail.open` is `false`.
+ * @fires {CustomEvent<OpenChangeDetail>} lu-open-change - The user asked to close the dialog: Escape, the backdrop, the close button. `detail.open` is `false`. Not cancelable: the dialog never closes itself, so there is nothing to prevent; leave `open` set to keep it open.
  */
 export class LumenDialog extends LitElement {
   static properties = {

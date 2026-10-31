@@ -6,12 +6,12 @@ import type { ValueChangeDetail } from '../select/select'
 /**
  * A row of toggle buttons where at most one is pressed. Pressing the pressed one releases it, so the value can be empty.
  *
- * It sets its own `value` when the user presses a button, then fires `lu-value-change`.
+ * It fires `lu-value-change` when the user presses a button, then sets its own `value` unless a listener cancels the event.
  *
  * @summary A row of toggle buttons with at most one pressed.
  * @tag lu-segmented
  * @csspart group - The bordered row of buttons.
- * @fires {CustomEvent<ValueChangeDetail<string | null>>} lu-value-change - The user pressed a button. `detail.value` is its value, or `null` when the pressed one was released.
+ * @fires {CustomEvent<ValueChangeDetail<string | null>>} lu-value-change - The user pressed a button. `detail.value` is its value, or `null` when the pressed one was released. Cancelable: `preventDefault()` keeps the current `value`, which the element still holds while the event runs.
  */
 export class LumenSegmented extends LitElement {
   static properties = {
@@ -78,8 +78,9 @@ export class LumenSegmented extends LitElement {
   private press(event: MouseEvent, entry: string) {
     event.stopPropagation()
     const value = this.value === entry ? null : entry
-    this.value = value
-    emit<ValueChangeDetail<string | null>>(this, 'lu-value-change', { value })
+    if (emit<ValueChangeDetail<string | null>>(this, 'lu-value-change', { value }, { cancelable: true })) {
+      this.value = value
+    }
   }
 
   render() {

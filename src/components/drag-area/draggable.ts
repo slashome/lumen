@@ -17,7 +17,8 @@ export interface PickupDetail {
  * @summary An item that can be dragged between drop zones.
  * @tag lu-draggable
  * @slot - The content of the item.
- * @fires {CustomEvent<Record<string, never>>} lu-open - The user clicked the item or pressed Enter on it, while `openable` and not dragging.
+ * @fires {CustomEvent<Record<string, never>>} lu-open - The user clicked the item or pressed Enter on it, while `openable` and not dragging. Not cancelable: the owner opens the item.
+ * @fires {CustomEvent<PickupDetail>} lu-pickup - The user pressed Space on the item, while not dragging. `detail.id` is its `drag-id`. The enclosing `lu-drag-area` listens for it to start a keyboard move; the item does not know its area, so the event bubbles and is composed to reach it, and nothing stops it there: it goes on up to the document. Not cancelable: listen to it, do not fire it.
  */
 export class LumenDraggable extends LitElement {
   static properties = {

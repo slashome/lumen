@@ -25,7 +25,7 @@ function isModified(event: MouseEvent): boolean {
  *
  * @summary Sanitized Markdown, with links the application resolves.
  * @tag lu-markdown
- * @fires {CustomEvent<NavigateDetail>} lu-navigate - The user clicked an internal link without a modifier key. The default navigation is prevented; `detail.href` is the link.
+ * @fires {CustomEvent<NavigateDetail>} lu-navigate - The user clicked an internal link without a modifier key. The default navigation is prevented; `detail.href` is the link. Not cancelable: the element never navigates, the owner does.
  */
 export class LumenMarkdown extends LitElement {
   static properties = {

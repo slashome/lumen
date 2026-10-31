@@ -20,4 +20,19 @@ describe('lu-segmented', () => {
     small!.click()
     expect(changes).toEqual(['S', null])
   })
+
+  it('keeps its value when a listener cancels lu-value-change', async () => {
+    const segmented = await mount<LumenSegmented>('<lu-segmented label="Size"></lu-segmented>')
+    segmented.values = ['S', 'M']
+    await segmented.updateComplete
+    const seen: (string | null)[] = []
+    segmented.addEventListener('lu-value-change', (event) => {
+      seen.push(segmented.value)
+      event.preventDefault()
+    })
+    segmented.shadowRoot!.querySelector('button')!.click()
+    await segmented.updateComplete
+    expect(seen).toEqual([null])
+    expect(segmented.value).toBeNull()
+  })
 })

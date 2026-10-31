@@ -18,13 +18,13 @@ export interface SelectedChangeDetail {
 /**
  * A multiple-choice filter on the ARIA menu pattern: a button that shows the label and the count of selected values, and opens a menu of checkable items in the top layer, with a clear item.
  *
- * It takes its options as data, not as `lu-option` children. It sets its own `selected` when the user toggles an item, then fires `lu-selected-change`.
+ * It takes its options as data, not as `lu-option` children. It fires `lu-selected-change` when the user toggles an item, then sets its own `selected` unless a listener cancels the event.
  *
  * @summary A multiple-choice filter behind a button.
  * @tag lu-multi-select
  * @csspart trigger - The button that opens the menu.
  * @csspart menu - The floating menu of items.
- * @fires {CustomEvent<SelectedChangeDetail>} lu-selected-change - The user toggled an item or cleared the selection. `detail.selected` holds the selected values.
+ * @fires {CustomEvent<SelectedChangeDetail>} lu-selected-change - The user toggled an item or cleared the selection. `detail.selected` holds the selected values. Cancelable: `preventDefault()` keeps the current `selected`, which the element still holds while the event runs; clearing closes the menu either way.
  */
 export class LumenMultiSelect extends LitElement {
   static properties = {
@@ -161,8 +161,9 @@ export class LumenMultiSelect extends LitElement {
   }
 
   private change(selected: string[]) {
-    this.selected = selected
-    emit<SelectedChangeDetail>(this, 'lu-selected-change', { selected })
+    if (emit<SelectedChangeDetail>(this, 'lu-selected-change', { selected }, { cancelable: true })) {
+      this.selected = selected
+    }
   }
 
   private toggle(value: string) {

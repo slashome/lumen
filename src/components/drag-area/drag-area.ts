@@ -25,7 +25,7 @@ interface Carried {
  * @summary The scope of a drag and drop between zones.
  * @tag lu-drag-area
  * @slot - The drop zones and their draggable items.
- * @fires {CustomEvent<DragEndDetail>} lu-drag-end - An item was dropped. `detail.active` is its `drag-id`; `detail.over` is the `zone-id` it was dropped on, or `null` outside any zone.
+ * @fires {CustomEvent<DragEndDetail>} lu-drag-end - An item was dropped. `detail.active` is its `drag-id`; `detail.over` is the `zone-id` it was dropped on, or `null` outside any zone. Not cancelable: the area never moves the item, the owner does.
  */
 export class LumenDragArea extends LitElement {
   static properties = {
