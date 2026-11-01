@@ -4,15 +4,15 @@ export interface MascotData {
   height: number
 }
 
-const upperWing = 'M0 0 L11 -7 L25 0 L11 7 Z'
-const lowerWing = 'M0 0 L7 -4.5 L16 0 L7 4.5 Z'
+const upperWing = 'M1 -0.9 Q7 -6.5 11 -6.5 Q15 -6.5 25 -1.2 Q26.5 0 25 1.2 Q15 6.5 11 6.5 Q7 6.5 1 0.9 Q0 0 1 -0.9 Z'
+const lowerWing = 'M1 -0.7 Q4.5 -4 7 -4 Q9.5 -4 15 -0.9 Q16.2 0 15 0.9 Q9.5 4 7 4 Q4.5 4 1 0.7 Q0 0 1 -0.7 Z'
 
 const sparkle = 'M0 -4 Q0.7 -0.7 4 0 Q0.7 0.7 0 4 Q-0.7 0.7 -4 0 Q-0.7 -0.7 0 -4 Z'
 
-function wings(id: string, transform: string) {
+function wings(id: string, transform: string, reach: number) {
   return `<g id="${id}" class="wing"${transform}>
-    <path class="upper" d="${upperWing}" transform="translate(27 28) rotate(-142)"/>
-    <path class="lower" d="${lowerWing}" transform="translate(27 36) rotate(148)"/>
+    <path class="upper" d="${upperWing}" transform="rotate(-140 32 32) translate(${32 + reach} 32)"/>
+    <path class="lower" d="${lowerWing}" transform="rotate(155 32 32) translate(${32 + reach} 32)"/>
   </g>`
 }
 
@@ -25,7 +25,7 @@ const lit = `<style>
   .core-edge { stop-color: var(--lu-color-primary); }
   .wing path {
     fill: color-mix(in oklab, var(--lu-color-primary) 28%, transparent);
-    stroke: color-mix(in oklab, var(--lu-color-primary) 85%, var(--lu-color-glow));
+    stroke: color-mix(in oklab, var(--lu-color-primary) 70%, var(--lu-color-glow));
     stroke-width: 2;
     stroke-linejoin: round;
   }
@@ -44,28 +44,29 @@ const lit = `<style>
   </radialGradient>
 </defs>
 <g id="glow"><circle cx="32" cy="32" r="30" fill="url(#halo)"/></g>
-${wings('wing-left', '')}
-${wings('wing-right', mirrored)}
+${wings('wing-left', '', 5)}
+${wings('wing-right', mirrored, 5)}
 <g id="body"><circle cx="32" cy="32" r="9" fill="url(#core)"/></g>
 <g id="sparkles">
-  <path d="${sparkle}" transform="translate(51 11)"/>
-  <path d="${sparkle}" transform="translate(56 46) scale(0.7)"/>
-  <path d="${sparkle}" transform="translate(9 53) scale(0.85)"/>
-  <path d="${sparkle}" transform="translate(32 55) scale(0.6)"/>
+  <path d="${sparkle}" transform="translate(56 25)"/>
+  <path d="${sparkle}" transform="translate(32 9) scale(0.65)"/>
+  <path d="${sparkle}" transform="translate(6 27) scale(0.75)"/>
+  <path d="${sparkle}" transform="translate(46 55) scale(0.85)"/>
+  <path d="${sparkle}" transform="translate(21 57) scale(0.55)"/>
 </g>`
 
 const dotted = `<style>
   .wing path, #body circle {
     fill: none;
     stroke: var(--lu-color-muted-foreground);
-    stroke-width: 2.5;
+    stroke-width: 2;
     stroke-dasharray: 0 4;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 </style>
-${wings('wing-left', '')}
-${wings('wing-right', mirrored)}
+${wings('wing-left', '', 10)}
+${wings('wing-right', mirrored, 10)}
 <g id="body"><circle cx="32" cy="32" r="9"/></g>`
 
 export const fairy: Record<'default' | 'empty', MascotData> = {
