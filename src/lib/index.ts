@@ -5,6 +5,7 @@ export { nextSort, parseSort, sortRows, type SortDirection, type SortValue, type
 export { storedSort } from './sort-store'
 export { createStore, type Store } from './store'
 export { iconData, iconNames, onIconsRegistered, registerIcons, type IconData, type LumenIconName } from './icons'
+export { mascotData, onMascotRegistered, registerMascot, type LumenMascotVariant, type MascotData } from './mascots'
 export { attachLight, light } from './light'
 export { dismiss, toast, toasts, type Toast, type ToastKind, type ToastOptions } from './toast'
 export { lumenMessageKeys, registerLumenMessages, type LumenMessageKey, type LumenMessages } from './messages'

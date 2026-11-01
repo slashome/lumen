@@ -141,6 +141,7 @@ const cases: Case[] = [
     missing: ['needs for'],
   },
   { tag: 'lu-icon', bare: '<lu-icon name="copy"></lu-icon>', labelled: '<lu-icon name="copy" label="Copy"></lu-icon>', missing: [] },
+  { tag: 'lu-mascot', bare: '<lu-mascot></lu-mascot>', labelled: '<lu-mascot label="Lumen"></lu-mascot>', missing: [] },
   { tag: 'lu-highlight', bare: '<lu-highlight text="Paint"></lu-highlight>', labelled: '<lu-highlight text="Paint"></lu-highlight>', missing: [] },
   { tag: 'lu-markdown', bare: '<lu-markdown source="Paint"></lu-markdown>', labelled: '<lu-markdown source="Paint"></lu-markdown>', missing: [] },
 ]

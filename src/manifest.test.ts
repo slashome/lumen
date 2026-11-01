@@ -41,6 +41,7 @@ describe('custom-elements.json', () => {
       'lu-hover-card',
       'lu-icon',
       'lu-markdown',
+      'lu-mascot',
       'lu-multi-select',
       'lu-option',
       'lu-segmented',
