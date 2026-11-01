@@ -18,7 +18,6 @@ import './components/drag-area/drag-area'
 import './components/file-drop/file-drop'
 import './components/tag/tag'
 import './components/combobox/combobox'
-import './components/mascot/mascot'
 
 export * from './lib'
 export { LumenIcon } from './components/icon/icon'
@@ -41,4 +40,3 @@ export { LumenDragArea, type DragEndDetail } from './components/drag-area/drag-a
 export { LumenFileDrop, type FilesChangeDetail, type FilesChangeSource, type RejectDetail, type RejectedFile } from './components/file-drop/file-drop'
 export { LumenTag, type RemoveDetail } from './components/tag/tag'
 export { LumenCombobox, type ComboboxOption, type ComboboxValue, type SearchDetail } from './components/combobox/combobox'
-export { LumenMascot } from './components/mascot/mascot'

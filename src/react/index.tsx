@@ -8,7 +8,6 @@ import { nextSort, sortRows, type SortDirection, type SortValue, type TableSort 
 import { storedSort } from '../lib/sort-store'
 import { documentLang, messagesFor, reportMissing, subscribeToMessages } from '../lib/messages'
 import type { ComboboxOption, ComboboxValue } from '../components/combobox/combobox'
-import type { LumenMascotVariant } from '../lib/mascots'
 import {
   ComboboxElement,
   ConfirmDialogElement,
@@ -20,7 +19,6 @@ import {
   HoverCardElement,
   IconElement,
   MarkdownElement,
-  MascotElement,
   MultiSelectElement,
   OptionElement,
   SegmentedElement,
@@ -62,10 +60,6 @@ export function Button({ className, variant, size, type = 'button', ...props }: 
 
 export function Icon({ name, label, className }: { name: string; label?: string; className?: string }) {
   return <IconElement name={name} label={label ?? ''} className={className} />
-}
-
-export function Mascot({ variant, label, className }: { variant?: LumenMascotVariant; label?: string; className?: string }) {
-  return <MascotElement variant={variant ?? 'default'} label={label ?? ''} className={className} />
 }
 
 export function Badge({ className, ...props }: ComponentProps<'span'>) {

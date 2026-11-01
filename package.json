@@ -33,7 +33,6 @@
     "./dist/file-drop.js",
     "./dist/tag.js",
     "./dist/combobox.js",
-    "./dist/mascot.js",
     "./dist/components/select/option.js",
     "./dist/components/drag-area/draggable.js",
     "./dist/components/drag-area/drop-zone.js",
@@ -116,10 +115,6 @@
     "./combobox": {
       "types": "./dist/types/components/combobox/combobox.d.ts",
       "default": "./dist/combobox.js"
-    },
-    "./mascot": {
-      "types": "./dist/types/components/mascot/mascot.d.ts",
-      "default": "./dist/mascot.js"
     },
     "./lib": {
       "types": "./dist/types/lib/index.d.ts",
