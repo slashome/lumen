@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<title>Lumen</title>
+<defs>
+<radialGradient id="halo"><stop offset="0" stop-color="#3760c9" stop-opacity="0.6"/><stop offset="0.45" stop-color="#3760c9" stop-opacity="0.2"/><stop offset="1" stop-color="#3760c9" stop-opacity="0"/></radialGradient>
+<radialGradient id="core" cx="0.42" cy="0.4" r="0.62"><stop offset="0" stop-color="#ffffff"/><stop offset="0.45" stop-color="#b9c7ec"/><stop offset="1" stop-color="#3760c9"/></radialGradient>
+</defs>
+<circle cx="32" cy="32" r="30" fill="url(#halo)"/>
+<g fill="#3760c9" fill-opacity="0.28" stroke="#738fd9" stroke-width="2" stroke-linejoin="round">
+<g><path d="M1 -0.9 Q7 -6.5 11 -6.5 Q15 -6.5 25 -1.2 Q26.5 0 25 1.2 Q15 6.5 11 6.5 Q7 6.5 1 0.9 Q0 0 1 -0.9 Z" transform="rotate(-140 32 32) translate(37 32)"/><path d="M1 -0.7 Q4.5 -4 7 -4 Q9.5 -4 15 -0.9 Q16.2 0 15 0.9 Q9.5 4 7 4 Q4.5 4 1 0.7 Q0 0 1 -0.7 Z" transform="rotate(155 32 32) translate(37 32)"/></g>
+<g transform="matrix(-1 0 0 1 64 0)"><path d="M1 -0.9 Q7 -6.5 11 -6.5 Q15 -6.5 25 -1.2 Q26.5 0 25 1.2 Q15 6.5 11 6.5 Q7 6.5 1 0.9 Q0 0 1 -0.9 Z" transform="rotate(-140 32 32) translate(37 32)"/><path d="M1 -0.7 Q4.5 -4 7 -4 Q9.5 -4 15 -0.9 Q16.2 0 15 0.9 Q9.5 4 7 4 Q4.5 4 1 0.7 Q0 0 1 -0.7 Z" transform="rotate(155 32 32) translate(37 32)"/></g>
+</g>
+<circle cx="32" cy="32" r="9" fill="url(#core)"/>
+<g fill="#3760c9">
+<path d="M0 -4 Q0.7 -0.7 4 0 Q0.7 0.7 0 4 Q-0.7 0.7 -4 0 Q-0.7 -0.7 0 -4 Z" transform="translate(56 25)"/>
+<path d="M0 -4 Q0.7 -0.7 4 0 Q0.7 0.7 0 4 Q-0.7 0.7 -4 0 Q-0.7 -0.7 0 -4 Z" transform="translate(32 9) scale(0.65)"/>
+<path d="M0 -4 Q0.7 -0.7 4 0 Q0.7 0.7 0 4 Q-0.7 0.7 -4 0 Q-0.7 -0.7 0 -4 Z" transform="translate(6 27) scale(0.75)"/>
+<path d="M0 -4 Q0.7 -0.7 4 0 Q0.7 0.7 0 4 Q-0.7 0.7 -4 0 Q-0.7 -0.7 0 -4 Z" transform="translate(46 55) scale(0.85)"/>
+<path d="M0 -4 Q0.7 -0.7 4 0 Q0.7 0.7 0 4 Q-0.7 0.7 -4 0 Q-0.7 -0.7 0 -4 Z" transform="translate(21 57) scale(0.55)"/>
+</g>
+</svg>

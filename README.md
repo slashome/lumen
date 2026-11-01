@@ -1,3 +1,5 @@
+<img src="assets/logo.svg" width="96" height="96" alt="">
+
 # Lumen
 
 The design system of slashome: design tokens, CSS classes for what has no state, and custom elements for what has one. One implementation for React, Vue, Svelte and plain HTML.
