@@ -49,6 +49,10 @@
       "$value": "color-mix(in oklab, {color.accent} 14%, transparent)",
       "$description": "The disc behind an icon button on hover. Not as a background for content."
     },
+    "glow": {
+      "$value": "{color.white}",
+      "$description": "The bright heart of a light, at the center of the mascot. Not for text, fills or surfaces: use background or popover."
+    },
     "overlay": {
       "$value": "oklch(0 0 0 / 0.3)",
       "$description": "The veil behind a modal dialog or sheet. Not for anything that stays interactive."
