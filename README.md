@@ -38,7 +38,28 @@ The entries are `icon`, `dialog`, `sheet`, `confirm-dialog`, `tooltip`, `hover-c
 
 Lumen ships no text. Register the generic labels once at start-up, for each language: `registerLumenMessages('fr', messages)` from `@slashome/lumen`, or `app.use(lumen, { messages: { fr, en } })` from `@slashome/lumen/vue`. An attribute on an instance (`close-label`, `confirm-label`…) wins over them, and `label` is required on `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-tabs`, `lu-file-drop` and `lu-combobox`, whose accessible name it is. The Labels page of the Storybook lists the keys.
 
-Theme with two variables on `:root`: `--lu-theme-primary` and `--lu-theme-secondary`. Dark mode follows `data-appearance="dark"` on the root, or the system.
+## Theme
+
+Two colors theme everything: `--lu-theme-primary` and `--lu-theme-secondary`, `#3760c9` by default. Every other shade derives from them, in light and dark.
+
+Set them at start-up, and again whenever they change, a user picking their colors for instance:
+
+```js
+import { setLumenTheme } from '@slashome/lumen'
+
+setLumenTheme({ primary: '#16a34a', secondary: '#c026d3' })
+```
+
+`setLumenTheme` sets only the colors it is given, on `document.documentElement` or on the element passed as its second argument. In Vue, `app.use(lumen, { messages, theme: { primary, secondary } })` calls it; in React, call it before the first render, as `registerLumenMessages`. Without JavaScript, set the variables in CSS:
+
+```css
+:root {
+  --lu-theme-primary: #16a34a;
+  --lu-theme-secondary: #c026d3;
+}
+```
+
+Dark mode follows `data-appearance="dark"` on the root, or the system.
 
 ## Develop
 

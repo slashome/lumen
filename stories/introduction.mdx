@@ -30,14 +30,24 @@ Lumen ships no text: register the generic labels once at start-up, for each lang
 
 ## Theme
 
-Two colors, set on `:root` at run time; every other shade derives from them, in light and dark.
+Two colors, `--lu-theme-primary` and `--lu-theme-secondary`, `#3760c9` by default; every other shade derives from them, in light and dark. Set them at start-up with `setLumenTheme()`, and call it again whenever they change:
+
+```js
+import { setLumenTheme } from '@slashome/lumen'
+
+setLumenTheme({ primary: '#16a34a', secondary: '#c026d3' })
+```
+
+It sets only the colors it is given, on the root element or on the element passed second. Vue passes them to the plugin, `app.use(lumen, { messages, theme: { primary, secondary } })`; React calls the function before the first render. Without JavaScript, set the variables in CSS:
 
 ```css
 :root {
-  --lu-theme-primary: #3760c9;
-  --lu-theme-secondary: #3760c9;
+  --lu-theme-primary: #16a34a;
+  --lu-theme-secondary: #c026d3;
 }
 ```
+
+The two color pickers of the toolbar, Primary and Secondary, call `setLumenTheme()` on every story of this Storybook.
 
 Dark mode follows `data-appearance="dark"` on the root element, or the system when the attribute is absent.
 

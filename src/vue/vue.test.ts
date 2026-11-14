@@ -8,11 +8,12 @@ import '../components/tooltip/tooltip'
 import '../components/segmented/segmented'
 import type { LumenCombobox } from '../components/combobox/combobox'
 import '../components/combobox/combobox'
-import { LuButton, LuCombobox, LuDialog, LuMultiSelect, LuSegmented, LuSelect, LuTabs, LuTooltip } from './index'
+import { lumen, LuButton, LuCombobox, LuDialog, LuMultiSelect, LuSegmented, LuSelect, LuTabs, LuTooltip } from './index'
 import './elements'
 
 afterEach(() => {
   document.body.innerHTML = ''
+  document.documentElement.removeAttribute('style')
 })
 
 async function mount(render: () => ReturnType<typeof h>) {
@@ -43,6 +44,12 @@ describe('the Vue adapter', () => {
     expectTypeOf<PropsOf<typeof LuMultiSelect>['label']>().toEqualTypeOf<string>()
     expectTypeOf<PropsOf<typeof LuSegmented>['label']>().toEqualTypeOf<string>()
     expectTypeOf<PropsOf<typeof LuTabs>['label']>().toEqualTypeOf<string>()
+  })
+
+  it('sets the theme given to the plugin', () => {
+    createApp(defineComponent({ render: () => null })).use(lumen, { messages: {}, theme: { primary: '#16a34a', secondary: '#c026d3' } })
+    expect(document.documentElement.style.getPropertyValue('--lu-theme-primary')).toBe('#16a34a')
+    expect(document.documentElement.style.getPropertyValue('--lu-theme-secondary')).toBe('#c026d3')
   })
 
   it('draws a button of type button by default, and a link styled as one given href', async () => {

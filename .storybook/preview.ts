@@ -4,6 +4,7 @@ import { declarationOf, markDeprecated } from './deprecated'
 import { markRequired } from './required'
 import '../src/foundations/lumen.css'
 import '../src/index'
+import { setLumenTheme } from '../src/lib'
 import { registerDemoMessages } from '../stories/messages'
 
 setCustomElementsManifest(manifest)
@@ -15,28 +16,15 @@ const preview: Preview = {
       description: 'Light or dark appearance',
       toolbar: { title: 'Appearance', icon: 'mirror', items: ['light', 'dark'], dynamicTitle: true },
     },
-    primary: {
-      description: 'The theme primary color',
-      toolbar: {
-        title: 'Primary',
-        icon: 'paintbrush',
-        items: [
-          { value: '#3760c9', title: 'Blue' },
-          { value: '#16a34a', title: 'Green' },
-          { value: '#c026d3', title: 'Fuchsia' },
-          { value: '#ea580c', title: 'Orange' },
-        ],
-        dynamicTitle: true,
-      },
-    },
+    primary: { description: 'The theme primary color, set by the color picker of the toolbar' },
+    secondary: { description: 'The theme secondary color, set by the color picker of the toolbar' },
   },
-  initialGlobals: { appearance: 'light', primary: '#3760c9' },
+  initialGlobals: { appearance: 'light', primary: '#3760c9', secondary: '#3760c9' },
   decorators: [
     (story, context) => {
       const root = document.documentElement
       root.dataset.appearance = context.globals.appearance
-      root.style.setProperty('--lu-theme-primary', context.globals.primary)
-      root.style.setProperty('--lu-theme-secondary', context.globals.primary)
+      setLumenTheme({ primary: context.globals.primary, secondary: context.globals.secondary })
       return story()
     },
   ],

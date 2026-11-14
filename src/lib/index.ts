@@ -8,3 +8,4 @@ export { iconData, iconNames, onIconsRegistered, registerIcons, type IconData, t
 export { attachLight, light } from './light'
 export { dismiss, toast, toasts, type Toast, type ToastKind, type ToastOptions } from './toast'
 export { lumenMessageKeys, registerLumenMessages, type LumenMessageKey, type LumenMessages } from './messages'
+export { setLumenTheme, type LumenTheme } from './theme'
