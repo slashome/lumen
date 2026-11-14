@@ -6,6 +6,7 @@ import type { Range } from '../lib/highlight'
 import { highlightTerms } from '../lib/highlight-terms'
 import { nextSort, sortRows, type SortDirection, type SortValue, type TableSort } from '../lib/sort'
 import { storedSort } from '../lib/sort-store'
+import { blockedWhile, busyAttributes, buttonClasses, type ButtonLook } from '../lib/button'
 import { documentLang, messagesFor, reportMissing, subscribeToMessages } from '../lib/messages'
 import type { ComboboxOption, ComboboxValue } from '../components/combobox/combobox'
 import {
@@ -40,22 +41,23 @@ export function classes(...parts: (string | false | null | undefined)[]): string
   return parts.filter(Boolean).join(' ')
 }
 
-/** `'destructive'` is deprecated: use `'danger'`, which draws the same. Removed in the next major version. */
-export type ButtonVariant = 'default' | 'outline' | 'ghost' | 'danger' | 'destructive'
-export type ButtonSize = 'default' | 'sm' | 'icon'
+export type { ButtonSize, ButtonVariant } from '../lib/button'
+export { buttonClasses }
 
-function variantModifier(variant: ButtonVariant): string {
-  return variant === 'destructive' ? 'danger' : variant
+interface LuButtonOwnProps extends ButtonLook {
+  loading?: boolean
 }
 
-export function buttonClasses({ variant = 'default', size = 'default' }: { variant?: ButtonVariant | null; size?: ButtonSize | null } = {}): string {
-  return classes('lu-button', variant && variant !== 'default' && `lu-button--${variantModifier(variant)}`, size && size !== 'default' && `lu-button--${size}`)
-}
+export type LuButtonProps = (ComponentProps<'button'> & LuButtonOwnProps & { href?: undefined }) | (Omit<ComponentProps<'a'>, 'type'> & LuButtonOwnProps & { href: string })
 
-export type LuButtonProps = ComponentProps<'button'> & { variant?: ButtonVariant | null; size?: ButtonSize | null }
-
-export function LuButton({ className, variant, size, type = 'button', ...props }: LuButtonProps) {
-  return <button type={type} className={classes(buttonClasses({ variant, size }), className)} {...props} />
+export function LuButton({ className, variant, size, loading = false, ...props }: LuButtonProps) {
+  const look = { className: classes(buttonClasses({ variant, size }), className), ...busyAttributes(loading) }
+  if (props.href !== undefined) {
+    const { onClick, ...anchor } = props
+    return <a {...anchor} {...look} onClick={blockedWhile(loading, onClick)} />
+  }
+  const { type = 'button', onClick, ...button } = props
+  return <button type={type} {...button} {...look} onClick={blockedWhile(loading, onClick)} />
 }
 
 export function LuIcon({ name, label, className }: { name: string; label?: string; className?: string }) {

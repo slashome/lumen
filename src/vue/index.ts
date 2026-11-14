@@ -3,6 +3,8 @@ import { registerLumenMessages, type LumenMessages } from '../lib/messages'
 
 export type { LumenElementTag } from './elements'
 export type { LumenMessages } from '../lib/messages'
+export { LuButton } from './button'
+export type { ButtonSize, ButtonVariant } from '../lib/button'
 export { LuCombobox, LuConfirmDialog, LuDialog, LuHoverCard, LuMultiSelect, LuSegmented, LuSelect, LuSheet, LuTabs, LuTooltip } from './models'
 
 export interface LumenPluginOptions {

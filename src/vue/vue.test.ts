@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, expectTypeOf, it } from 'vitest'
+import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vitest'
 import { createApp, defineComponent, h, nextTick, ref, type GlobalComponents } from 'vue'
 import type { LumenDialog } from '../components/dialog/dialog'
 import type { LumenSegmented } from '../components/segmented/segmented'
@@ -8,7 +8,7 @@ import '../components/tooltip/tooltip'
 import '../components/segmented/segmented'
 import type { LumenCombobox } from '../components/combobox/combobox'
 import '../components/combobox/combobox'
-import { LuCombobox, LuDialog, LuMultiSelect, LuSegmented, LuSelect, LuTabs, LuTooltip } from './index'
+import { LuButton, LuCombobox, LuDialog, LuMultiSelect, LuSegmented, LuSelect, LuTabs, LuTooltip } from './index'
 import './elements'
 
 afterEach(() => {
@@ -43,6 +43,49 @@ describe('the Vue adapter', () => {
     expectTypeOf<PropsOf<typeof LuMultiSelect>['label']>().toEqualTypeOf<string>()
     expectTypeOf<PropsOf<typeof LuSegmented>['label']>().toEqualTypeOf<string>()
     expectTypeOf<PropsOf<typeof LuTabs>['label']>().toEqualTypeOf<string>()
+  })
+
+  it('draws a button of type button by default, and a link styled as one given href', async () => {
+    const host = await mount(() => h('div', [h(LuButton, { variant: 'outline' }, () => 'Save'), h(LuButton, { href: '/docs', size: 'sm' }, () => 'Docs')]))
+    const button = host.querySelector('button')!
+    expect(button.type).toBe('button')
+    expect(button.className).toBe('lu-button lu-button--outline')
+    const link = host.querySelector('a')!
+    expect(link.getAttribute('href')).toBe('/docs')
+    expect(link.hasAttribute('type')).toBe(false)
+    expect(link.className).toBe('lu-button lu-button--sm')
+  })
+
+  it('marks a loading button busy and blocks its activation, keeping it focusable', async () => {
+    const onClick = vi.fn()
+    const onSubmit = vi.fn((event: Event) => event.preventDefault())
+    const host = await mount(() =>
+      h('form', { onSubmit }, [h(LuButton, { type: 'submit', loading: true, onClick }, () => 'Save'), h(LuButton, { href: '/docs', loading: true, onClick }, () => 'Docs')]),
+    )
+    const button = host.querySelector('button')!
+    const link = host.querySelector('a')!
+    for (const element of [button, link]) {
+      expect(element.getAttribute('aria-busy')).toBe('true')
+      expect(element.getAttribute('aria-disabled')).toBe('true')
+      expect(element.hasAttribute('disabled')).toBe(false)
+      const click = new MouseEvent('click', { bubbles: true, cancelable: true })
+      element.dispatchEvent(click)
+      expect(click.defaultPrevented).toBe(true)
+    }
+    button.focus()
+    expect(document.activeElement).toBe(button)
+    expect(onClick).not.toHaveBeenCalled()
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('emits click from a button that is not loading, and keeps the classes given', async () => {
+    const onClick = vi.fn()
+    const host = await mount(() => h(LuButton, { class: 'wide', onClick }, () => 'Save'))
+    const button = host.querySelector('button')!
+    button.click()
+    expect(onClick).toHaveBeenCalledOnce()
+    expect(button.className).toBe('lu-button wide')
+    expect(button.hasAttribute('aria-busy')).toBe(false)
   })
 
   it('drives a dialog through v-model:open', async () => {

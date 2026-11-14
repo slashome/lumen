@@ -16,6 +16,7 @@
     font-weight: var(--lu-font-weight-medium);
     line-height: 1;
     white-space: nowrap;
+    text-decoration: none;
     cursor: pointer;
     transition:
       background-color var(--lu-motion-hover-duration) var(--lu-motion-hover-easing),
@@ -34,6 +35,29 @@
     &[aria-disabled='true'] {
       pointer-events: none;
       opacity: 0.5;
+    }
+
+    &[aria-busy='true'] {
+      pointer-events: auto;
+      opacity: 1;
+      cursor: progress;
+
+      &::before {
+        content: '';
+        flex: none;
+        inline-size: 1em;
+        block-size: 1em;
+        border: 2px solid currentColor;
+        border-inline-end-color: transparent;
+        border-radius: var(--lu-radius-full);
+        animation: lu-button-spin 1s linear infinite;
+      }
+    }
+  }
+
+  @keyframes lu-button-spin {
+    to {
+      rotate: 360deg;
     }
   }
 
@@ -138,6 +162,10 @@
     .lu-icon-button,
     .lu-icon-button::before {
       transition: none;
+    }
+
+    .lu-button[aria-busy='true']::before {
+      animation-duration: 3s;
     }
   }
 }

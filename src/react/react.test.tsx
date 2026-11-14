@@ -5,7 +5,7 @@ import type { LumenDialog } from '../components/dialog/dialog'
 import type { LumenSegmented } from '../components/segmented/segmented'
 import type { LumenTooltip } from '../components/tooltip/tooltip'
 import * as react from './index'
-import { buttonClasses, LuCombobox, LuConfirmDialog, LuDialog, LuHighlight, LuMultiSelect, LuSegmented, LuSelect, LuTabs, LuTag, LuTooltip } from './index'
+import { buttonClasses, LuButton, LuCombobox, LuConfirmDialog, LuDialog, LuHighlight, LuMultiSelect, LuSegmented, LuSelect, LuTabs, LuTag, LuTooltip } from './index'
 import { ComboboxElement, ConfirmDialogElement, FileDropElement, HighlightElement, MultiSelectElement, SegmentedElement, SelectElement, TabsElement } from './elements'
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
@@ -91,6 +91,61 @@ describe('the React adapter', () => {
     expect(onSearch).toHaveBeenCalledWith('app')
     expect(onValueChange).toHaveBeenCalledWith('apple', 'option')
     expect(combobox.value).toBe('')
+  })
+
+  it('draws a button of type button by default, and a link styled as one given href', async () => {
+    const host = await mount(
+      <>
+        <LuButton variant="outline">Save</LuButton>
+        <LuButton href="/docs" size="sm">
+          Docs
+        </LuButton>
+      </>,
+    )
+    const button = host.querySelector('button')!
+    expect(button.type).toBe('button')
+    expect(button.className).toBe('lu-button lu-button--outline')
+    const link = host.querySelector('a')!
+    expect(link.getAttribute('href')).toBe('/docs')
+    expect(link.hasAttribute('type')).toBe(false)
+    expect(link.className).toBe('lu-button lu-button--sm')
+  })
+
+  it('marks a loading button busy and blocks its activation, keeping it focusable', async () => {
+    const onClick = vi.fn()
+    const onSubmit = vi.fn((event: SubmitEvent) => event.preventDefault())
+    const host = await mount(
+      <form onSubmit={(event) => onSubmit(event.nativeEvent as SubmitEvent)}>
+        <LuButton type="submit" loading onClick={onClick}>
+          Save
+        </LuButton>
+        <LuButton href="/docs" loading onClick={onClick}>
+          Docs
+        </LuButton>
+      </form>,
+    )
+    const button = host.querySelector('button')!
+    const link = host.querySelector('a')!
+    for (const element of [button, link]) {
+      expect(element.getAttribute('aria-busy')).toBe('true')
+      expect(element.getAttribute('aria-disabled')).toBe('true')
+      expect(element.hasAttribute('disabled')).toBe(false)
+      const click = new MouseEvent('click', { bubbles: true, cancelable: true })
+      element.dispatchEvent(click)
+      expect(click.defaultPrevented).toBe(true)
+    }
+    button.focus()
+    expect(document.activeElement).toBe(button)
+    expect(onClick).not.toHaveBeenCalled()
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('calls onClick of a button that is not loading', async () => {
+    const onClick = vi.fn()
+    const host = await mount(<LuButton onClick={onClick}>Save</LuButton>)
+    host.querySelector('button')!.click()
+    expect(onClick).toHaveBeenCalledOnce()
+    expect(host.querySelector('button')!.hasAttribute('aria-busy')).toBe(false)
   })
 
   it('draws the danger button, also under its deprecated name', () => {
