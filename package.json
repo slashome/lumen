@@ -1,7 +1,7 @@
 {
   "name": "@slashome/lumen",
-  "version": "0.1.0",
-  "description": "The slashome design system: tokens, CSS and Lit custom elements for React, Vue, Svelte and plain HTML.",
+  "version": "0.2.0",
+  "description": "The slashome design system: tokens, CSS classes and custom elements for React, Vue, Svelte and plain HTML.",
   "license": "MIT",
   "type": "module",
   "repository": {
@@ -30,6 +30,9 @@
     "./dist/markdown.js",
     "./dist/highlight.js",
     "./dist/drag-area.js",
+    "./dist/file-drop.js",
+    "./dist/tag.js",
+    "./dist/combobox.js",
     "./dist/components/select/option.js",
     "./dist/components/drag-area/draggable.js",
     "./dist/components/drag-area/drop-zone.js",
@@ -101,6 +104,18 @@
       "types": "./dist/types/components/drag-area/drag-area.d.ts",
       "default": "./dist/drag-area.js"
     },
+    "./file-drop": {
+      "types": "./dist/types/components/file-drop/file-drop.d.ts",
+      "default": "./dist/file-drop.js"
+    },
+    "./tag": {
+      "types": "./dist/types/components/tag/tag.d.ts",
+      "default": "./dist/tag.js"
+    },
+    "./combobox": {
+      "types": "./dist/types/components/combobox/combobox.d.ts",
+      "default": "./dist/combobox.js"
+    },
     "./lib": {
       "types": "./dist/types/lib/index.d.ts",
       "default": "./dist/lib.js"
@@ -171,6 +186,7 @@
     "@types/react-dom": "19.3.0",
     "@vitest/browser": "5.0.5",
     "@vitest/browser-playwright": "5.0.5",
+    "colorjs.io": "0.5.2",
     "eslint": "10.13.0",
     "eslint-plugin-lit": "2.3.1",
     "eslint-plugin-wc": "3.1.0",
@@ -187,5 +203,12 @@
     "vitest": "5.0.5",
     "vue": "3.5.44"
   },
-  "packageManager": "pnpm@12.16.1"
+  "packageManager": "pnpm@12.16.1",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "26.13.1",
+      "onFail": "download"
+    }
+  }
 }

@@ -5,6 +5,7 @@ interface Described {
   name: string
   description?: string
   type?: { text: string }
+  required?: boolean
 }
 
 interface Element {
@@ -29,11 +30,13 @@ function undescribed(items: Described[] | undefined): string[] {
 describe('custom-elements.json', () => {
   it('lists every element under its lu- tag', () => {
     expect(elements.map((element) => element.tagName).sort()).toEqual([
+      'lu-combobox',
       'lu-confirm-dialog',
       'lu-dialog',
       'lu-drag-area',
       'lu-draggable',
       'lu-drop-zone',
+      'lu-file-drop',
       'lu-highlight',
       'lu-hover-card',
       'lu-icon',
@@ -44,6 +47,7 @@ describe('custom-elements.json', () => {
       'lu-select',
       'lu-sheet',
       'lu-tabs',
+      'lu-tag',
       'lu-toaster',
       'lu-tooltip',
     ])
@@ -67,5 +71,15 @@ describe('custom-elements.json', () => {
       expect(event.name).toMatch(/^lu-[a-z-]+$/)
       expect(event.type?.text).toMatch(/^CustomEvent<.+>$/)
     }
+  })
+
+  it('marks as required the label that names a select, a multi-select, a segmented, tabs, a file drop or a combobox, and nothing else', () => {
+    const required = elements.flatMap((element) => (element.attributes ?? []).filter((attribute) => attribute.required).map((attribute) => `${element.tagName} ${attribute.name}`))
+    expect(required.sort()).toEqual(['lu-combobox label', 'lu-file-drop label', 'lu-multi-select label', 'lu-segmented label', 'lu-select label', 'lu-tabs label'])
+  })
+
+  it('gives lu-confirm-dialog no close-label, which it has no button for', () => {
+    const confirm = elements.find((element) => element.tagName === 'lu-confirm-dialog')
+    expect(confirm?.attributes?.map((attribute) => attribute.name)).not.toContain('close-label')
   })
 })

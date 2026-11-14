@@ -1,6 +1,7 @@
 import { createStore } from './store'
 
-export type ToastKind = 'default' | 'success' | 'error' | 'info' | 'warning'
+/** The tone of a toast. `'error'` is deprecated: use `'danger'`, which draws the same. */
+export type ToastKind = 'default' | 'success' | 'danger' | 'info' | 'warning' | 'error'
 
 export interface Toast {
   id: number
@@ -30,7 +31,9 @@ export function dismiss(id: number) {
 
 export const toast = Object.assign((message: string, options?: ToastOptions) => show('default', message, options), {
   success: (message: string, options?: ToastOptions) => show('success', message, options),
-  error: (message: string, options?: ToastOptions) => show('error', message, options),
+  danger: (message: string, options?: ToastOptions) => show('danger', message, options),
+  /** @deprecated Use `toast.danger`, which raises the same toast. Removed in the next major version. */
+  error: (message: string, options?: ToastOptions) => show('danger', message, options),
   info: (message: string, options?: ToastOptions) => show('info', message, options),
   warning: (message: string, options?: ToastOptions) => show('warning', message, options),
   dismiss,

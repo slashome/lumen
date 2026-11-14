@@ -3,6 +3,7 @@ import type { ArgTypes } from '@storybook/web-components-vite'
 interface Item {
   name: string
   deprecated?: boolean | string
+  required?: boolean
 }
 
 export interface Declaration {

@@ -40,4 +40,8 @@ export function installDomShims() {
       return open
     }
   }
+  const internals = globalThis.ElementInternals?.prototype
+  if (internals && typeof internals.setFormValue !== 'function') {
+    internals.setFormValue = function setFormValue() {}
+  }
 }

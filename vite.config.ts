@@ -35,7 +35,7 @@ export default defineConfig({
         test: {
           name: 'unit',
           environment: 'jsdom',
-          setupFiles: ['./src/testing/setup.ts'],
+          setupFiles: ['./src/testing/setup.ts', './stories/messages.setup.ts'],
           alias: [{ find: /^@lit\/react$/, replacement: litReactForBrowsers }],
           exclude: [...configDefaults.exclude, 'storybook-static/**'],
         },

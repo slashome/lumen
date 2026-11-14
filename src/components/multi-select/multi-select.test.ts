@@ -42,4 +42,16 @@ describe('lu-multi-select', () => {
     expect(seen).toEqual([['task']])
     expect(select.selected).toEqual(['task'])
   })
+
+  it('says whether an item was toggled or the selection cleared', async () => {
+    const select = await mount<LumenMultiSelect>('<lu-multi-select label="Kind"></lu-multi-select>')
+    select.options = [{ value: 'task', label: 'Task' }]
+    await select.updateComplete
+    const sources: string[] = []
+    select.addEventListener('lu-selected-change', (event) => sources.push((event as CustomEvent<{ source: string }>).detail.source))
+    select.shadowRoot!.querySelector<HTMLButtonElement>('.item')!.click()
+    await select.updateComplete
+    select.shadowRoot!.querySelector<HTMLButtonElement>('.clear')!.click()
+    expect(sources).toEqual(['option', 'clear'])
+  })
 })

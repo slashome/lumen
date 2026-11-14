@@ -1,7 +1,8 @@
-import { css, html, LitElement } from 'lit'
+import { css, html, LitElement, nothing } from 'lit'
 import { emit } from '../../lib/emit'
+import { requiredLabel } from '../../lib/messages'
 import { define } from '../../lib/define'
-import type { ValueChangeDetail } from '../select/select'
+import type { ValueChangeDetail } from '../../lib/change'
 
 let instances = 0
 
@@ -23,7 +24,7 @@ function isEnabled(tab: HTMLElement | undefined): tab is HTMLElement {
  * @slot - The panels, one per tab, in the order of the tabs.
  * @slot tab - The tabs, usually `<button value>`. A tab without `value` takes its position, from `0`.
  * @csspart tablist - The row that holds the tabs.
- * @fires {CustomEvent<ValueChangeDetail>} lu-value-change - The user selected a tab other than the current one. `detail.value` is its value. Cancelable: `preventDefault()` keeps the current `value`, which the element still holds while the event runs.
+ * @fires {CustomEvent<ValueChangeDetail>} lu-value-change - The user selected a tab other than the current one. `detail.value` is its value, `detail.source` is `option`. Cancelable: `preventDefault()` keeps the current `value`, which the element still holds while the event runs.
  */
 export class LumenTabs extends LitElement {
   static properties = {
@@ -97,7 +98,10 @@ export class LumenTabs extends LitElement {
     }
   `
 
-  /** The accessible name of the tab list. */
+  /**
+   * The accessible name of the tab list. Without it, the element logs an error.
+   * @required
+   */
   declare label: string
   /** The value of the selected tab. When no tab has it, the first tab is selected. */
   declare value: string | null
@@ -164,7 +168,7 @@ export class LumenTabs extends LitElement {
     if (index === this.selectedIndex) {
       return
     }
-    if (emit<ValueChangeDetail>(this, 'lu-value-change', { value }, { cancelable: true })) {
+    if (emit<ValueChangeDetail>(this, 'lu-value-change', { value, source: 'option' }, { cancelable: true })) {
       this.value = value
     }
   }
@@ -221,7 +225,7 @@ export class LumenTabs extends LitElement {
 
   render() {
     return html`
-      <div class="tablist" role="tablist" aria-label=${this.label} part="tablist" @click=${this.onClick} @keydown=${this.onKeydown}>
+      <div class="tablist" role="tablist" aria-label=${requiredLabel(this, this.label, 'label') ?? nothing} part="tablist" @click=${this.onClick} @keydown=${this.onKeydown}>
         <slot name="tab" @slotchange=${() => this.sync()}></slot>
       </div>
       <slot @slotchange=${() => this.sync()}></slot>

@@ -1,11 +1,15 @@
-import { useEffect, useMemo, useSyncExternalStore, type ComponentProps, type InputHTMLAttributes, type ReactElement, type ReactNode } from 'react'
+import { useEffect, useMemo, useSyncExternalStore, type ComponentProps, type InputHTMLAttributes, type ReactNode } from 'react'
 import type { LinkResolver } from '../components/markdown/markdown'
+import type { OpenChangeSource, ValueChangeSource } from '../lib/change'
 import type { MultiSelectOption } from '../components/multi-select/multi-select'
 import type { Range } from '../lib/highlight'
 import { highlightTerms } from '../lib/highlight-terms'
 import { nextSort, sortRows, type SortDirection, type SortValue, type TableSort } from '../lib/sort'
 import { storedSort } from '../lib/sort-store'
+import { documentLang, messagesFor, reportMissing, subscribeToMessages } from '../lib/messages'
+import type { ComboboxOption, ComboboxValue } from '../components/combobox/combobox'
 import {
+  ComboboxElement,
   ConfirmDialogElement,
   DialogElement,
   DragAreaElement,
@@ -21,6 +25,7 @@ import {
   SelectElement,
   SheetElement,
   TabsElement,
+  TagElement,
   ToasterElement,
   TooltipElement,
 } from './elements'
@@ -28,16 +33,23 @@ import {
 export { toast } from '../lib/toast'
 export type { LinkResolver, LinkTarget } from '../components/markdown/markdown'
 export type { MultiSelectOption } from '../components/multi-select/multi-select'
+export type { ComboboxOption, ComboboxValue } from '../components/combobox/combobox'
+export type { OpenChangeSource, ValueChangeSource } from '../lib/change'
 
 export function classes(...parts: (string | false | null | undefined)[]): string {
   return parts.filter(Boolean).join(' ')
 }
 
-export type ButtonVariant = 'default' | 'outline' | 'ghost' | 'destructive'
+/** `'destructive'` is deprecated: use `'danger'`, which draws the same. Removed in the next major version. */
+export type ButtonVariant = 'default' | 'outline' | 'ghost' | 'danger' | 'destructive'
 export type ButtonSize = 'default' | 'sm' | 'icon'
 
+function variantModifier(variant: ButtonVariant): string {
+  return variant === 'destructive' ? 'danger' : variant
+}
+
 export function buttonClasses({ variant = 'default', size = 'default' }: { variant?: ButtonVariant | null; size?: ButtonSize | null } = {}): string {
-  return classes('lu-button', variant && variant !== 'default' && `lu-button--${variant}`, size && size !== 'default' && `lu-button--${size}`)
+  return classes('lu-button', variant && variant !== 'default' && `lu-button--${variantModifier(variant)}`, size && size !== 'default' && `lu-button--${size}`)
 }
 
 export type ButtonProps = ComponentProps<'button'> & { variant?: ButtonVariant | null; size?: ButtonSize | null }
@@ -52,6 +64,29 @@ export function Icon({ name, label, className }: { name: string; label?: string;
 
 export function Badge({ className, ...props }: ComponentProps<'span'>) {
   return <span className={classes('lu-badge', className)} {...props} />
+}
+
+export function Tag({
+  value,
+  onRemove,
+  disabled = false,
+  className,
+  children,
+}: {
+  value?: string
+  onRemove?: (value: string) => void
+  disabled?: boolean
+  className?: string
+  children: ReactNode
+}) {
+  if (!onRemove) {
+    return <span className={classes('lu-tag', className)}>{children}</span>
+  }
+  return (
+    <TagElement removable {...only('value', value)} disabled={disabled} onRemove={(event) => onRemove(event.detail.value)} className={className}>
+      {children}
+    </TagElement>
+  )
 }
 
 export function Input({ className, ...props }: ComponentProps<'input'>) {
@@ -99,9 +134,28 @@ export function EmptyState({ icon, title, children, className }: { icon?: string
   )
 }
 
-export function LoadingState({ rows = 4, label = 'Loading…' }: { rows?: number; label?: string }) {
+function subscribeToLang(onChange: () => void) {
+  return subscribeToMessages({ requestUpdate: onChange })
+}
+
+function registeredLoadingLabel(): string | undefined {
+  return messagesFor(documentLang())?.loading
+}
+
+function useLoadingLabel(label: string | undefined): string | undefined {
+  const registered = useSyncExternalStore(subscribeToLang, registeredLoadingLabel, () => undefined)
+  const resolved = label || registered
+  useEffect(() => {
+    if (!resolved) {
+      reportMissing(LoadingState, 'LoadingState', 'loading', documentLang(), 'the label prop')
+    }
+  }, [resolved])
+  return resolved
+}
+
+export function LoadingState({ rows = 4, label }: { rows?: number; label?: string }) {
   return (
-    <div role="status" aria-label={label} className="lu-loading-state">
+    <div role="status" aria-label={useLoadingLabel(label)} className="lu-loading-state">
       {Array.from({ length: rows }, (_, index) => (
         <div key={index} className="lu-loading-state__row" />
       ))}
@@ -139,13 +193,32 @@ export function ComingSoon({ title, children }: { title: string; children?: Reac
   )
 }
 
-interface DialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+function controlledBy<Detail>(controlled: boolean, handle: (detail: Detail) => void) {
+  return (event: CustomEvent<Detail>) => {
+    if (controlled) {
+      event.preventDefault()
+    }
+    handle(event.detail)
+  }
+}
+
+function only<Key extends string, Value>(key: Key, value: Value | undefined): Partial<Record<Key, Value>> {
+  return value === undefined ? {} : ({ [key]: value } as Record<Key, Value>)
+}
+
+export type OpenChangeHandler = (open: boolean, source: OpenChangeSource) => void
+
+interface ModalProps {
+  open?: boolean
+  onOpenChange?: OpenChangeHandler
   title: ReactNode
   description?: ReactNode
   className?: string
   children?: ReactNode
+}
+
+interface DialogProps extends ModalProps {
+  closeLabel?: string
 }
 
 function Titles({ title, description }: { title: ReactNode; description?: ReactNode }) {
@@ -157,18 +230,22 @@ function Titles({ title, description }: { title: ReactNode; description?: ReactN
   )
 }
 
-export function Dialog({ open, onOpenChange, title, description, className, children }: DialogProps) {
+function openChange(open: boolean | undefined, onOpenChange: OpenChangeHandler | undefined) {
+  return controlledBy<{ open: boolean; source: OpenChangeSource }>(open !== undefined, (detail) => onOpenChange?.(detail.open, detail.source))
+}
+
+export function Dialog({ open, onOpenChange, title, description, closeLabel, className, children }: DialogProps) {
   return (
-    <DialogElement open={open} onOpenChange={(event) => onOpenChange(event.detail.open)} className={className}>
+    <DialogElement {...only('open', open)} {...only('closeLabel', closeLabel)} onOpenChange={openChange(open, onOpenChange)} className={className}>
       <Titles title={title} description={description} />
       {children}
     </DialogElement>
   )
 }
 
-export function Sheet({ open, onOpenChange, title, description, className, children }: DialogProps) {
+export function Sheet({ open, onOpenChange, title, description, closeLabel, className, children }: DialogProps) {
   return (
-    <SheetElement open={open} onOpenChange={(event) => onOpenChange(event.detail.open)} className={className}>
+    <SheetElement {...only('open', open)} {...only('closeLabel', closeLabel)} onOpenChange={openChange(open, onOpenChange)} className={className}>
       <Titles title={title} description={description} />
       {children}
     </SheetElement>
@@ -181,17 +258,17 @@ export function ConfirmDialog({
   title,
   description,
   confirmLabel,
-  cancelLabel = 'Cancel',
+  cancelLabel,
   pending = false,
   onConfirm,
-}: Omit<DialogProps, 'children' | 'className'> & { confirmLabel: string; cancelLabel?: string; pending?: boolean; onConfirm: () => void }) {
+}: Omit<ModalProps, 'children' | 'className'> & { confirmLabel?: string; cancelLabel?: string; pending?: boolean; onConfirm: () => void }) {
   return (
     <ConfirmDialogElement
-      open={open}
-      onOpenChange={(event) => onOpenChange(event.detail.open)}
+      {...only('open', open)}
+      onOpenChange={openChange(open, onOpenChange)}
       onConfirm={onConfirm}
-      confirmLabel={confirmLabel}
-      cancelLabel={cancelLabel}
+      {...only('confirmLabel', confirmLabel)}
+      {...only('cancelLabel', cancelLabel)}
       pending={pending}
     >
       <Titles title={title} description={description} />
@@ -199,26 +276,43 @@ export function ConfirmDialog({
   )
 }
 
-export function Tooltip({ content, children }: { content: string; children: ReactElement }) {
-  return <TooltipElement content={content}>{children}</TooltipElement>
+export function Tooltip({
+  htmlFor,
+  open,
+  onOpenChange,
+  children,
+}: {
+  htmlFor: string
+  open?: boolean
+  onOpenChange?: OpenChangeHandler
+  children: ReactNode
+}) {
+  return (
+    <TooltipElement htmlFor={htmlFor} {...only('open', open)} onOpenChange={openChange(open, onOpenChange)}>
+      {children}
+    </TooltipElement>
+  )
 }
 
 export function HoverCard({
-  trigger,
+  htmlFor,
   children,
   openDelay = 700,
   pinned = false,
+  open,
+  onOpenChange,
   className,
 }: {
-  trigger: ReactElement
+  htmlFor: string
   children: ReactNode
   openDelay?: number
   pinned?: boolean
+  open?: boolean
+  onOpenChange?: OpenChangeHandler
   className?: string
 }) {
   return (
-    <HoverCardElement openDelay={openDelay} pinned={pinned} className={className}>
-      <span slot="trigger">{trigger}</span>
+    <HoverCardElement htmlFor={htmlFor} openDelay={openDelay} pinned={pinned} {...only('open', open)} onOpenChange={openChange(open, onOpenChange)} className={className}>
       {children}
     </HoverCardElement>
   )
@@ -233,14 +327,19 @@ export function Select({
   className,
 }: {
   label: string
-  value: string
-  onValueChange: (value: string) => void
+  value?: string
+  onValueChange?: (value: string, source: ValueChangeSource) => void
   display?: ReactNode
   children: ReactNode
   className?: string
 }) {
   return (
-    <SelectElement label={label} value={value} onValueChange={(event) => onValueChange(event.detail.value)} className={className}>
+    <SelectElement
+      label={label}
+      {...only('value', value)}
+      onValueChange={controlledBy<{ value: string; source: ValueChangeSource }>(value !== undefined, (detail) => onValueChange?.(detail.value, detail.source))}
+      className={className}
+    >
       {display ? <span slot="display">{display}</span> : null}
       {children}
     </SelectElement>
@@ -259,30 +358,94 @@ export function MultiSelect({
   label,
   options,
   selected,
+  clearLabel,
   onChange,
 }: {
   label: string
   options: MultiSelectOption[]
-  selected: string[]
-  onChange: (selected: string[]) => void
+  selected?: string[]
+  clearLabel?: string
+  onChange?: (selected: string[], source: ValueChangeSource) => void
 }) {
-  return <MultiSelectElement label={label} options={options} selected={selected} onSelectedChange={(event) => onChange(event.detail.selected)} />
+  return (
+    <MultiSelectElement
+      label={label}
+      options={options}
+      {...only('selected', selected)}
+      {...only('clearLabel', clearLabel)}
+      onSelectedChange={controlledBy<{ selected: string[]; source: ValueChangeSource }>(selected !== undefined, (detail) => onChange?.(detail.selected, detail.source))}
+    />
+  )
 }
 
-export function Segmented({
+export function Combobox({
   label,
-  values,
+  options,
   value,
-  onChange,
-  focusable = true,
+  onValueChange,
+  onSearch,
+  multiple = false,
+  creatable = false,
+  skipFilter = false,
+  loading = false,
+  disabled = false,
+  name,
+  placeholder,
+  className,
 }: {
   label: string
-  values: string[]
-  value: string | null
-  onChange: (value: string | null) => void
-  focusable?: boolean
+  options: ComboboxOption[]
+  value?: ComboboxValue
+  onValueChange?: (value: ComboboxValue, source: ValueChangeSource) => void
+  onSearch?: (query: string) => void
+  multiple?: boolean
+  creatable?: boolean
+  skipFilter?: boolean
+  loading?: boolean
+  disabled?: boolean
+  name?: string
+  placeholder?: string
+  className?: string
 }) {
-  return <SegmentedElement label={label} values={values} value={value} focusable={focusable} onValueChange={(event) => onChange(event.detail.value)} />
+  return (
+    <ComboboxElement
+      label={label}
+      options={options}
+      {...only('value', value)}
+      multiple={multiple}
+      creatable={creatable}
+      skipFilter={skipFilter}
+      loading={loading}
+      disabled={disabled}
+      {...only('name', name)}
+      {...only('placeholder', placeholder)}
+      onValueChange={controlledBy<{ value: ComboboxValue; source: ValueChangeSource }>(value !== undefined, (detail) => onValueChange?.(detail.value, detail.source))}
+      onSearch={(event) => onSearch?.(event.detail.query)}
+      className={className}
+    />
+  )
+}
+
+export interface SegmentedProps {
+  label: string
+  values: string[]
+  value?: string | null
+  onChange?: (value: string | null, source: ValueChangeSource) => void
+  skipTab?: boolean
+  /** @deprecated Use `skipTab`, true to leave the buttons out of the tab order. Removed in the next major version. */
+  focusable?: boolean
+}
+
+export function Segmented({ label, values, value, onChange, skipTab = false, focusable = true }: SegmentedProps) {
+  return (
+    <SegmentedElement
+      label={label}
+      values={values}
+      {...only('value', value)}
+      skipTab={skipTab || !focusable}
+      onValueChange={controlledBy<{ value: string | null; source: ValueChangeSource }>(value !== undefined, (detail) => onChange?.(detail.value, detail.source))}
+    />
+  )
 }
 
 export function Tabs({
@@ -294,21 +457,27 @@ export function Tabs({
   className,
 }: {
   label: string
-  value: string
-  onChange: (value: string) => void
+  value?: string
+  onChange?: (value: string, source: ValueChangeSource) => void
   manual?: boolean
   children: ReactNode
   className?: string
 }) {
   return (
-    <TabsElement label={label} value={value} manual={manual} onValueChange={(event) => onChange(event.detail.value)} className={className}>
+    <TabsElement
+      label={label}
+      {...only('value', value)}
+      manual={manual}
+      onValueChange={controlledBy<{ value: string; source: ValueChangeSource }>(value !== undefined, (detail) => onChange?.(detail.value, detail.source))}
+      className={className}
+    >
       {children}
     </TabsElement>
   )
 }
 
-export function Toaster() {
-  return <ToasterElement />
+export function Toaster({ label, closeLabel }: { label?: string; closeLabel?: string } = {}) {
+  return <ToasterElement {...only('label', label)} {...only('closeLabel', closeLabel)} />
 }
 
 export function Markdown({
@@ -354,9 +523,23 @@ export function DragArea({ onDragEnd, children, className }: { onDragEnd: (event
   )
 }
 
-export function Draggable({ id, onOpen, label, className, children }: { id: string; onOpen?: () => void; label?: string; className?: string; children: ReactNode }) {
+export function Draggable({
+  id,
+  onOpen,
+  label,
+  roleDescription,
+  className,
+  children,
+}: {
+  id: string
+  onOpen?: () => void
+  label?: string
+  roleDescription?: string
+  className?: string
+  children: ReactNode
+}) {
   return (
-    <DraggableElement dragId={id} openable={Boolean(onOpen)} label={label ?? ''} onOpen={() => onOpen?.()} className={className}>
+    <DraggableElement dragId={id} openable={Boolean(onOpen)} label={label ?? ''} {...only('roleDescription', roleDescription)} onOpen={() => onOpen?.()} className={className}>
       {children}
     </DraggableElement>
   )

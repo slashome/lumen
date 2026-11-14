@@ -4,10 +4,10 @@ import { expect } from 'storybook/test'
 
 const meta: Meta = {
   title: 'Form/Radio card',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `A radio as a card, for choices that need a sentence each. The card is a \`<label>\` that wraps a native \`.lu-radio\`, so a click anywhere on it checks the radio, and the browser handles the group, the arrow keys and the form value. The card draws the checked, focused, invalid and disabled states of its radio. Put the cards in a \`<fieldset class="lu-field">\`.
 

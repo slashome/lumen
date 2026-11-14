@@ -3,10 +3,10 @@ import { html } from 'lit'
 
 const meta: Meta = {
   title: 'Feedback/Skeleton',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `A pulsing placeholder in the shape of the content that is loading. It pulses on the \`muted\` fill and stands still under \`prefers-reduced-motion\`. Size it with \`inline-size\` and \`block-size\`; it is a control high by default.
 

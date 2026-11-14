@@ -4,10 +4,10 @@ import { expect } from 'storybook/test'
 
 const meta: Meta = {
   title: 'Feedback/Alert',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `A message about a region or a page that stays in place, unlike a toast. The status modifier tints it and colors its icon; the text stays in the foreground color, so it reads on every tint.
 
@@ -85,7 +85,7 @@ export const LiveRegions: StoryObj = {
     <div data-demo style="display:grid;gap:0.75rem;max-inline-size:32rem">
       <div style="display:flex;gap:0.5rem">
         <button class="lu-button lu-button--outline" @click=${save}>Save</button>
-        <button class="lu-button lu-button--destructive" @click=${remove}>Delete</button>
+        <button class="lu-button lu-button--danger" @click=${remove}>Delete</button>
       </div>
       <div role="status"></div>
       <div role="alert"></div>

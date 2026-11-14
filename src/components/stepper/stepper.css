@@ -1,0 +1,140 @@
+@layer lu.components {
+  .lu-stepper {
+    --lu-stepper-marker-size: 1.5rem;
+    display: flex;
+    gap: var(--lu-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: lu-step;
+    font-size: var(--lu-font-size-sm);
+  }
+
+  .lu-stepper__step {
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    gap: var(--lu-space-2);
+    min-inline-size: 0;
+    color: var(--lu-color-muted-foreground);
+    counter-increment: lu-step;
+
+    &::before {
+      content: counter(lu-step);
+      content: counter(lu-step) / '';
+      box-sizing: border-box;
+      display: inline-grid;
+      flex-shrink: 0;
+      place-items: center;
+      inline-size: var(--lu-stepper-marker-size);
+      block-size: var(--lu-stepper-marker-size);
+      border: 1px solid var(--lu-color-border);
+      border-radius: 50%;
+      background: var(--lu-color-background);
+      color: var(--lu-color-muted-foreground);
+      font-size: var(--lu-font-size-xs);
+      font-variant-numeric: tabular-nums;
+    }
+
+    &::after {
+      content: '';
+      flex: 1 1 var(--lu-space-4);
+      min-inline-size: var(--lu-space-4);
+      block-size: 1px;
+      background: var(--lu-color-border);
+    }
+
+    &:last-child {
+      flex: 0 0 auto;
+
+      &::after {
+        content: none;
+      }
+    }
+
+    &[aria-current='step'] {
+      color: var(--lu-color-foreground);
+      font-weight: var(--lu-font-weight-medium);
+
+      &::before {
+        border-color: var(--lu-color-primary);
+        background: var(--lu-color-primary);
+        color: var(--lu-color-primary-foreground);
+        outline: 2px solid var(--lu-color-primary);
+        outline-offset: 2px;
+      }
+    }
+
+    &:has(~ [aria-current='step']) {
+      color: var(--lu-color-foreground);
+
+      &::before {
+        content: '';
+        border: 0;
+        background: var(--lu-color-primary);
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cmask id='m'%3E%3Crect width='24' height='24' fill='white'/%3E%3Cpath d='M7 12.5l3.5 3.5L17 9' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/mask%3E%3Ccircle cx='12' cy='12' r='12' mask='url(%23m)'/%3E%3C/svg%3E") center / contain no-repeat;
+      }
+
+      &::after {
+        background: var(--lu-color-primary);
+      }
+    }
+  }
+
+  .lu-stepper__label {
+    overflow: hidden;
+    border-radius: var(--lu-radius-sm);
+    color: inherit;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:is(a[href]) {
+      text-decoration: underline;
+      text-decoration-color: color-mix(in oklch, currentColor 40%, transparent);
+      text-underline-offset: 0.2em;
+      transition: text-decoration-color var(--lu-motion-hover-duration) var(--lu-motion-hover-easing);
+
+      &:hover {
+        text-decoration-color: currentColor;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--lu-color-ring);
+      outline-offset: 2px;
+    }
+  }
+
+  .lu-stepper--vertical {
+    flex-direction: column;
+    gap: 0;
+
+    .lu-stepper__step {
+      display: grid;
+      grid-template-columns: var(--lu-stepper-marker-size) 1fr;
+      column-gap: var(--lu-space-2);
+      flex: none;
+
+      &::after {
+        grid-column: 1;
+        justify-self: center;
+        inline-size: 1px;
+        min-inline-size: 0;
+        block-size: auto;
+        min-block-size: var(--lu-space-4);
+        margin-block: var(--lu-space-1);
+      }
+
+      &:last-child::after {
+        content: none;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lu-stepper__label {
+      transition: none;
+    }
+  }
+}

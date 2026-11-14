@@ -55,7 +55,7 @@
     },
     "danger": {
       "$value": "{color.red.600}",
-      "$description": "Destructive actions and errors: destructive button, error state, error toast. Not to draw attention to a safe action."
+      "$description": "Actions that delete or cannot be undone, and errors: the danger button, the error state, the danger toast and alert. Not to draw attention to a safe action."
     },
     "danger-foreground": {
       "$value": "{color.white}",

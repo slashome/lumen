@@ -3,10 +3,10 @@ import { html } from 'lit'
 
 const meta: Meta = {
   title: 'Form/Textarea',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `A multi-line text field on the native \`<textarea>\`, at least two control heights tall and resizable in height. Set its height with \`rows\`. Name it with a \`<label>\`, inside a \`.lu-field\` for a hint or an error.
 

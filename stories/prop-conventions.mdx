@@ -10,7 +10,7 @@ The vocabulary every component shares, so that a name means the same thing on ev
 
 - **Everything public is prefixed `lu-`**: elements (`<lu-select>`), classes (`.lu-button`), custom properties (`--lu-dialog-width`), events (`lu-value-change`) and cascade layers (`lu.components`).
 - **Attributes are kebab-case, properties camelCase**, one for the other: `close-label` sets `closeLabel`, `open-delay` sets `openDelay`.
-- **Floor 0 is BEM**: a block (`.lu-data-table`), its elements (`.lu-data-table__cell`) and its modifiers (`.lu-button--outline`). A modifier never works without its block.
+- **CSS classes are BEM**: a block (`.lu-data-table`), its elements (`.lu-data-table__cell`) and its modifiers (`.lu-button--outline`). A modifier never works without its block.
 
 ## Sizes
 
@@ -24,40 +24,72 @@ A size is a modifier of the block, never a separate class. `.lu-button--icon` is
 - **default**: the one main action, on the primary fill. `.lu-button`.
 - **`outline`**: secondary, a border on the page fill. `.lu-button--outline`, `.lu-badge--outline`.
 - **`ghost`**: no fill until hovered, inside dense content. `.lu-button--ghost`.
-- **`destructive`**: deletes or cannot be undone, on the danger fill. `.lu-button--destructive`.
+- **`danger`**: deletes or cannot be undone, on the danger fill. `.lu-button--danger`; `.lu-button--destructive` is its deprecated name.
 - **`primary`**: the one badge that must stand out. `.lu-badge--primary`.
 
-A status is not a variant: success, error, warning and info are kinds of toast and modifiers of `.lu-alert` (`--success`, `--danger`, `--warning`, `--info`), drawn with the tokens of the same name.
+A status is not a variant: success, danger, warning and info are kinds of toast (`toast.danger()`) and modifiers of `.lu-alert` (`--success`, `--danger`, `--warning`, `--info`), drawn with the tokens of the same name. **The error state has one name, `danger`**, from the token to the button, the alert and the toast; the toast kind `error`, `toast.error()` and `.lu-button--destructive` are its deprecated names.
 
 ## Events
 
 - **Every event is a `CustomEvent` named `lu-*`**, bubbling and composed, with a typed `detail` documented on the page of its element.
-- **An event is cancelable only when it comes before an action the element performs itself, and that a consumer may rightly want to stop.** Then the element fires first, acts only if `preventDefault()` was not called, and still holds its previous state while the event runs. Otherwise the event is not cancelable: when the owner performs the action, there is nothing for the element to prevent. The `@fires` line of each event says which it is.
-  - Cancelable: `lu-value-change` on `lu-select`, `lu-segmented` and `lu-tabs`, `lu-selected-change` on `lu-multi-select`. Cancelling keeps the current value.
-  - Not cancelable: `lu-open-change`, `lu-confirm`, `lu-open`, `lu-navigate`, `lu-drag-end`, and `lu-pickup`, which `lu-draggable` sends to its `lu-drag-area`.
-- **`lu-<noun>-change`** reports a new value, and its `detail` holds that noun: `lu-open-change` → `{ open }`, `lu-value-change` → `{ value }`, `lu-selected-change` → `{ selected }`.
-- **`lu-<verb>`** reports an action, with what the owner needs to act: `lu-confirm`, `lu-open`, `lu-navigate` → `{ href }`, `lu-drag-end` → `{ active, over }`.
-- **Overlays are controlled**: `lu-dialog`, `lu-sheet` and `lu-confirm-dialog` never close themselves; they fire `lu-open-change` and the owner sets `open`. **Form elements and tabs update themselves**: `lu-select`, `lu-segmented`, `lu-multi-select` and `lu-tabs` fire their change event, then set their own value unless it was cancelled.
+- **An event is cancelable when it comes before a change the element makes itself**: the element fires first, changes only if `preventDefault()` was not called, and still holds its previous state while the event runs. An event that reports an action the owner performs is not cancelable: there is nothing for the element to prevent. The `@fires` line of each event says which it is.
+  - Cancelable: every `lu-*-change`. `lu-open-change` on `lu-dialog`, `lu-sheet`, `lu-confirm-dialog`, `lu-tooltip` and `lu-hover-card`; `lu-value-change` on `lu-select`, `lu-segmented`, `lu-tabs` and `lu-combobox`; `lu-selected-change` on `lu-multi-select`; `lu-files-change` on `lu-file-drop`.
+  - Not cancelable: `lu-confirm`, `lu-open`, `lu-navigate`, `lu-drag-end`, `lu-reject`, `lu-remove`, `lu-search`.
+- **A `lu-*` event is always public**: it is fired for the application and documented on the page of its element. Elements of Lumen talk to each other by calling methods, never by events: `lu-draggable` calls its `lu-drag-area` directly. An element that renders another in its own shadow root is that one's owner, and listens to its public events as an application would: `lu-combobox` handles the `lu-remove` of its tags and stops it there, so the page sees only its `lu-value-change`.
+- **`lu-<noun>-change`** reports a change the user asked for, and its `detail` holds that noun and the `source`: `lu-open-change` → `{ open, source }`, `lu-value-change` → `{ value, source }`, `lu-selected-change` → `{ selected, source }`, `lu-files-change` → `{ files, source }`.
+- **`lu-<verb>`** reports an action, with what the owner needs to act: `lu-confirm`, `lu-open`, `lu-navigate` → `{ href }`, `lu-drag-end` → `{ active, over }`, `lu-reject` → `{ files }`, `lu-remove` → `{ value }`, `lu-search` → `{ query }`.
 - In React the event is the camel-cased prop without the prefix: `lu-value-change` is `onValueChange`. In Vue it is `@lu-value-change` in a template, `onLuValueChange` in a render function.
+
+## Controlled and uncontrolled
+
+**Every state the user can change, an element changes itself, and one mechanism makes it controlled** ([ADR-0011](https://github.com/slashome/lumen/blob/develop/docs/adr/0011-change-state-after-a-cancelable-event.md)).
+
+- **Uncontrolled**, the default: the element fires its cancelable `lu-*-change`, then sets `open`, `value`, `selected` or `files`. Listen to the event to know, or do nothing.
+- **Controlled**: cancel the event with `preventDefault()`, then set the property yourself, to `detail.open` or to anything else. Cancelling without setting refuses the change: a dialog stays open on Escape and on a click outside.
+- **Setting the property never fires an event**: only the user's actions do.
+- **React** keeps its idiom: give `open` (or `value`, `selected`) and the component is controlled, the adapter cancels the event and calls `onOpenChange(open, source)`; leave it out and the element changes itself and still calls `onOpenChange`. **Vue** gets the same through `v-model:open`, `v-model:value` and `v-model:selected` on `LuDialog`, `LuSelect`… from `@slashome/lumen/vue`: bound, the component is controlled; unbound, the element changes itself and still emits `update:open`.
+
+`detail.source` says what the user did, in one short word:
+
+| Source | What the user did |
+| --- | --- |
+| `trigger` | The pointer or the focus reached or left the trigger of a tooltip or a hover card. |
+| `panel` | The pointer or the focus reached or left the hover card itself. |
+| `escape` | Pressed Escape. |
+| `outside` | Clicked outside: the backdrop of a dialog or a sheet. |
+| `close-button` | Pressed the close button of a dialog or a sheet. |
+| `cancel` | Pressed the cancel button of a confirm dialog. |
+| `form` | Submitted a `<form method="dialog">` inside a dialog or a sheet. |
+| `option` | Chose an option, a segment or a tab. |
+| `clear` | Pressed the clear item of a multi-select, or emptied the text of a single combobox and left it. |
+| `create` | Created a value from the text typed in a combobox. |
+| `drop` | Dropped files on a file drop. |
+| `picker` | Chose files in the system picker of a file drop. |
+| `remove` | Pressed the remove button of a file in a file drop or of a tag in a combobox, or Backspace in the empty field of a multiple combobox. |
+
+The confirm button of `lu-confirm-dialog` changes nothing: it fires `lu-confirm`, and the owner closes the dialog once the action is done, with `pending` set in between.
+
 
 ## Boolean attributes
 
-The platform's rule: **present means true, absent means false**, and the default is false. `open`, `disabled`, `pending`, `pinned`, `selected`, `openable`, `manual`. A boolean the CSS styles is reflected, so `:host([open])` and `lu-option[selected]` work.
+The platform's rule: **present means true, absent means false**, and the default is false. `open`, `disabled`, `pending`, `pinned`, `selected`, `openable`, `manual`, `skip-tab`, `multiple`, `removable`, `creatable`, `skip-filter`, `loading`. A boolean that would be true by default is named for its opposite: `skip-tab`, not `focusable`; `skip-filter`, not `filter`; whose `="false"` is deprecated. A boolean the CSS styles is reflected, so `:host([open])` and `lu-option[selected]` work.
 
 ## Text and labels
 
-- **`label` is the accessible name** of the element: `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-icon`, `lu-draggable`, `lu-drop-zone`.
-- **Every text the element draws itself is an attribute named `*-label`**, with an English default the application translates: `close-label`, `cancel-label`, `confirm-label`, `clear-label`.
+- **Lumen ships no text** ([Labels](?path=/docs/foundations-labels--docs)). The application registers the generic labels once with `registerLumenMessages()`, and an attribute on an instance wins over them.
+- **`label` is the accessible name** of the element: `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-tabs`, `lu-file-drop`, `lu-combobox`, `lu-icon`, `lu-draggable`, `lu-drop-zone`, `lu-toaster`. It is **required** where nothing else names the control, on `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-tabs`, `lu-file-drop` and `lu-combobox`: required in the React and Vue types, marked required in the props table, and a console error when it is missing.
+- **Every text the element draws itself is an attribute named `*-label`**, with no default: `close-label`, `confirm-label`, `cancel-label`, `clear-label` fall back to the registry. Prefer a `confirm-label` that names the action to the generic `confirm` message.
 - **Short text is an attribute; text that needs markup is a slot of the same name**: the `heading` attribute or `<span slot="heading">`, the `description` attribute or `<span slot="description">`.
 
 ## Slots
 
 - The **default slot** holds the content: the body of a dialog, the options of a select, the items of a drop zone.
-- **Named slots** hold a part with a role: `heading`, `description`, `display` (what the select's button shows), `trigger` (what opens the hover card), `tab` (the tabs of `lu-tabs`).
+- **Named slots** hold a part with a role: `heading`, `description`, `display` (what the select's button shows), `tab` (the tabs of `lu-tabs`).
+- **A floating component never wraps its trigger.** `lu-tooltip` and `lu-hover-card` hold their content in the default slot and name their trigger by its id in `for`, as `<label for>` does, or take the element in the `anchor` property when it lives in another shadow root. They set `aria-describedby`, or `aria-expanded` and `aria-controls`, on the trigger themselves.
 
 ## Parts
 
-A part is named after what the shadow element is, never after its look: `dialog`, `panel`, `title`, `description`, `trigger`, `listbox`, `tablist`, `menu`, `card`, `tooltip`, `region`, `toast`, `group`, `svg`. Style them with `::part()`; nothing else in a shadow root is public.
+A part is named after what the shadow element is, never after its look: `dialog`, `panel`, `title`, `description`, `trigger`, `listbox`, `tablist`, `menu`, `region`, `toast`, `group`, `svg`. `lu-tooltip` and `lu-hover-card` have no part: the element is the floating panel, styled as itself. Style them with `::part()`; nothing else in a shadow root is public.
 
 ## CSS custom properties
 
@@ -65,7 +97,7 @@ A part is named after what the shadow element is, never after its look: `dialog`
 
 ## Data
 
-Arrays, objects and functions are properties: `.options`, `.selected`, `.values`, `.terms`, `.ranges`, `.resolveLink`. Arrays also read a JSON attribute, for plain HTML.
+Arrays, objects and functions are properties: `.options`, `.selected`, `.values`, `.files`, `.terms`, `.ranges`, `.resolveLink`. Arrays also read a JSON attribute, for plain HTML.
 
 ## Deprecation
 

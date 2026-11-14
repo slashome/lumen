@@ -8,8 +8,8 @@ const meta: Meta = {
   title: 'Form/Select',
   component: 'lu-select',
   subcomponents: { 'lu-option': 'lu-option' },
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/select'" } },
 }
 export default meta
 
@@ -47,7 +47,7 @@ export const Default: StoryObj = {
       await expect(option('done')).toHaveFocus()
       await userEvent.keyboard('{Enter}')
       await expect(changes).toHaveBeenCalledOnce()
-      await expect(changes).toHaveBeenCalledWith({ value: 'done' })
+      await expect(changes).toHaveBeenCalledWith({ value: 'done', source: 'option' })
       await expect(select?.value).toBe('done')
       await expect(isOpen(listbox)).toBe(false)
       await expect(select?.shadowRoot?.activeElement).toBe(trigger)
@@ -65,7 +65,7 @@ export const Default: StoryObj = {
       await userEvent.keyboard('i')
       await expect(option('in_progress')).toHaveFocus()
       await userEvent.keyboard('{Enter}')
-      await expect(changes).toHaveBeenLastCalledWith({ value: 'in_progress' })
+      await expect(changes).toHaveBeenLastCalledWith({ value: 'in_progress', source: 'option' })
       await expect(isOpen(listbox)).toBe(false)
     })
 

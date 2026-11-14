@@ -1,5 +1,7 @@
-import { css, html, LitElement, type PropertyValues } from 'lit'
+import { css, html, LitElement, nothing, type PropertyValues } from 'lit'
+import type { ValueChangeDetail } from '../../lib/change'
 import { emit } from '../../lib/emit'
+import { requiredLabel } from '../../lib/messages'
 import { float } from '../../lib/floating'
 import { isPopoverOpen } from '../../lib/popover'
 import { define } from '../../lib/define'
@@ -8,9 +10,7 @@ import { LumenOption } from './option'
 import { popoverStyles } from '../../lib/styles'
 import '../icon/icon'
 
-export interface ValueChangeDetail<Value = string> {
-  value: Value
-}
+export type { ValueChangeDetail, ValueChangeSource } from '../../lib/change'
 
 /**
  * A single-choice select on the ARIA combobox and listbox pattern: a button that opens a list of `lu-option` in the top layer, with arrow keys, Home, End and typeahead.
@@ -23,7 +23,7 @@ export interface ValueChangeDetail<Value = string> {
  * @slot display - What the button shows, when the label of the selected option is not enough.
  * @csspart trigger - The button that opens the list.
  * @csspart listbox - The floating list of options.
- * @fires {CustomEvent<ValueChangeDetail>} lu-value-change - The user picked an option other than the current one. `detail.value` is its value. Cancelable: `preventDefault()` keeps the current `value`, which the element still holds while the event runs; the list closes either way.
+ * @fires {CustomEvent<ValueChangeDetail>} lu-value-change - The user picked an option other than the current one. `detail.value` is its value, `detail.source` is `option`. Cancelable: `preventDefault()` keeps the current `value`, which the element still holds while the event runs; the list closes either way.
  */
 export class LumenSelect extends LitElement {
   static properties = {
@@ -91,7 +91,10 @@ export class LumenSelect extends LitElement {
     `,
   ]
 
-  /** The accessible name of the select and of its list. */
+  /**
+   * The accessible name of the select and of its list. Without it, the element logs an error.
+   * @required
+   */
   declare label: string
   /** The value of the selected option. An empty string, or a value no option has, selects nothing. */
   declare value: string
@@ -183,7 +186,7 @@ export class LumenSelect extends LitElement {
       return
     }
     this.close()
-    if (option.value !== this.value && emit<ValueChangeDetail>(this, 'lu-value-change', { value: option.value }, { cancelable: true })) {
+    if (option.value !== this.value && emit<ValueChangeDetail>(this, 'lu-value-change', { value: option.value, source: 'option' }, { cancelable: true })) {
       this.value = option.value
     }
   }
@@ -245,7 +248,7 @@ export class LumenSelect extends LitElement {
         role="combobox"
         aria-haspopup="listbox"
         aria-expanded=${String(this.expanded)}
-        aria-label=${this.label}
+        aria-label=${requiredLabel(this, this.label, 'label') ?? nothing}
         ?disabled=${this.disabled}
         @click=${this.open}
         @keydown=${this.onTriggerKeydown}
@@ -253,7 +256,7 @@ export class LumenSelect extends LitElement {
         <span class="value"><slot name="display">${this.selectedLabel}</slot></span>
         <lu-icon class="chevron" name="chevron-down"></lu-icon>
       </button>
-      <div popover="auto" role="listbox" part="listbox" aria-label=${this.label} @toggle=${this.onToggle} @keydown=${this.onListKeydown} @click=${this.onListClick}>
+      <div popover="auto" role="listbox" part="listbox" aria-label=${this.label || nothing} @toggle=${this.onToggle} @keydown=${this.onListKeydown} @click=${this.onListClick}>
         <slot @slotchange=${this.syncOptions}></slot>
       </div>
     `

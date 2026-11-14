@@ -1,10 +1,13 @@
 import { setCustomElementsManifest, type Preview } from '@storybook/web-components-vite'
 import manifest from '../custom-elements.json'
 import { declarationOf, markDeprecated } from './deprecated'
+import { markRequired } from './required'
 import '../src/foundations/lumen.css'
 import '../src/index'
+import { registerDemoMessages } from '../stories/messages'
 
 setCustomElementsManifest(manifest)
+registerDemoMessages()
 
 const preview: Preview = {
   globalTypes: {
@@ -37,13 +40,13 @@ const preview: Preview = {
       return story()
     },
   ],
-  argTypesEnhancers: [(context) => markDeprecated(context.argTypes, declarationOf(manifest, context.component))],
+  argTypesEnhancers: [(context) => markRequired(markDeprecated(context.argTypes, declarationOf(manifest, context.component)), declarationOf(manifest, context.component))],
   parameters: {
     controls: { expanded: true },
     a11y: { test: 'error' },
     options: {
       storySort: {
-        order: ['Foundations', ['Introduction', 'Prop conventions', 'Tokens', 'Icons', 'Light', 'Frameworks', 'Changelog'], 'Actions', 'Form', 'Feedback', 'Navigation', 'Data', 'Overlays'],
+        order: ['Foundations', ['Introduction', 'Prop conventions', 'Labels', 'Tokens', 'Icons', 'Light', 'Frameworks', 'Changelog'], 'Actions', 'Form', 'Feedback', 'Navigation', 'Data', 'Overlays'],
       },
     },
   },

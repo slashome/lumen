@@ -3,7 +3,7 @@
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "access": "public",
-  "baseBranch": "main",
+  "baseBranch": "develop",
   "changedFilePatterns": ["src/**", "tokens/**", "icons/**"],
   "format": false,
   "ignore": []

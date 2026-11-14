@@ -4,10 +4,10 @@ import { expect } from 'storybook/test'
 
 const meta: Meta = {
   title: 'Form/Radio',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `A radio button on the native \`<input type="radio">\`. Radios that share a \`name\` form one group: the browser keeps one checked and moves through them with the arrow keys. Put the group in a \`<fieldset class="lu-field">\` named by its \`<legend>\`, and each radio in a \`.lu-field__choice\` label.
 

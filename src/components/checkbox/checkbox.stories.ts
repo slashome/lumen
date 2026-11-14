@@ -4,10 +4,10 @@ import { expect } from 'storybook/test'
 
 const meta: Meta = {
   title: 'Form/Checkbox',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `A checkbox on the native \`<input type="checkbox">\`: it submits with its form, is checked with \`checked\`, and shows a dash when its \`indeterminate\` property is true, as for a "select all" that covers some rows. Name it with a \`<label>\`, usually a \`.lu-field__choice\`; group several in a \`<fieldset class="lu-field">\`.
 

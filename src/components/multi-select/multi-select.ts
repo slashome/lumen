@@ -1,7 +1,9 @@
 import { css, html, LitElement, nothing } from 'lit'
+import type { SelectedChangeDetail, ValueChangeSource } from '../../lib/change'
 import { emit } from '../../lib/emit'
 import { float } from '../../lib/floating'
 import { define } from '../../lib/define'
+import { MessagesController, requiredLabel } from '../../lib/messages'
 import { nextIndex } from '../../lib/list-navigation'
 import { buttonStyles, popoverStyles } from '../../lib/styles'
 import '../icon/icon'
@@ -11,9 +13,7 @@ export interface MultiSelectOption {
   label: string
 }
 
-export interface SelectedChangeDetail {
-  selected: string[]
-}
+export type { SelectedChangeDetail } from '../../lib/change'
 
 /**
  * A multiple-choice filter on the ARIA menu pattern: a button that shows the label and the count of selected values, and opens a menu of checkable items in the top layer, with a clear item.
@@ -24,7 +24,7 @@ export interface SelectedChangeDetail {
  * @tag lu-multi-select
  * @csspart trigger - The button that opens the menu.
  * @csspart menu - The floating menu of items.
- * @fires {CustomEvent<SelectedChangeDetail>} lu-selected-change - The user toggled an item or cleared the selection. `detail.selected` holds the selected values. Cancelable: `preventDefault()` keeps the current `selected`, which the element still holds while the event runs; clearing closes the menu either way.
+ * @fires {CustomEvent<SelectedChangeDetail>} lu-selected-change - The user toggled an item or cleared the selection. `detail.selected` holds the selected values; `detail.source` is `option` for a toggle, `clear` for the clear item. Cancelable: `preventDefault()` keeps the current `selected`, which the element still holds while the event runs; clearing closes the menu either way.
  */
 export class LumenMultiSelect extends LitElement {
   static properties = {
@@ -104,14 +104,18 @@ export class LumenMultiSelect extends LitElement {
     `,
   ]
 
-  /** The text of the button, which also names the menu. */
+  /**
+   * The text of the button, which also names the menu. Without it, the element logs an error.
+   * @required
+   */
   declare label: string
   /** The items of the menu, in order: `{ value, label }`. */
   declare options: MultiSelectOption[]
   /** The values of the checked items. */
   declare selected: string[]
-  /** The text of the item that clears the selection. */
+  /** The text of the item that clears the selection. Overrides the `clear` message registered with `registerLumenMessages()`. */
   declare clearLabel: string
+  private messages = new MessagesController(this)
   declare private expanded: boolean
   private stopFloating?: () => void
 
@@ -120,7 +124,7 @@ export class LumenMultiSelect extends LitElement {
     this.label = ''
     this.options = []
     this.selected = []
-    this.clearLabel = 'Clear'
+    this.clearLabel = ''
     this.expanded = false
   }
 
@@ -160,18 +164,18 @@ export class LumenMultiSelect extends LitElement {
     }
   }
 
-  private change(selected: string[]) {
-    if (emit<SelectedChangeDetail>(this, 'lu-selected-change', { selected }, { cancelable: true })) {
+  private change(selected: string[], source: ValueChangeSource) {
+    if (emit<SelectedChangeDetail>(this, 'lu-selected-change', { selected, source }, { cancelable: true })) {
       this.selected = selected
     }
   }
 
   private toggle(value: string) {
-    this.change(this.selected.includes(value) ? this.selected.filter((entry) => entry !== value) : [...this.selected, value])
+    this.change(this.selected.includes(value) ? this.selected.filter((entry) => entry !== value) : [...this.selected, value], 'option')
   }
 
   private clear() {
-    this.change([])
+    this.change([], 'clear')
     this.menu?.hidePopover()
     this.trigger?.focus()
   }
@@ -206,10 +210,10 @@ export class LumenMultiSelect extends LitElement {
         @click=${this.open}
         @keydown=${this.onTriggerKeydown}
       >
-        ${this.label} ${this.selected.length > 0 ? html`<span class="count">${this.selected.length}</span>` : nothing}
+        ${requiredLabel(this, this.label, 'label') ?? nothing} ${this.selected.length > 0 ? html`<span class="count">${this.selected.length}</span>` : nothing}
         <lu-icon class="chevron" name="chevron-down"></lu-icon>
       </button>
-      <div popover="auto" role="menu" part="menu" aria-label=${this.label} @toggle=${this.onToggle} @keydown=${this.onMenuKeydown}>
+      <div popover="auto" role="menu" part="menu" aria-label=${this.label || nothing} @toggle=${this.onToggle} @keydown=${this.onMenuKeydown}>
         ${this.options.map(
           (option) => html`
             <button
@@ -226,7 +230,7 @@ export class LumenMultiSelect extends LitElement {
           `,
         )}
         ${this.selected.length > 0
-          ? html`<hr /><button type="button" class="item clear" role="menuitem" tabindex="-1" @click=${this.clear}>${this.clearLabel}</button>`
+          ? html`<hr /><button type="button" class="item clear" role="menuitem" tabindex="-1" @click=${this.clear}>${this.messages.text('clear', this.clearLabel, 'clear-label') ?? nothing}</button>`
           : nothing}
       </div>
     `

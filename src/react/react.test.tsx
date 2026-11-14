@@ -1,8 +1,11 @@
-import { act, type ReactNode } from 'react'
+import { act, type ComponentProps, type ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { afterEach, describe, expect, it } from 'vitest'
-import { Highlight } from './index'
-import { HighlightElement } from './elements'
+import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vitest'
+import type { LumenDialog } from '../components/dialog/dialog'
+import type { LumenSegmented } from '../components/segmented/segmented'
+import type { LumenTooltip } from '../components/tooltip/tooltip'
+import { buttonClasses, Combobox, ConfirmDialog, Dialog, Highlight, MultiSelect, Segmented, Select, Tabs, Tag, Tooltip } from './index'
+import { ComboboxElement, ConfirmDialogElement, FileDropElement, HighlightElement, MultiSelectElement, SegmentedElement, SelectElement, TabsElement } from './elements'
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
 
@@ -19,6 +22,25 @@ afterEach(() => {
 })
 
 describe('the React adapter', () => {
+  it('requires the label that names a select, a multi-select, a segmented, tabs, a file drop or a combobox, as the elements do', () => {
+    expectTypeOf<ComponentProps<typeof ComboboxElement>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof Combobox>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof SelectElement>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof MultiSelectElement>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof SegmentedElement>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof TabsElement>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof FileDropElement>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof Select>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof MultiSelect>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof Segmented>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof Tabs>['label']>().toEqualTypeOf<string>()
+  })
+
+  it('leaves confirmLabel optional, over the confirm message', () => {
+    expectTypeOf<ComponentProps<typeof ConfirmDialog>['confirmLabel']>().toEqualTypeOf<string | undefined>()
+    expectTypeOf<ComponentProps<typeof ConfirmDialogElement>['confirmLabel']>().toEqualTypeOf<string | undefined>()
+  })
+
   it('passes properties to the wrapped element', async () => {
     const host = await mount(<HighlightElement text="Raw wrapper" />)
     expect(host.textContent).toContain('Raw wrapper')
@@ -27,5 +49,127 @@ describe('the React adapter', () => {
   it('passes properties through the adapter component', async () => {
     const host = await mount(<Highlight text="Paint the fence" />)
     expect(host.textContent).toContain('Paint the fence')
+  })
+
+  it('draws a tag as the CSS class without onRemove, and as the removable element with it', async () => {
+    const onRemove = vi.fn()
+    const host = await mount(
+      <>
+        <Tag>Design</Tag>
+        <Tag value="a11y" onRemove={onRemove}>
+          Accessibility
+        </Tag>
+      </>,
+    )
+    expect(host.querySelector('span.lu-tag')?.textContent).toBe('Design')
+    const tag = host.querySelector<HTMLElement & { updateComplete: Promise<boolean> }>('lu-tag')!
+    await tag.updateComplete
+    expect(tag.hasAttribute('removable')).toBe(true)
+    tag.shadowRoot!.querySelector<HTMLButtonElement>('[part="remove"]')!.click()
+    expect(onRemove).toHaveBeenCalledWith('a11y')
+  })
+
+  it('keeps a combobox given value where React puts it, and reports the choice and the search', async () => {
+    const onValueChange = vi.fn()
+    const onSearch = vi.fn()
+    const host = await mount(<Combobox label="Fruit" options={[{ value: 'apple', label: 'Apple' }]} value="" onValueChange={onValueChange} onSearch={onSearch} />)
+    const combobox = host.querySelector<HTMLElement & { updateComplete: Promise<boolean>; value: unknown }>('lu-combobox')!
+    await combobox.updateComplete
+    const input = combobox.shadowRoot!.querySelector('input')!
+    input.value = 'app'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    await combobox.updateComplete
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }))
+    await combobox.updateComplete
+    expect(onSearch).toHaveBeenCalledWith('app')
+    expect(onValueChange).toHaveBeenCalledWith('apple', 'option')
+    expect(combobox.value).toBe('')
+  })
+
+  it('draws the danger button, also under its deprecated name', () => {
+    expect(buttonClasses({ variant: 'danger' })).toBe('lu-button lu-button--danger')
+    expect(buttonClasses({ variant: 'destructive' })).toBe('lu-button lu-button--danger')
+  })
+
+  it('keeps a dialog given open where React puts it, and reports the request', async () => {
+    const onOpenChange = vi.fn()
+    const host = await mount(<Dialog open title="Edit" onOpenChange={onOpenChange} />)
+    const dialog = host.querySelector<LumenDialog>('lu-dialog')!
+    dialog.shadowRoot!.querySelector('dialog')!.dispatchEvent(new Event('cancel', { cancelable: true }))
+    await dialog.updateComplete
+    expect(onOpenChange).toHaveBeenCalledWith(false, 'escape')
+    expect(dialog.open).toBe(true)
+  })
+
+  it('lets a dialog without open close itself, and reports it', async () => {
+    const onOpenChange = vi.fn()
+    const host = await mount(<Dialog title="Edit" onOpenChange={onOpenChange} />)
+    const dialog = host.querySelector<LumenDialog>('lu-dialog')!
+    dialog.open = true
+    await dialog.updateComplete
+    dialog.shadowRoot!.querySelector<HTMLButtonElement>('.close')!.click()
+    await dialog.updateComplete
+    expect(onOpenChange).toHaveBeenCalledWith(false, 'close-button')
+    expect(dialog.open).toBe(false)
+  })
+
+  it('binds a tooltip to its trigger by htmlFor, controls it given open, and leaves one without it alone', async () => {
+    const host = await mount(
+      <>
+        <button id="one">One</button>
+        <Tooltip htmlFor="one" open={false}>
+          Controlled
+        </Tooltip>
+        <button id="two">Two</button>
+        <Tooltip htmlFor="two">Free</Tooltip>
+      </>,
+    )
+    const [controlled, free] = [...host.querySelectorAll<LumenTooltip>('lu-tooltip')]
+    const [one, two] = [...host.querySelectorAll('button')]
+    expect(one!.getAttribute('aria-describedby')).toBe(controlled!.id)
+    expect(two!.getAttribute('aria-describedby')).toBe(free!.id)
+    for (const [tooltip, trigger] of [
+      [controlled!, one!],
+      [free!, two!],
+    ] as const) {
+      tooltip.delay = 0
+      trigger.dispatchEvent(new Event('pointerenter'))
+    }
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    expect(controlled!.open).toBe(false)
+    expect(free!.open).toBe(true)
+  })
+
+  it('keeps a segmented given a value on that value until React changes it', async () => {
+    const onChange = vi.fn()
+    const host = await mount(<Segmented label="Size" values={['S', 'M']} value="S" onChange={onChange} />)
+    const segmented = host.querySelector<LumenSegmented>('lu-segmented')!
+    segmented.shadowRoot!.querySelectorAll('button')[1]!.click()
+    await segmented.updateComplete
+    expect(onChange).toHaveBeenCalledWith('M', 'option')
+    expect(segmented.value).toBe('S')
+  })
+
+  it('lets a segmented without a value change itself', async () => {
+    const onChange = vi.fn()
+    const host = await mount(<Segmented label="Size" values={['S', 'M']} onChange={onChange} />)
+    const segmented = host.querySelector<LumenSegmented>('lu-segmented')!
+    segmented.shadowRoot!.querySelectorAll('button')[1]!.click()
+    await segmented.updateComplete
+    expect(onChange).toHaveBeenCalledWith('M', 'option')
+    expect(segmented.value).toBe('M')
+  })
+
+  it('leaves the segmented buttons out of the tab order with skipTab, or the deprecated focusable false', async () => {
+    const host = await mount(
+      <>
+        <Segmented label="Kept" values={['S']} />
+        <Segmented label="Skipped" values={['S']} skipTab />
+        <Segmented label="Unfocusable" values={['S']} focusable={false} />
+      </>,
+    )
+    const segmenteds = [...host.querySelectorAll<LumenSegmented>('lu-segmented')]
+    await Promise.all(segmenteds.map((segmented) => segmented.updateComplete))
+    expect(segmenteds.map((segmented) => segmented.shadowRoot!.querySelector('button')!.tabIndex)).toEqual([0, -1, -1])
   })
 })

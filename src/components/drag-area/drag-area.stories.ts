@@ -7,8 +7,8 @@ const meta: Meta = {
   title: 'Actions/Drag and drop',
   component: 'lu-drag-area',
   subcomponents: { 'lu-draggable': 'lu-draggable', 'lu-drop-zone': 'lu-drop-zone' },
-  tags: ['autodocs', 'floor-1'],
-  parameters: { docs: { subtitle: 'Floor 1 — Lit' } },
+  tags: ['autodocs'],
+  parameters: { docs: { subtitle: "Custom element · import '@slashome/lumen/drag-area'" } },
 }
 export default meta
 

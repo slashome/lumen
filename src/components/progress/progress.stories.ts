@@ -4,10 +4,10 @@ import { expect } from 'storybook/test'
 
 const meta: Meta = {
   title: 'Feedback/Progress',
-  tags: ['autodocs', 'floor-0'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
-      subtitle: 'Floor 0 — CSS',
+      subtitle: 'CSS class · no JavaScript',
       description: {
         component: `A progress bar on the native \`<progress>\`, which gives assistive technologies the \`progressbar\` role and its value. With \`value\` and \`max\` it is determinate and fills with the primary color; without \`value\` it is indeterminate and a segment sweeps across it, standing still under \`prefers-reduced-motion\`. Name it with a \`<label for>\` or \`aria-label\`.
 

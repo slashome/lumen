@@ -5,9 +5,11 @@
 @import './light.css';
 @import '../components/button/button.css';
 @import '../components/badge/badge.css';
+@import '../components/tag/tag.css';
 @import '../components/field/field.css';
 @import '../components/input/input.css';
 @import '../components/textarea/textarea.css';
+@import '../components/date-input/date-input.css';
 @import '../components/native-select/native-select.css';
 @import '../components/switch/switch.css';
 @import '../components/checkbox/checkbox.css';
@@ -20,6 +22,7 @@
 @import '../components/progress/progress.css';
 @import '../components/breadcrumb/breadcrumb.css';
 @import '../components/pagination/pagination.css';
+@import '../components/stepper/stepper.css';
 @import '../components/markdown/markdown.css';
 @import '../components/data-table/data-table.css';
 @import '../components/highlight/mark.css';

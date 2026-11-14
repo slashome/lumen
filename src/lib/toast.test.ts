@@ -6,11 +6,16 @@ describe('toast', () => {
 
   it('queues a message with its kind and a default duration', () => {
     toast.success('Saved')
-    toast.error('Failed', { duration: 10 })
+    toast.danger('Failed', { duration: 10 })
     expect(toasts.get().map(({ kind, message, duration }) => ({ kind, message, duration }))).toEqual([
       { kind: 'success', message: 'Saved', duration: 4000 },
-      { kind: 'error', message: 'Failed', duration: 10 },
+      { kind: 'danger', message: 'Failed', duration: 10 },
     ])
+  })
+
+  it('raises a danger toast from the deprecated toast.error', () => {
+    toast.error('Failed')
+    expect(toasts.get().map((entry) => entry.kind)).toEqual(['danger'])
   })
 
   it('removes a dismissed message only', () => {

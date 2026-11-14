@@ -1,7 +1,8 @@
-import { css, html, LitElement } from 'lit'
+import { css, html, LitElement, nothing } from 'lit'
 import { emit } from '../../lib/emit'
+import { requiredLabel } from '../../lib/messages'
 import { define } from '../../lib/define'
-import type { ValueChangeDetail } from '../select/select'
+import type { ValueChangeDetail } from '../../lib/change'
 
 /**
  * A row of toggle buttons where at most one is pressed. Pressing the pressed one releases it, so the value can be empty.
@@ -11,13 +12,14 @@ import type { ValueChangeDetail } from '../select/select'
  * @summary A row of toggle buttons with at most one pressed.
  * @tag lu-segmented
  * @csspart group - The bordered row of buttons.
- * @fires {CustomEvent<ValueChangeDetail<string | null>>} lu-value-change - The user pressed a button. `detail.value` is its value, or `null` when the pressed one was released. Cancelable: `preventDefault()` keeps the current `value`, which the element still holds while the event runs.
+ * @fires {CustomEvent<ValueChangeDetail<string | null>>} lu-value-change - The user pressed a button. `detail.value` is its value, or `null` when the pressed one was released; `detail.source` is `option`. Cancelable: `preventDefault()` keeps the current `value`, which the element still holds while the event runs.
  */
 export class LumenSegmented extends LitElement {
   static properties = {
     label: {},
     values: { type: Array },
     value: {},
+    skipTab: { type: Boolean, reflect: true, attribute: 'skip-tab' },
     focusable: { type: Boolean, converter: { fromAttribute: (value: string | null) => value !== 'false' } },
   }
 
@@ -58,13 +60,21 @@ export class LumenSegmented extends LitElement {
     }
   `
 
-  /** The accessible name of the group. */
+  /**
+   * The accessible name of the group. Without it, the element logs an error.
+   * @required
+   */
   declare label: string
   /** The values, one button each, shown as they are. */
   declare values: string[]
   /** The pressed value, or `null` when none is. */
   declare value: string | null
-  /** Whether the buttons are in the tab order. On by default; only the attribute value `false` turns it off. */
+  /** Whether the buttons are left out of the tab order, for a row that the page reaches with its own keys. They stay clickable. */
+  declare skipTab: boolean
+  /**
+   * Whether the buttons are in the tab order. On by default; only the attribute value `false` turns it off.
+   * @deprecated Use `skip-tab`, present to leave the buttons out of the tab order. Removed in the next major version.
+   */
   declare focusable: boolean
 
   constructor() {
@@ -72,23 +82,24 @@ export class LumenSegmented extends LitElement {
     this.label = ''
     this.values = []
     this.value = null
+    this.skipTab = false
     this.focusable = true
   }
 
   private press(event: MouseEvent, entry: string) {
     event.stopPropagation()
     const value = this.value === entry ? null : entry
-    if (emit<ValueChangeDetail<string | null>>(this, 'lu-value-change', { value }, { cancelable: true })) {
+    if (emit<ValueChangeDetail<string | null>>(this, 'lu-value-change', { value, source: 'option' }, { cancelable: true })) {
       this.value = value
     }
   }
 
   render() {
     return html`
-      <div class="group" role="group" aria-label=${this.label} part="group">
+      <div class="group" role="group" aria-label=${requiredLabel(this, this.label, 'label') ?? nothing} part="group">
         ${this.values.map(
           (entry) => html`
-            <button type="button" tabindex=${this.focusable ? 0 : -1} aria-pressed=${String(this.value === entry)} @click=${(event: MouseEvent) => this.press(event, entry)}>
+            <button type="button" tabindex=${this.skipTab || !this.focusable ? -1 : 0} aria-pressed=${String(this.value === entry)} @click=${(event: MouseEvent) => this.press(event, entry)}>
               ${entry}
             </button>
           `,
