@@ -1,6 +1,6 @@
 {
   "name": "@slashome/lumen",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The slashome design system: tokens, CSS classes and custom elements for React, Vue, Svelte and plain HTML.",
   "license": "MIT",
   "type": "module",
