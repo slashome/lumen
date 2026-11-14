@@ -37,6 +37,10 @@ Rules, not a tutorial. Each one points to the decision that sets it, in [`docs/a
 - **A changeset for every change to `src/`, `tokens/` or `icons/`**: `pnpm changeset`, the semver level and one line written for a consumer; `pnpm changeset --empty` when nothing ships. CI fails a pull request into `develop`, or a push to `develop`, without one. ([ADR-0008](docs/adr/0008-write-the-changelog-from-changesets.md), [ADR-0010](docs/adr/0010-integrate-on-develop-publish-from-main.md))
 - **Deprecate for a minor, remove in a major.** A token takes `$deprecated`; an attribute, property, element or export takes `@deprecated` in its JSDoc; an event, slot, part or custom property takes `@deprecated` at the end of its JSDoc line. The deprecation names its replacement, which ships in the same version. ([ADR-0006](docs/adr/0006-deprecate-for-a-minor-remove-in-a-major.md))
 
+## Toolchain
+
+- **pnpm brings Node.** The Node version is declared once, in `devEngines.runtime` of `package.json`; `pnpm install` downloads it and every `pnpm` script runs with it, and the workflows read it with `node-version-file: package.json`. To change it, change that line. No container. ([ADR-0018](docs/adr/0018-pin-node-in-dev-engines-not-in-a-container.md))
+
 ## Before pushing
 
 ```sh
