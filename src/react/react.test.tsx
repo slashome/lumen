@@ -4,7 +4,8 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vitest'
 import type { LumenDialog } from '../components/dialog/dialog'
 import type { LumenSegmented } from '../components/segmented/segmented'
 import type { LumenTooltip } from '../components/tooltip/tooltip'
-import { buttonClasses, Combobox, ConfirmDialog, Dialog, Highlight, MultiSelect, Segmented, Select, Tabs, Tag, Tooltip } from './index'
+import * as react from './index'
+import { buttonClasses, LuCombobox, LuConfirmDialog, LuDialog, LuHighlight, LuMultiSelect, LuSegmented, LuSelect, LuTabs, LuTag, LuTooltip } from './index'
 import { ComboboxElement, ConfirmDialogElement, FileDropElement, HighlightElement, MultiSelectElement, SegmentedElement, SelectElement, TabsElement } from './elements'
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
@@ -22,22 +23,28 @@ afterEach(() => {
 })
 
 describe('the React adapter', () => {
+  it('names every component Lu<Name>, as the Vue adapter does', () => {
+    const components = Object.keys(react).filter((name) => /^[A-Z]/.test(name))
+    expect(components.length).toBeGreaterThan(0)
+    expect(components.filter((name) => !name.startsWith('Lu'))).toEqual([])
+  })
+
   it('requires the label that names a select, a multi-select, a segmented, tabs, a file drop or a combobox, as the elements do', () => {
     expectTypeOf<ComponentProps<typeof ComboboxElement>['label']>().toEqualTypeOf<string>()
-    expectTypeOf<ComponentProps<typeof Combobox>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof LuCombobox>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof SelectElement>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof MultiSelectElement>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof SegmentedElement>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof TabsElement>['label']>().toEqualTypeOf<string>()
     expectTypeOf<ComponentProps<typeof FileDropElement>['label']>().toEqualTypeOf<string>()
-    expectTypeOf<ComponentProps<typeof Select>['label']>().toEqualTypeOf<string>()
-    expectTypeOf<ComponentProps<typeof MultiSelect>['label']>().toEqualTypeOf<string>()
-    expectTypeOf<ComponentProps<typeof Segmented>['label']>().toEqualTypeOf<string>()
-    expectTypeOf<ComponentProps<typeof Tabs>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof LuSelect>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof LuMultiSelect>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof LuSegmented>['label']>().toEqualTypeOf<string>()
+    expectTypeOf<ComponentProps<typeof LuTabs>['label']>().toEqualTypeOf<string>()
   })
 
   it('leaves confirmLabel optional, over the confirm message', () => {
-    expectTypeOf<ComponentProps<typeof ConfirmDialog>['confirmLabel']>().toEqualTypeOf<string | undefined>()
+    expectTypeOf<ComponentProps<typeof LuConfirmDialog>['confirmLabel']>().toEqualTypeOf<string | undefined>()
     expectTypeOf<ComponentProps<typeof ConfirmDialogElement>['confirmLabel']>().toEqualTypeOf<string | undefined>()
   })
 
@@ -47,7 +54,7 @@ describe('the React adapter', () => {
   })
 
   it('passes properties through the adapter component', async () => {
-    const host = await mount(<Highlight text="Paint the fence" />)
+    const host = await mount(<LuHighlight text="Paint the fence" />)
     expect(host.textContent).toContain('Paint the fence')
   })
 
@@ -55,10 +62,10 @@ describe('the React adapter', () => {
     const onRemove = vi.fn()
     const host = await mount(
       <>
-        <Tag>Design</Tag>
-        <Tag value="a11y" onRemove={onRemove}>
+        <LuTag>Design</LuTag>
+        <LuTag value="a11y" onRemove={onRemove}>
           Accessibility
-        </Tag>
+        </LuTag>
       </>,
     )
     expect(host.querySelector('span.lu-tag')?.textContent).toBe('Design')
@@ -72,7 +79,7 @@ describe('the React adapter', () => {
   it('keeps a combobox given value where React puts it, and reports the choice and the search', async () => {
     const onValueChange = vi.fn()
     const onSearch = vi.fn()
-    const host = await mount(<Combobox label="Fruit" options={[{ value: 'apple', label: 'Apple' }]} value="" onValueChange={onValueChange} onSearch={onSearch} />)
+    const host = await mount(<LuCombobox label="Fruit" options={[{ value: 'apple', label: 'Apple' }]} value="" onValueChange={onValueChange} onSearch={onSearch} />)
     const combobox = host.querySelector<HTMLElement & { updateComplete: Promise<boolean>; value: unknown }>('lu-combobox')!
     await combobox.updateComplete
     const input = combobox.shadowRoot!.querySelector('input')!
@@ -93,7 +100,7 @@ describe('the React adapter', () => {
 
   it('keeps a dialog given open where React puts it, and reports the request', async () => {
     const onOpenChange = vi.fn()
-    const host = await mount(<Dialog open title="Edit" onOpenChange={onOpenChange} />)
+    const host = await mount(<LuDialog open title="Edit" onOpenChange={onOpenChange} />)
     const dialog = host.querySelector<LumenDialog>('lu-dialog')!
     dialog.shadowRoot!.querySelector('dialog')!.dispatchEvent(new Event('cancel', { cancelable: true }))
     await dialog.updateComplete
@@ -103,7 +110,7 @@ describe('the React adapter', () => {
 
   it('lets a dialog without open close itself, and reports it', async () => {
     const onOpenChange = vi.fn()
-    const host = await mount(<Dialog title="Edit" onOpenChange={onOpenChange} />)
+    const host = await mount(<LuDialog title="Edit" onOpenChange={onOpenChange} />)
     const dialog = host.querySelector<LumenDialog>('lu-dialog')!
     dialog.open = true
     await dialog.updateComplete
@@ -117,11 +124,11 @@ describe('the React adapter', () => {
     const host = await mount(
       <>
         <button id="one">One</button>
-        <Tooltip htmlFor="one" open={false}>
+        <LuTooltip htmlFor="one" open={false}>
           Controlled
-        </Tooltip>
+        </LuTooltip>
         <button id="two">Two</button>
-        <Tooltip htmlFor="two">Free</Tooltip>
+        <LuTooltip htmlFor="two">Free</LuTooltip>
       </>,
     )
     const [controlled, free] = [...host.querySelectorAll<LumenTooltip>('lu-tooltip')]
@@ -142,7 +149,7 @@ describe('the React adapter', () => {
 
   it('keeps a segmented given a value on that value until React changes it', async () => {
     const onChange = vi.fn()
-    const host = await mount(<Segmented label="Size" values={['S', 'M']} value="S" onChange={onChange} />)
+    const host = await mount(<LuSegmented label="Size" values={['S', 'M']} value="S" onChange={onChange} />)
     const segmented = host.querySelector<LumenSegmented>('lu-segmented')!
     segmented.shadowRoot!.querySelectorAll('button')[1]!.click()
     await segmented.updateComplete
@@ -152,7 +159,7 @@ describe('the React adapter', () => {
 
   it('lets a segmented without a value change itself', async () => {
     const onChange = vi.fn()
-    const host = await mount(<Segmented label="Size" values={['S', 'M']} onChange={onChange} />)
+    const host = await mount(<LuSegmented label="Size" values={['S', 'M']} onChange={onChange} />)
     const segmented = host.querySelector<LumenSegmented>('lu-segmented')!
     segmented.shadowRoot!.querySelectorAll('button')[1]!.click()
     await segmented.updateComplete
@@ -163,9 +170,9 @@ describe('the React adapter', () => {
   it('leaves the segmented buttons out of the tab order with skipTab, or the deprecated focusable false', async () => {
     const host = await mount(
       <>
-        <Segmented label="Kept" values={['S']} />
-        <Segmented label="Skipped" values={['S']} skipTab />
-        <Segmented label="Unfocusable" values={['S']} focusable={false} />
+        <LuSegmented label="Kept" values={['S']} />
+        <LuSegmented label="Skipped" values={['S']} skipTab />
+        <LuSegmented label="Unfocusable" values={['S']} focusable={false} />
       </>,
     )
     const segmenteds = [...host.querySelectorAll<LumenSegmented>('lu-segmented')]

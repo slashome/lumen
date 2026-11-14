@@ -34,7 +34,7 @@ The entries are `icon`, `dialog`, `sheet`, `confirm-dialog`, `tooltip`, `hover-c
 | --- | --- |
 | Plain HTML, Svelte | `<button class="lu-button">`, `<lu-select>` |
 | Vue | the same elements; tell the compiler with `isLumenElement` from `@slashome/lumen/vue`, which also exports `LuDialog`, `LuSelect`… for `v-model:open` and `v-model:value` |
-| React | `@slashome/lumen/react`: `Button`, `Dialog`, `Select`, `DataTable`, `toast`… |
+| React | `@slashome/lumen/react`: `LuButton`, `LuDialog`, `LuSelect`, `LuDataTable`, `toast`…, the same names as in Vue |
 
 Lumen ships no text. Register the generic labels once at start-up, for each language: `registerLumenMessages('fr', messages)` from `@slashome/lumen`, or `app.use(lumen, { messages: { fr, en } })` from `@slashome/lumen/vue`. An attribute on an instance (`close-label`, `confirm-label`…) wins over them, and `label` is required on `lu-select`, `lu-multi-select`, `lu-segmented`, `lu-tabs`, `lu-file-drop` and `lu-combobox`, whose accessible name it is. The Labels page of the Storybook lists the keys.
 

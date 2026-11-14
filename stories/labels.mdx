@@ -41,7 +41,7 @@ The registry is kept on `globalThis` under `Symbol.for('@slashome/lumen/messages
 | `cancel` | `string` | The cancel button of `lu-confirm-dialog`; attribute `cancel-label`. |
 | `clear` | `string` | The clear item of `lu-multi-select`; attribute `clear-label`. |
 | `notifications` | `string` | The region of `lu-toaster`; attribute `label`. |
-| `loading` | `string` | `LoadingState` in React, prop `label`; the list of `lu-combobox` while `loading` is set. |
+| `loading` | `string` | `LuLoadingState` in React, prop `label`; the list of `lu-combobox` while `loading` is set. |
 | `draggable` | `string` | What assistive technology calls a `lu-draggable`; attribute `role-description`. |
 | `dragPickedUp` | `({ item }) => string` | Announced by `lu-drag-area` when an item is picked up with the keyboard; it says how to move, drop and cancel. |
 | `dragOver` | `({ zone }) => string` | Announced when a keyboard move reaches a zone. |
@@ -95,7 +95,7 @@ registerLumenMessages('fr', {
 createRoot(document.getElementById('root')!).render(<App />)
 ```
 
-`Select`, `MultiSelect`, `Segmented` and `Tabs` require `label`, and so do their raw wrappers (`SelectElement`…). `Dialog`, `Sheet`, `ConfirmDialog` (`confirmLabel`, `cancelLabel`), `Toaster`, `MultiSelect` (`clearLabel`), `Draggable` and `LoadingState` take optional label props that win over the registry.
+`LuSelect`, `LuMultiSelect`, `LuSegmented` and `LuTabs` require `label`. `LuDialog`, `LuSheet`, `LuConfirmDialog` (`confirmLabel`, `cancelLabel`), `LuToaster`, `LuMultiSelect` (`clearLabel`), `LuDraggable` and `LuLoadingState` take optional label props that win over the registry.
 
 ## Vue
 

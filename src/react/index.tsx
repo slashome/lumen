@@ -52,21 +52,21 @@ export function buttonClasses({ variant = 'default', size = 'default' }: { varia
   return classes('lu-button', variant && variant !== 'default' && `lu-button--${variantModifier(variant)}`, size && size !== 'default' && `lu-button--${size}`)
 }
 
-export type ButtonProps = ComponentProps<'button'> & { variant?: ButtonVariant | null; size?: ButtonSize | null }
+export type LuButtonProps = ComponentProps<'button'> & { variant?: ButtonVariant | null; size?: ButtonSize | null }
 
-export function Button({ className, variant, size, type = 'button', ...props }: ButtonProps) {
+export function LuButton({ className, variant, size, type = 'button', ...props }: LuButtonProps) {
   return <button type={type} className={classes(buttonClasses({ variant, size }), className)} {...props} />
 }
 
-export function Icon({ name, label, className }: { name: string; label?: string; className?: string }) {
+export function LuIcon({ name, label, className }: { name: string; label?: string; className?: string }) {
   return <IconElement name={name} label={label ?? ''} className={className} />
 }
 
-export function Badge({ className, ...props }: ComponentProps<'span'>) {
+export function LuBadge({ className, ...props }: ComponentProps<'span'>) {
   return <span className={classes('lu-badge', className)} {...props} />
 }
 
-export function Tag({
+export function LuTag({
   value,
   onRemove,
   disabled = false,
@@ -89,11 +89,11 @@ export function Tag({
   )
 }
 
-export function Input({ className, ...props }: ComponentProps<'input'>) {
+export function LuInput({ className, ...props }: ComponentProps<'input'>) {
   return <input className={classes('lu-input', className)} {...props} />
 }
 
-export function NativeSelect({ className, ...props }: ComponentProps<'select'>) {
+export function LuNativeSelect({ className, ...props }: ComponentProps<'select'>) {
   return (
     <span className="lu-native-select">
       <select className={classes('lu-native-select__control', className)} {...props} />
@@ -101,7 +101,7 @@ export function NativeSelect({ className, ...props }: ComponentProps<'select'>) 
   )
 }
 
-export function Switch({
+export function LuSwitch({
   checked,
   onCheckedChange,
   className,
@@ -120,11 +120,11 @@ export function Switch({
   )
 }
 
-export function Kbd({ children }: { children: ReactNode }) {
+export function LuKbd({ children }: { children: ReactNode }) {
   return <kbd className="lu-kbd">{children}</kbd>
 }
 
-export function EmptyState({ icon, title, children, className }: { icon?: string; title: string; children?: ReactNode; className?: string }) {
+export function LuEmptyState({ icon, title, children, className }: { icon?: string; title: string; children?: ReactNode; className?: string }) {
   return (
     <div className={classes('lu-empty-state', className)}>
       {icon && <IconElement name={icon} className="lu-empty-state__icon" />}
@@ -147,13 +147,13 @@ function useLoadingLabel(label: string | undefined): string | undefined {
   const resolved = label || registered
   useEffect(() => {
     if (!resolved) {
-      reportMissing(LoadingState, 'LoadingState', 'loading', documentLang(), 'the label prop')
+      reportMissing(LuLoadingState, 'LuLoadingState', 'loading', documentLang(), 'the label prop')
     }
   }, [resolved])
   return resolved
 }
 
-export function LoadingState({ rows = 4, label }: { rows?: number; label?: string }) {
+export function LuLoadingState({ rows = 4, label }: { rows?: number; label?: string }) {
   return (
     <div role="status" aria-label={useLoadingLabel(label)} className="lu-loading-state">
       {Array.from({ length: rows }, (_, index) => (
@@ -163,7 +163,7 @@ export function LoadingState({ rows = 4, label }: { rows?: number; label?: strin
   )
 }
 
-export function ErrorState({ message }: { message: string }) {
+export function LuErrorState({ message }: { message: string }) {
   return (
     <p role="alert" className="lu-error-state">
       {message}
@@ -171,7 +171,7 @@ export function ErrorState({ message }: { message: string }) {
   )
 }
 
-export function PageHeader({ title, description, actions, children }: { title: ReactNode; description?: ReactNode; actions?: ReactNode; children?: ReactNode }) {
+export function LuPageHeader({ title, description, actions, children }: { title: ReactNode; description?: ReactNode; actions?: ReactNode; children?: ReactNode }) {
   return (
     <div className="lu-page-header">
       <div className="lu-page-header__main">
@@ -184,7 +184,7 @@ export function PageHeader({ title, description, actions, children }: { title: R
   )
 }
 
-export function ComingSoon({ title, children }: { title: string; children?: ReactNode }) {
+export function LuComingSoon({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <div className="lu-coming-soon">
       <h1 className="lu-coming-soon__title">{title}</h1>
@@ -234,7 +234,7 @@ function openChange(open: boolean | undefined, onOpenChange: OpenChangeHandler |
   return controlledBy<{ open: boolean; source: OpenChangeSource }>(open !== undefined, (detail) => onOpenChange?.(detail.open, detail.source))
 }
 
-export function Dialog({ open, onOpenChange, title, description, closeLabel, className, children }: DialogProps) {
+export function LuDialog({ open, onOpenChange, title, description, closeLabel, className, children }: DialogProps) {
   return (
     <DialogElement {...only('open', open)} {...only('closeLabel', closeLabel)} onOpenChange={openChange(open, onOpenChange)} className={className}>
       <Titles title={title} description={description} />
@@ -243,7 +243,7 @@ export function Dialog({ open, onOpenChange, title, description, closeLabel, cla
   )
 }
 
-export function Sheet({ open, onOpenChange, title, description, closeLabel, className, children }: DialogProps) {
+export function LuSheet({ open, onOpenChange, title, description, closeLabel, className, children }: DialogProps) {
   return (
     <SheetElement {...only('open', open)} {...only('closeLabel', closeLabel)} onOpenChange={openChange(open, onOpenChange)} className={className}>
       <Titles title={title} description={description} />
@@ -252,7 +252,7 @@ export function Sheet({ open, onOpenChange, title, description, closeLabel, clas
   )
 }
 
-export function ConfirmDialog({
+export function LuConfirmDialog({
   open,
   onOpenChange,
   title,
@@ -276,7 +276,7 @@ export function ConfirmDialog({
   )
 }
 
-export function Tooltip({
+export function LuTooltip({
   htmlFor,
   open,
   onOpenChange,
@@ -294,7 +294,7 @@ export function Tooltip({
   )
 }
 
-export function HoverCard({
+export function LuHoverCard({
   htmlFor,
   children,
   openDelay = 700,
@@ -318,7 +318,7 @@ export function HoverCard({
   )
 }
 
-export function Select({
+export function LuSelect({
   label,
   value,
   onValueChange,
@@ -346,7 +346,7 @@ export function Select({
   )
 }
 
-export function SelectItem({ value, textValue, children, className }: { value: string; textValue?: string; children: ReactNode; className?: string }) {
+export function LuSelectItem({ value, textValue, children, className }: { value: string; textValue?: string; children: ReactNode; className?: string }) {
   return (
     <OptionElement value={value} textValue={textValue ?? ''} className={className}>
       {children}
@@ -354,7 +354,7 @@ export function SelectItem({ value, textValue, children, className }: { value: s
   )
 }
 
-export function MultiSelect({
+export function LuMultiSelect({
   label,
   options,
   selected,
@@ -378,7 +378,7 @@ export function MultiSelect({
   )
 }
 
-export function Combobox({
+export function LuCombobox({
   label,
   options,
   value,
@@ -426,7 +426,7 @@ export function Combobox({
   )
 }
 
-export interface SegmentedProps {
+export interface LuSegmentedProps {
   label: string
   values: string[]
   value?: string | null
@@ -436,7 +436,7 @@ export interface SegmentedProps {
   focusable?: boolean
 }
 
-export function Segmented({ label, values, value, onChange, skipTab = false, focusable = true }: SegmentedProps) {
+export function LuSegmented({ label, values, value, onChange, skipTab = false, focusable = true }: LuSegmentedProps) {
   return (
     <SegmentedElement
       label={label}
@@ -448,7 +448,7 @@ export function Segmented({ label, values, value, onChange, skipTab = false, foc
   )
 }
 
-export function Tabs({
+export function LuTabs({
   label,
   value,
   onChange,
@@ -476,11 +476,11 @@ export function Tabs({
   )
 }
 
-export function Toaster({ label, closeLabel }: { label?: string; closeLabel?: string } = {}) {
+export function LuToaster({ label, closeLabel }: { label?: string; closeLabel?: string } = {}) {
   return <ToasterElement {...only('label', label)} {...only('closeLabel', closeLabel)} />
 }
 
-export function Markdown({
+export function LuMarkdown({
   source,
   resolveLink,
   onNavigate,
@@ -494,7 +494,7 @@ export function Markdown({
   return <MarkdownElement source={source} resolveLink={resolveLink} onNavigate={(event) => onNavigate?.(event.detail.href)} className={className} />
 }
 
-export function HighlightTerms({ terms, children }: { terms: readonly string[]; children: ReactNode }) {
+export function LuHighlightTerms({ terms, children }: { terms: readonly string[]; children: ReactNode }) {
   useEffect(() => highlightTerms.set(terms), [terms])
   return children
 }
@@ -503,7 +503,7 @@ export function useHighlightTerms(): readonly string[] {
   return useSyncExternalStore(highlightTerms.subscribe, highlightTerms.get)
 }
 
-export function Highlight({ text, terms, ranges }: { text: string; terms?: readonly string[]; ranges?: readonly Range[] }) {
+export function LuHighlight({ text, terms, ranges }: { text: string; terms?: readonly string[]; ranges?: readonly Range[] }) {
   return <HighlightElement text={text} terms={terms} ranges={ranges} />
 }
 
@@ -512,7 +512,7 @@ export interface DragEndEvent {
   over: { id: string } | null
 }
 
-export function DragArea({ onDragEnd, children, className }: { onDragEnd: (event: DragEndEvent) => void; children: ReactNode; className?: string }) {
+export function LuDragArea({ onDragEnd, children, className }: { onDragEnd: (event: DragEndEvent) => void; children: ReactNode; className?: string }) {
   return (
     <DragAreaElement
       className={className}
@@ -523,7 +523,7 @@ export function DragArea({ onDragEnd, children, className }: { onDragEnd: (event
   )
 }
 
-export function Draggable({
+export function LuDraggable({
   id,
   onOpen,
   label,
@@ -545,7 +545,7 @@ export function Draggable({
   )
 }
 
-export function DropZone({ id, label, className, children }: { id: string; label?: string; className?: string; children: ReactNode }) {
+export function LuDropZone({ id, label, className, children }: { id: string; label?: string; className?: string; children: ReactNode }) {
   return (
     <DropZoneElement zoneId={id} label={label ?? ''} className={className}>
       {children}
@@ -577,7 +577,7 @@ function sortIcon(direction: SortDirection | undefined) {
   return direction === 'asc' ? 'sort-asc' : direction === 'desc' ? 'sort-desc' : 'sort'
 }
 
-export function DataTable<Row>({
+export function LuDataTable<Row>({
   rows,
   columns,
   rowKey,

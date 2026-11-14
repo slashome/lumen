@@ -9,6 +9,7 @@ The vocabulary every component shares, so that a name means the same thing on ev
 ## Names
 
 - **Everything public is prefixed `lu-`**: elements (`<lu-select>`), classes (`.lu-button`), custom properties (`--lu-dialog-width`), events (`lu-value-change`) and cascade layers (`lu.components`).
+- **A framework component is `Lu<Name>`**, the same in React and in Vue: `LuButton`, `LuDialog`, `LuSelect`. Its props type follows it, `LuButtonProps`.
 - **Attributes are kebab-case, properties camelCase**, one for the other: `close-label` sets `closeLabel`, `open-delay` sets `openDelay`.
 - **CSS classes are BEM**: a block (`.lu-data-table`), its elements (`.lu-data-table__cell`) and its modifiers (`.lu-button--outline`). A modifier never works without its block.
 

@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client'
 import { expect, waitFor } from 'storybook/test'
 import { createApp, h, ref } from 'vue'
 import type { LumenSelect } from '../src/components/select/select'
-import { Button, Select, SelectItem } from '../src/react'
+import { LuButton, LuSelect, LuSelectItem } from '../src/react'
 import { inShadow } from './play'
 
 const meta: Meta = {
@@ -26,16 +26,16 @@ function ReactDemo() {
   const [status, setStatus] = useState('todo')
   return (
     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-      <Select label="Status (React)" value={status} onValueChange={setStatus}>
+      <LuSelect label="Status (React)" value={status} onValueChange={setStatus}>
         {statuses.map((entry) => (
-          <SelectItem key={entry} value={entry}>
+          <LuSelectItem key={entry} value={entry}>
             {entry}
-          </SelectItem>
+          </LuSelectItem>
         ))}
-      </Select>
-      <Button variant="outline" onClick={() => setStatus('todo')}>
+      </LuSelect>
+      <LuButton variant="outline" onClick={() => setStatus('todo')}>
         Reset
-      </Button>
+      </LuButton>
       <output>{status}</output>
     </div>
   )

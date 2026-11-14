@@ -44,18 +44,18 @@ Dark mode follows `data-appearance="dark"` on the root element, or the system wh
 ## React
 
 ```tsx
-import { Button, Dialog, toast, Toaster } from '@slashome/lumen/react'
+import { LuButton, LuDialog, LuToaster, toast } from '@slashome/lumen/react'
 ```
 
-The adapter keeps React's idioms: `open` and `onOpenChange`, `value` and `onValueChange`. Given `open` or `value`, a component is controlled; without it, the element changes itself and still calls the callback.
+Every component takes the `Lu` prefix, the same name as in Vue. The adapter keeps React's idioms: `open` and `onOpenChange`, `value` and `onValueChange`. Given `open` or `value`, a component is controlled; without it, the element changes itself and still calls the callback.
 
-`Tooltip` and `HoverCard` do not wrap their trigger: they name it with `htmlFor`, as `<label htmlFor>` does, and the trigger carries the id, best made with `useId()`.
+`LuTooltip` and `LuHoverCard` do not wrap their trigger: they name it with `htmlFor`, as `<label htmlFor>` does, and the trigger carries the id, best made with `useId()`.
 
 ```tsx
 const id = useId()
 
-<Button id={id} variant="ghost" size="icon"><Icon name="copy" label="Copy" /></Button>
-<Tooltip htmlFor={id}>Copy the command</Tooltip>
+<LuButton id={id} variant="ghost" size="icon"><LuIcon name="copy" label="Copy" /></LuButton>
+<LuTooltip htmlFor={id}>Copy the command</LuTooltip>
 ```
 
 ## Vue
