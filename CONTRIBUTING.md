@@ -40,6 +40,7 @@ Rules, not a tutorial. Each one points to the decision that sets it, in [`docs/a
 ## Toolchain
 
 - **pnpm brings Node.** The Node version is declared once, in `devEngines.runtime` of `package.json`; `pnpm install` downloads it and every `pnpm` script runs with it, and the workflows read it with `node-version-file: package.json`. To change it, change that line. No container. ([ADR-0018](docs/adr/0018-pin-node-in-dev-engines-not-in-a-container.md))
+- **No npm token.** `release.yml` publishes by npm trusted publishing, with no secret and no dependency cache; keep its file name, npm trusts it by name. ([ADR-0019](docs/adr/0019-publish-to-npm-with-trusted-publishing.md))
 
 ## Before pushing
 

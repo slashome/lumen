@@ -26,5 +26,6 @@ On 2026-11-14 Node 26 is the active LTS (« Lithium »), Node 24 is in maintenan
 
 - A contributor and the CI run the same Node without a version manager; a change of version is one line in a pull request.
 - `pnpm install` downloads Node once per store, about 30 MB.
+- npm also reads `devEngines` but cannot download a runtime: run in the repository under another Node, it stops with `EBADDEVENGINES`. Lumen is worked on with pnpm only, and the CI runs the pinned Node, so this only bites an `npm` typed by hand.
 - A tool run outside pnpm, a `node` typed in the shell or an editor's language server, still uses the machine's Node; only pnpm scripts and `pnpm exec` are pinned.
 - A problem that a container would hide, such as a stale checkout, still has to be found by looking at the checkout.
