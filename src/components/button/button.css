@@ -103,6 +103,10 @@
     inline-size: var(--lu-control-height-sm);
     block-size: var(--lu-control-height-sm);
     padding-inline: 0;
+
+    &[aria-busy='true'] > * {
+      display: none;
+    }
   }
 
   .lu-icon-button {

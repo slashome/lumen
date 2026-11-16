@@ -1,5 +1,9 @@
 const litSelector = '.lu-button, .lu-icon-button, .lu-switch, .lu-checkbox, .lu-radio, [data-lu-light]'
 
+function isInactive(element: Element) {
+  return element.getAttribute('aria-busy') === 'true' || element.getAttribute('aria-disabled') === 'true'
+}
+
 export function light(element: Element) {
   element.removeAttribute('data-lu-lit')
   void (element as HTMLElement).offsetWidth
@@ -10,7 +14,7 @@ export function light(element: Element) {
 export function attachLight(root: Document | ShadowRoot | HTMLElement = document): () => void {
   const onClick = (event: Event) => {
     const target = event.composedPath().find((node): node is Element => node instanceof Element && node.matches(litSelector))
-    if (target) {
+    if (target && !isInactive(target)) {
       light(target)
     }
   }
