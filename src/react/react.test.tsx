@@ -5,7 +5,7 @@ import type { LumenDialog } from '../components/dialog/dialog'
 import type { LumenSegmented } from '../components/segmented/segmented'
 import type { LumenTooltip } from '../components/tooltip/tooltip'
 import * as react from './index'
-import { buttonClasses, LuButton, LuCombobox, LuConfirmDialog, LuDialog, LuHighlight, LuMultiSelect, LuSegmented, LuSelect, LuTabs, LuTag, LuTooltip } from './index'
+import { buttonClasses, LuButton, LuCombobox, LuConfirmDialog, LuDialog, LuHighlight, LuMultiSelect, LuSegmented, LuSelect, LuSheet, LuTabs, LuTag, LuTooltip } from './index'
 import { ComboboxElement, ConfirmDialogElement, FileDropElement, HighlightElement, MultiSelectElement, SegmentedElement, SelectElement, TabsElement } from './elements'
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
@@ -161,6 +161,13 @@ describe('the React adapter', () => {
     await dialog.updateComplete
     expect(onOpenChange).toHaveBeenCalledWith(false, 'escape')
     expect(dialog.open).toBe(true)
+  })
+
+  it('docks a sheet to the bottom with placement', async () => {
+    const host = await mount(<LuSheet placement="bottom" title="Plank" />)
+    const sheet = host.querySelector('lu-sheet')!
+    await (sheet as LumenDialog).updateComplete
+    expect(sheet.getAttribute('placement')).toBe('bottom')
   })
 
   it('lets a dialog without open close itself, and reports it', async () => {

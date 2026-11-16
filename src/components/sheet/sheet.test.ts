@@ -61,4 +61,13 @@ describe('lu-sheet', () => {
     expect(sheet.open).toBe(true)
     expect(nativeDialog(sheet).hasAttribute('open')).toBe(true)
   })
+
+  it('docks to the inline end by default and to the bottom with placement', async () => {
+    const sheet = await mount<LumenSheet>('<lu-sheet heading="T104"></lu-sheet>')
+    expect(sheet.placement).toBe('end')
+    expect(sheet.getAttribute('placement')).toBe('end')
+    sheet.placement = 'bottom'
+    await sheet.updateComplete
+    expect(sheet.getAttribute('placement')).toBe('bottom')
+  })
 })

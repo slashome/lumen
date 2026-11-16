@@ -37,3 +37,21 @@ export const Controlled: StoryObj = {
   `,
   play: (context) => playControlledModal(context, 'lu-sheet', 'Open the sheet'),
 }
+
+export const Bottom: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'With `placement="bottom"` the sheet rises from the bottom at full width, as high as its content up to `--lu-sheet-height`, and keeps clear of the home indicator. It has no drag handle: it closes with its button, Escape or the backdrop.',
+      },
+    },
+  },
+  render: () => html`
+    <button class="lu-button lu-button--outline" @click=${openNext}>Open the sheet</button>
+    <lu-sheet placement="bottom" heading="Plank — the instructions">
+      <lu-markdown source="Forearms under the shoulders, body in one line from head to heels. Breathe slowly and hold."></lu-markdown>
+    </lu-sheet>
+  `,
+  play: (context) => playModal(context, 'lu-sheet', 'Open the sheet'),
+}
+

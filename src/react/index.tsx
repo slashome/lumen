@@ -9,6 +9,7 @@ import { storedSort } from '../lib/sort-store'
 import { blockedWhile, busyAttributes, buttonClasses, type ButtonLook } from '../lib/button'
 import { documentLang, messagesFor, reportMissing, subscribeToMessages } from '../lib/messages'
 import type { ComboboxOption, ComboboxValue } from '../components/combobox/combobox'
+import type { SheetPlacement } from '../components/sheet/sheet'
 import {
   ComboboxElement,
   ConfirmDialogElement,
@@ -245,9 +246,13 @@ export function LuDialog({ open, onOpenChange, title, description, closeLabel, c
   )
 }
 
-export function LuSheet({ open, onOpenChange, title, description, closeLabel, className, children }: DialogProps) {
+interface SheetProps extends DialogProps {
+  placement?: SheetPlacement
+}
+
+export function LuSheet({ open, onOpenChange, title, description, closeLabel, placement, className, children }: SheetProps) {
   return (
-    <SheetElement {...only('open', open)} {...only('closeLabel', closeLabel)} onOpenChange={openChange(open, onOpenChange)} className={className}>
+    <SheetElement {...only('open', open)} {...only('closeLabel', closeLabel)} {...only('placement', placement)} onOpenChange={openChange(open, onOpenChange)} className={className}>
       <Titles title={title} description={description} />
       {children}
     </SheetElement>
